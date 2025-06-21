@@ -1,65 +1,120 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
-export default function HomePage() {
+export default function MyPage() {
   const supabase = createClient()
-  const [userId, setUserId] = useState<string | null>(null)
-  const [posts, setPosts] = useState<any[]>([])
+  const router = useRouter()
 
+  const [userId, setUserId] = useState<string | null>(null)
+  const [logs, setLogs] = useState<any[]>([])
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editedContent, setEditedContent] = useState<string>("")
+
+  // ユーザー情報と投稿を取得
   useEffect(() => {
     const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUserId(user?.id ?? null)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+
+      setUserId(user.id)
 
       const { data, error } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname)")
+        .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false })
 
-      if (data) setPosts(data)
+      if (!error && data) {
+        setLogs(data)
+      }
     }
 
     fetchData()
   }, [])
 
-  const handleDelete = async (postId: string) => {
-    if (!confirm("この投稿を削除しますか？")) return
+  const handleEdit = (logId: string, currentContent: string) => {
+    setEditingId(logId)
+    setEditedContent(currentContent)
+  }
 
-    await supabase.from("gaman_logs").delete().eq("id", postId)
-    setPosts((prev) => prev.filter((p) => p.id !== postId))
+  const handleCancel = () => {
+    setEditingId(null)
+    setEditedContent("")
+  }
+
+  const handleSave = async (logId: string) => {
+    const { error } = await supabase
+      .from("gaman_logs")
+      .update({ content: editedContent })
+      .eq("id", logId)
+      .eq("user_id", userId)
+
+    if (!error) {
+      // ローカルのログも更新
+      setLogs((prev) =>
+        prev.map((log) =>
+          log.id === logId ? { ...log, content: editedContent } : log
+        )
+      )
+      setEditingId(null)
+      setEditedContent("")
+    } else {
+      alert("更新に失敗しました")
+    }
   }
 
   return (
-    <div className="p-4 max-w-xl mx-auto space-y-4">
-      <h1 className="text-xl font-bold">みんなの我慢記録</h1>
-      {posts.map((post) => (
-        <div key={post.id} className="bg-gray-800 p-4 rounded">
-          <p className="text-sm text-gray-400">{post.created_at}</p>
-          <p className="text-green-400 font-bold">{post.profiles?.nickname}</p>
-          <p className="text-white">{post.content}</p>
+    <main className="p-4 max-w-xl mx-auto">
+      <h1 className="text-xl font-bold mb-4">マイページ（自分の投稿一覧）</h1>
 
-          {/* 自分の投稿だけボタン表示 */}
-          {post.user_id === userId && (
-            <div className="mt-2 space-x-2">
+      <p className="text-sm text-gray-300 mb-4">
+        ログイン中のユーザーID: {userId ?? "未ログイン"}
+      </p>
+
+      {logs.map((log) => (
+        <div key={log.id} className="bg-gray-800 text-white p-4 rounded mb-4">
+          <p className="text-sm text-gray-400">{log.created_at}</p>
+
+          {editingId === log.id ? (
+            <>
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="w-full p-2 text-black rounded mb-2"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleSave(log.id)}
+                  className="bg-blue-500 text-white px-4 py-1 rounded"
+                >
+                  保存
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="bg-gray-500 text-white px-4 py-1 rounded"
+                >
+                  キャンセル
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p>{log.content}</p>
               <button
-                onClick={() => handleDelete(post.id)}
-                className="text-red-400 hover:underline"
-              >
-                削除
-              </button>
-
-              <a
-                href={`/edit/${post.id}`}
-                className="text-blue-400 hover:underline"
+                onClick={() => handleEdit(log.id, log.content)}
+                className="mt-2 text-sm text-blue-300 underline"
               >
                 編集
-              </a>
-            </div>
+              </button>
+            </>
           )}
         </div>
       ))}
-    </div>
+    </main>
   )
 }
