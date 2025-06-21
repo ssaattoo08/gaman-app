@@ -1,74 +1,77 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
 
-export default function EditProfile() {
+export default function EditProfilePage() {
   const supabase = createClient()
   const router = useRouter()
-  const [nickname, setNickname] = useState('')
-  const [message, setMessage] = useState('')
+  const [nickname, setNickname] = useState("")
+  const [loading, setLoading] = useState(true)
 
-  // 現在のニックネームを取得
   useEffect(() => {
-    const fetchNickname = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+    const fetchProfile = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      console.log("✅ ユーザー:", user)
+      if (userError) console.error("❌ ユーザー取得エラー:", userError)
 
-      if (!user) return router.push('/login')
+      if (!user) {
+        router.push("/login")
+        return
+      }
 
-      const { data } = await supabase
-        .from('profiles')
-        .select('nickname')
-        .eq('id', user.id)
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("nickname")
+        .eq("id", user.id)
         .single()
 
-      if (data) {
-        setNickname(data.nickname || '')
-      }
+      console.log("📦 プロフィールデータ:", data)
+      console.log("❌ プロフィール取得エラー:", error)
+
+      if (data) setNickname(data.nickname || "")
+      setLoading(false)
     }
 
-    fetchNickname()
+    fetchProfile()
   }, [])
 
-  const handleUpdate = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
-    if (!user) return
-
+    const { data: { user } } = await supabase.auth.getUser()
     const { error } = await supabase
-      .from('profiles')
+      .from("profiles")
       .update({ nickname })
-      .eq('id', user.id)
+      .eq("id", user.id)
 
-    if (error) {
-      setMessage('更新に失敗しました')
-    } else {
-      setMessage('✔︎ 保存しました！')
+    setLoading(false)
+
+    if (!error) {
+      alert("ニックネームを変更しました")
+      router.push("/")
     }
   }
 
+  if (loading) return <p>読み込み中...</p>
+
   return (
-    <main className="max-w-xl mx-auto mt-12 px-4">
-      <h1 className="text-xl font-bold mb-4">ニックネームを編集</h1>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4">
+      <label className="block mb-2 text-sm font-medium">ニックネーム</label>
       <input
-        type="text"
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
-        className="w-full border rounded p-2 mb-4 text-white"
-        placeholder="ニックネーム"
+        className="w-full p-2 border rounded"
+        required
       />
       <button
-        onClick={handleUpdate}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        type="submit"
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
       >
         保存する
       </button>
-      {message && <p className="mt-4 text-green-400 text-sm">{message}</p>}
-    </main>
+    </form>
   )
 }
