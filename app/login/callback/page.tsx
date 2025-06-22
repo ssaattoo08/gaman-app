@@ -26,9 +26,10 @@ export default function Callback() {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
 
+        console.log("取得したセッション情報:", session)  // セッション情報を確認
+
         if (error || !session?.user) {
           console.error("ログインセッション取得失敗", error)
-          // セッションが取得できない場合、ログインページにリダイレクト
           await router.push("/login")
           return
         }
@@ -62,12 +63,12 @@ export default function Callback() {
         }
 
         // ログイン後に `/mypage` へリダイレクト
-        await router.push("/mypage")
+        router.push("/mypage")
 
       } catch (error) {
         console.error("ログイン処理中にエラーが発生しました", error)
         // エラーが発生した場合、ログインページにリダイレクト
-        await router.push("/login")
+        router.push("/login")
       }
     }
 
