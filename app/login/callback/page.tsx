@@ -23,36 +23,52 @@ export default function Callback() {
 
   useEffect(() => {
     const handleLogin = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error || !session?.user) {
-        console.error("ログインセッション取得失敗", error)
-        return
-      }
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
 
-      const userId = session.user.id
-
-      // すでに登録されていないか確認
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("nickname")
-        .eq("id", userId)
-        .single()
-
-      // なければニックネームを挿入
-      if (!existingProfile) {
-        const nickname = generateRandomNickname()
-
-        const { error: insertError } = await supabase
-          .from("profiles")
-          .insert([{ id: userId, nickname }])
-
-        if (insertError) {
-          console.error("プロフィール登録エラー", insertError)
+        if (error || !session?.user) {
+          console.error("ログインセッション取得失敗", error)
+          // エラーが発生した場合、ログインページにリダイレクト
+          router.push("/login")
+          return
         }
-      }
 
-      // ログイン後に `/mypage` へリダイレクト
-      router.push("/mypage")
+        const userId = session.user.id
+
+        // すでに登録されていないか確認
+        const { data: existingProfile, error: profileError } = await supabase
+          .from("profiles")
+          .select("nickname")
+          .eq("id", userId)
+          .single()
+
+        if (profileError) {
+          console.error("プロフィール取得エラー", profileError)
+          return
+        }
+
+        // なければニックネームを挿入
+        if (!existingProfile) {
+          const nickname = generateRandomNickname()
+
+          const { error: insertError } = await supabase
+            .from("profiles")
+            .insert([{ id: userId, nickname }])
+
+          if (insertError) {
+            console.error("プロフィール登録エラー", insertError)
+            return
+          }
+        }
+
+        // ログイン後に `/mypage` へリダイレクト
+        await router.push("/mypage")
+
+      } catch (error) {
+        console.error("ログイン処理中にエラーが発生しました", error)
+        // エラーが発生した場合、ログインページにリダイレクト
+        router.push("/login")
+      }
     }
 
     handleLogin()
