@@ -14,30 +14,36 @@ export default function EditProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
-      console.log("✅ ユーザー:", user)
+  
+      // ユーザー取得エラーがあった場合はログを出力
       if (userError) {
         console.error("❌ ユーザー取得エラー:", userError)
         return
       }
-
-      setUser(user)  // ユーザー情報をステートに保存
-
-      if (user) {
-        // ユーザー情報があればプロフィールを取得
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("nickname")
-          .eq("id", user?.id)  // user が null の場合でもエラーを回避
-          .single()
-
-        console.log("📦 プロフィールデータ:", data)
-        console.error("❌ プロフィール取得エラー:", error)
-
-        if (data) setNickname(data.nickname || "")
+  
+      // userが取得できない場合のログ
+      if (!user) {
+        console.error("❌ ユーザーが取得できませんでした")
+        return
       }
+  
+      console.log("✅ ユーザー情報:", user) // ユーザー情報の確認用ログ
+  
+      setUser(user)  // ユーザー情報をステートに保存
+      // その後の処理（プロフィール情報の取得など）
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("nickname")
+        .eq("id", user.id)
+        .single()
+  
+      console.log("📦 プロフィールデータ:", data) // 取得したプロフィールの確認用ログ
+      console.error("❌ プロフィール取得エラー:", error)
+  
+      if (data) setNickname(data.nickname || "")
       setLoading(false)
     }
-
+  
     fetchProfile()
   }, [])
 
