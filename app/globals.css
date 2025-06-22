@@ -28,3 +28,9 @@ body {
 body {
   font-family: "Meiryo UI", "Meiryo", sans-serif;
 }
+
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* スクロールを無効化 */
+}
