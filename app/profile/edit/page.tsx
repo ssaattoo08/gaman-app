@@ -9,28 +9,32 @@ export default function EditProfilePage() {
   const router = useRouter()
   const [nickname, setNickname] = useState("")
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)  // ユーザーの情報を保持するステート
 
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       console.log("✅ ユーザー:", user)
-      if (userError) console.error("❌ ユーザー取得エラー:", userError)
-
-      if (!user) {
-        router.push("/login")
+      if (userError) {
+        console.error("❌ ユーザー取得エラー:", userError)
         return
       }
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("nickname")
-        .eq("id", user.id)
-        .single()
+      setUser(user)  // ユーザー情報をステートに保存
 
-      console.log("📦 プロフィールデータ:", data)
-      console.log("❌ プロフィール取得エラー:", error)
+      if (user) {
+        // ユーザー情報があればプロフィールを取得
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("nickname")
+          .eq("id", user.id)
+          .single()
 
-      if (data) setNickname(data.nickname || "")
+        console.log("📦 プロフィールデータ:", data)
+        console.error("❌ プロフィール取得エラー:", error)
+
+        if (data) setNickname(data.nickname || "")
+      }
       setLoading(false)
     }
 
@@ -39,19 +43,25 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!nickname) return // ニックネームが空でないか確認
+
     setLoading(true)
 
-    const { data: { user } } = await supabase.auth.getUser()
-    const { error } = await supabase
-      .from("profiles")
-      .update({ nickname })
-      .eq("id", user.id)
+    if (user) {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ nickname })
+        .eq("id", user.id)
 
-    setLoading(false)
+      setLoading(false)
 
-    if (!error) {
-      alert("ニックネームを変更しました")
-      router.push("/")
+      if (error) {
+        alert("変更に失敗しました")
+        console.error("❌ エラー:", error)
+      } else {
+        alert("ニックネームを変更しました")
+        router.push("/")  // 成功したらトップページに遷移
+      }
     }
   }
 
