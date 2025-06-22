@@ -2,10 +2,12 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
+import BottomNav from "@/components/BottomNav"
 
 export default function TimelinePage() {
   const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,9 +16,12 @@ export default function TimelinePage() {
         .select("id, content, created_at, user_id, profiles(nickname)")
         .order("created_at", { ascending: false })
 
-      if (!error && data) {
+      if (error) {
+        console.error("エラー:", error.message)
+      } else {
         setPosts(data)
       }
+      setLoading(false)
     }
 
     fetchData()
@@ -28,28 +33,36 @@ export default function TimelinePage() {
   }
 
   return (
-    <main className="px-4 py-6 max-w-xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-8 text-center tracking-wide">
-      Timeline
-      </h1>
+    <>
+      <main className="px-4 py-6 max-w-xl mx-auto">
+        <h1 className="text-2xl font-bold text-white mb-6 text-center">
+          Timeline
+        </h1>
 
-      <div className="space-y-4">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
-          >
-            <div className="text-sm text-gray-400 mb-2">
-              <span className="font-semibold text-blue-300">
-                {post.profiles?.nickname ?? "名無し"}
-              </span>
-              {"｜"}
-              {formatDate(post.created_at)}
-            </div>
-            <p className="text-base">{post.content}</p>
+        {loading ? (
+          <p className="text-white text-center">読み込み中...</p>
+        ) : (
+          <div className="space-y-4">
+            {posts.map((post) => (
+              <div
+                key={post.id}
+                className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+              >
+                <div className="text-sm text-gray-400 mb-2">
+                  <span className="font-semibold text-blue-300">
+                    {post.profiles?.nickname ?? "名無し"}
+                  </span>
+                  {"｜"}
+                  {formatDate(post.created_at)}
+                </div>
+                <p className="text-base">{post.content}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </main>
+        )}
+      </main>
+
+      <BottomNav />
+    </>
   )
 }
