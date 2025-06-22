@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation' // `next/navigation` から `useRouter` をインポート
 
 export default function LoginPage() {
   const supabase = createClient()
+  const router = useRouter() // useRouterフックを使ってページ遷移
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
@@ -32,6 +34,11 @@ export default function LoginPage() {
     }
   }
 
+  // 新規登録ページへ遷移するための関数
+  const goToRegister = () => {
+    router.push('/register') // '/register' ページに遷移
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
       <h1 className="text-2xl mb-6">メールログイン</h1>
@@ -48,6 +55,15 @@ export default function LoginPage() {
       >
         ログインリンクを送信
       </button>
+
+      {/* 新規登録ボタン */}
+      <button
+        onClick={goToRegister} // 新規登録ページへの遷移
+        className="mt-4 text-blue-500 hover:text-blue-700"
+      >
+        新規登録はこちら
+      </button>
+
       {message && <p className="mt-4 text-center">{message}</p>}
     </div>
   )
