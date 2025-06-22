@@ -1,9 +1,8 @@
-"use client"
+"use client"  // クライアントコンポーネントとして指定
 
 import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
-import { generateUniqueNickname } from "@/lib/utils/generateNickname" // ニックネーム生成関数をインポート
-import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"  // Supabaseクライアントのインポート
+import { useRouter } from "next/navigation"  // リダイレクトに必要
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("")
@@ -17,36 +16,34 @@ const RegisterPage = () => {
 
     const supabase = createClient()
 
+    // メールアドレスとパスワードが入力されているか確認
     if (!email || !password) {
       setError("メールアドレスとパスワードを入力してください")
       return
     }
 
-    // ユーザーの新規登録（Supabase）
-    const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      })
-      
-      if (signUpError) {
-        setError(`登録エラー: ${signUpError.message}`)
-        return
-      }
-      
-      const user = data?.user // `data` から `user` を取得
-      
-      if (!user) {
-        setError("ユーザー登録に失敗しました。")
-        return
-      }
+    // Supabaseで新規登録
+    const { data: user, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    })
 
-    // ニックネームの自動生成
-    const nickname = await generateUniqueNickname()
+    if (signUpError) {
+      setError(`登録エラー: ${signUpError.message}`)
+      return
+    }
 
-    // プロフィールの作成
+    // `user.id` を `profiles` テーブルに保存
+    const nickname = `user_${user?.id.slice(0, 8)}` // 簡単なニックネーム生成
     const { error: profileError } = await supabase
       .from("profiles")
-      .upsert({ id: user?.id, email, nickname }) // profilesテーブルにデータを挿入
+      .upsert([
+        {
+          user_id: user?.id, // `user_id` に `user.id` を設定
+          email,
+          nickname,
+        },
+      ])
 
     if (profileError) {
       setError(`プロフィールの作成に失敗しました: ${profileError.message}`)
