@@ -1,12 +1,13 @@
-"use client";  // クライアントコンポーネントとして指定
+"use client"
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { generateUniqueNickname } from "@/lib/utils/generateNickname" // ニックネーム生成関数をインポート
+import { useRouter } from "next/navigation"
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const router = useRouter()
@@ -16,27 +17,39 @@ const RegisterPage = () => {
 
     const supabase = createClient()
 
-    // バリデーション
     if (!email || !password) {
-      setError("📩 メールアドレスとパスワードを入力してください")
+      setError("メールアドレスとパスワードを入力してください")
       return
     }
 
-    const { error } = await supabase.auth.signUp({
+    // ユーザーの新規登録（Supabase）
+    const { user, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     })
 
-    if (error) {
-      setError(`エラー: ${error.message}`)
-      setSuccessMessage(null)
-    } else {
-      setError(null)
-      setSuccessMessage("✅ 新規登録が完了しました。ログインページへ移動します。")
-      setTimeout(() => {
-        router.push('/login')
-      }, 2000)
+    if (signUpError) {
+      setError(`登録エラー: ${signUpError.message}`)
+      return
     }
+
+    // ニックネームの自動生成
+    const nickname = await generateUniqueNickname()
+
+    // プロフィールの作成
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .upsert({ id: user?.id, email, nickname }) // profilesテーブルにデータを挿入
+
+    if (profileError) {
+      setError(`プロフィールの作成に失敗しました: ${profileError.message}`)
+      return
+    }
+
+    setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
+    setTimeout(() => {
+      router.push("/login")  // 登録後、ログインページへリダイレクト
+    }, 2000)
   }
 
   return (
