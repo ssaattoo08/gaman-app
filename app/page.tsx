@@ -22,7 +22,7 @@ export default function Home() {
 
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
           <button
-            onClick={() => router.push("/signup")}
+            onClick={() => router.push("/register")}
             className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition"
           >
             新規登録
