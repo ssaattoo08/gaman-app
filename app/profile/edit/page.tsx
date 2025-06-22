@@ -50,17 +50,14 @@ export default function EditProfilePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nickname) return // ニックネームが空でないか確認
-
+  
     setLoading(true)
-
-    if (user?.id) {  // userがnullでないかつidが存在する場合
+  
+    if (user && user.id) {  // userがnullでないかつidが存在する場合
       const { error } = await supabase
         .from("profiles")
         .update({ nickname })
-        .eq("id", user.id)
-
-      setLoading(false)
-
+        .eq("id", user.id)  // これでエラーを回避
       if (error) {
         alert("変更に失敗しました")
         console.error("❌ エラー:", error)
@@ -68,8 +65,13 @@ export default function EditProfilePage() {
         alert("ニックネームを変更しました")
         router.push("/")  // 成功したらトップページに遷移
       }
+    } else {
+      // userがnullの場合のエラーハンドリング
+      alert("ユーザー情報が取得できませんでした")
+      console.error("❌ ユーザー情報がnullです")
     }
   }
+  
 
   if (loading) return <p>読み込み中...</p>
 
