@@ -11,9 +11,9 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // セッションがない場合、ログインページにリダイレクト
+  // セッションがない場合、最初に `/`（新規登録・ログイン選択ページ）にリダイレクト
   if (!session && !req.nextUrl.pathname.startsWith("/login") && !req.nextUrl.pathname.startsWith("/login/callback")) {
-    return NextResponse.redirect(new URL("/login", req.url))
+    return NextResponse.redirect(new URL("/", req.url)) // `/login` ではなく `/` にリダイレクト
   }
 
   // セッションがある場合、`/login` にアクセスすると `/timeline` にリダイレクト
