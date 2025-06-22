@@ -53,11 +53,11 @@ export default function EditProfilePage() {
 
     setLoading(true)
 
-    if (user) {
+    if (user?.id) {  // userがnullでないかつidが存在する場合
       const { error } = await supabase
         .from("profiles")
         .update({ nickname })
-        .eq("id", user?.id)  // user が null の場合でもエラーを回避
+        .eq("id", user.id)
 
       setLoading(false)
 
