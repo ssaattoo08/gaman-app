@@ -23,15 +23,22 @@ const RegisterPage = () => {
     }
 
     // ユーザーの新規登録（Supabase）
-    const { user, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-
-    if (signUpError) {
-      setError(`登録エラー: ${signUpError.message}`)
-      return
-    }
+    const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+      
+      if (signUpError) {
+        setError(`登録エラー: ${signUpError.message}`)
+        return
+      }
+      
+      const user = data?.user // `data` から `user` を取得
+      
+      if (!user) {
+        setError("ユーザー登録に失敗しました。")
+        return
+      }
 
     // ニックネームの自動生成
     const nickname = await generateUniqueNickname()
