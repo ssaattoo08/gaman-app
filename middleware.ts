@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession()
 
   // セッションがない場合、最初に `/`（新規登録・ログイン選択ページ）にリダイレクト
-  if (!session && !req.nextUrl.pathname.startsWith("/login") && !req.nextUrl.pathname.startsWith("/login/callback")) {
+  if (!session && !req.nextUrl.pathname.startsWith("/login") && !req.nextUrl.pathname.startsWith("/login/callback") && !req.nextUrl.pathname.startsWith("/")) {
     return NextResponse.redirect(new URL("/", req.url)) // `/login` ではなく `/` にリダイレクト
   }
 
