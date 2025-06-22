@@ -7,9 +7,9 @@ export default function TopNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="hidden md:flex justify-between items-center px-6 py-4 bg-black border-b border-gray-700 text-white">
+    <nav className="hidden md:flex justify-between items-center px-6 py-4 bg-black text-white">
       {/*<div className="text-lg font-bold">g</div>*/}
-      <div className="flex space-x-6">
+      {/*<div className="flex space-x-6">*/}
         {/* 以下のリンク部分を削除 */}
         {/* <Link
           href="/timeline"
