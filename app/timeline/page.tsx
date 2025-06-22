@@ -36,7 +36,7 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          Timeline
+          HOME
         </h1>
 
         {loading ? (
