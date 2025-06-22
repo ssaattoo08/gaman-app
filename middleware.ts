@@ -5,11 +5,26 @@ import type { NextRequest } from "next/server"
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
-  await supabase.auth.getSession()
+
+  // セッションの取得
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  // セッションがない場合、ログインページにリダイレクト
+  if (!session && !req.nextUrl.pathname.startsWith("/login") && !req.nextUrl.pathname.startsWith("/login/callback")) {
+    return NextResponse.redirect(new URL("/login", req.url))
+  }
+
+  // セッションがある場合、`/login` にアクセスすると `/timeline` にリダイレクト
+  if (session && req.nextUrl.pathname === "/login") {
+    return NextResponse.redirect(new URL("/timeline", req.url)) // リダイレクト先を `/timeline` に変更
+  }
+
   return res
 }
 
-// ✅ `/login` や `/login/callback` など認証まわりは除外する
+// `/login` や `/login/callback` を除外
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|login|login/callback).*)",
