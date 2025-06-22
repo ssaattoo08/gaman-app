@@ -1,8 +1,8 @@
-// pages/register.tsx
+"use client"; // クライアントコンポーネントとして指定
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation' // 修正：next/router -> next/navigation
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('')
@@ -22,8 +22,7 @@ const RegisterPage = () => {
     if (error) {
       setError(error.message)
     } else {
-      // 登録成功後にログインページへリダイレクト
-      router.push('/login')
+      router.push('/login') // ログインページへリダイレクト
     }
   }
 
