@@ -33,27 +33,32 @@ const RegisterPage = () => {
       return
     }
 
-    // `user.id` を `profiles` テーブルに保存
-    const nickname = `user_${user?.id.slice(0, 8)}` // 簡単なニックネーム生成
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .upsert([
-        {
-          user_id: user?.id, // `user_id` に `user.id` を設定
-          email,
-          nickname,
-        },
-      ])
+    // user が null でないことを確認してから id にアクセス
+    if (user) {
+      // `user.id` を `profiles` テーブルに保存
+      const nickname = `user_${user.id.slice(0, 8)}` // 簡単なニックネーム生成
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .upsert([
+          {
+            user_id: user.id, // `user_id` に `user.id` を設定
+            email,
+            nickname,
+          },
+        ])
 
-    if (profileError) {
-      setError(`プロフィールの作成に失敗しました: ${profileError.message}`)
-      return
+      if (profileError) {
+        setError(`プロフィールの作成に失敗しました: ${profileError.message}`)
+        return
+      }
+
+      setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
+      setTimeout(() => {
+        router.push("/login")  // 登録後、ログインページへリダイレクト
+      }, 2000)
+    } else {
+      setError("ユーザー情報が取得できませんでした。")
     }
-
-    setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
-    setTimeout(() => {
-      router.push("/login")  // 登録後、ログインページへリダイレクト
-    }, 2000)
   }
 
   return (
