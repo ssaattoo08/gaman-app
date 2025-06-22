@@ -28,8 +28,8 @@ export default function Callback() {
 
         if (error || !session?.user) {
           console.error("ログインセッション取得失敗", error)
-          // エラーが発生した場合、ログインページにリダイレクト
-          router.push("/login")
+          // セッションが取得できない場合、ログインページにリダイレクト
+          await router.push("/login")
           return
         }
 
@@ -67,7 +67,7 @@ export default function Callback() {
       } catch (error) {
         console.error("ログイン処理中にエラーが発生しました", error)
         // エラーが発生した場合、ログインページにリダイレクト
-        router.push("/login")
+        await router.push("/login")
       }
     }
 
