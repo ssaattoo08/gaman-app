@@ -27,7 +27,7 @@ export default function EditProfilePage() {
         const { data, error } = await supabase
           .from("profiles")
           .select("nickname")
-          .eq("id", user.id)
+          .eq("id", user?.id)  // user が null の場合でもエラーを回避
           .single()
 
         console.log("📦 プロフィールデータ:", data)
@@ -51,7 +51,7 @@ export default function EditProfilePage() {
       const { error } = await supabase
         .from("profiles")
         .update({ nickname })
-        .eq("id", user.id)
+        .eq("id", user?.id)  // user が null の場合でもエラーを回避
 
       setLoading(false)
 
