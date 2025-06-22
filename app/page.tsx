@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center space-y-6">
-        /* <h1 className="text-5xl font-bold tracking-wide">g</h1> */
+        <h1 className="text-5xl font-bold tracking-wide">g</h1>
 
         <p className="text-lg leading-relaxed text-gray-200">
           日々のガマンを記録し<br />
