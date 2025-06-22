@@ -34,7 +34,7 @@ const RegisterPage = () => {
     }
 
     // user が null でないことを確認してから id にアクセス
-    if (user) {
+    if (user && user.id) {
       // `user.id` を `profiles` テーブルに保存
       const nickname = `user_${user.id.slice(0, 8)}` // 簡単なニックネーム生成
       const { error: profileError } = await supabase
