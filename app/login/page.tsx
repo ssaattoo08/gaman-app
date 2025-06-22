@@ -14,16 +14,19 @@ export default function LoginPage() {
       return
     }
 
+    // 本番と開発環境に応じてリダイレクトURLを切り替え
+    const redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL || 'http://localhost:3000/login/callback'
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: 'http://localhost:3000/login/callback',
+        emailRedirectTo: redirectUrl,
       },
     })
 
     if (error) {
       console.error('Login error:', error.message)
-      setMessage('ログインリンクの送信に失敗しました。')
+      setMessage('ログインリンクの送信に失敗しました。もう一度試してください。')
     } else {
       setMessage('✅ メールにログインリンクを送信しました。確認してください。')
     }
