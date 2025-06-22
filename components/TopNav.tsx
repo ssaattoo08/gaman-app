@@ -10,7 +10,8 @@ export default function TopNav() {
     <nav className="hidden md:flex justify-between items-center px-6 py-4 bg-black border-b border-gray-700 text-white">
       <div className="text-lg font-bold">g</div>
       <div className="flex space-x-6">
-        <Link
+        {/* 以下のリンク部分を削除 */}
+        {/* <Link
           href="/timeline"
           className={`${pathname === "/timeline" ? "text-blue-400" : "hover:text-blue-400"}`}
         >
@@ -27,7 +28,7 @@ export default function TopNav() {
           className={`${pathname === "/mypage" ? "text-blue-400" : "hover:text-blue-400"}`}
         >
           マイページ
-        </Link>
+        </Link> */}
       </div>
     </nav>
   )
