@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 
@@ -20,6 +20,7 @@ function generateRandomNickname() {
 export default function Callback() {
   const router = useRouter()
   const supabase = createClient()
+  const [message, setMessage] = useState<string | null>(null) // メッセージ表示用
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -43,8 +44,10 @@ export default function Callback() {
           .eq("id", userId)
           .single()
 
+        // プロフィール取得エラー時のエラーハンドリング
         if (profileError) {
           console.error("プロフィール取得エラー", profileError)
+          setMessage("プロフィールの取得に失敗しました。再度ログインしてください。")
           return
         }
 
@@ -58,6 +61,7 @@ export default function Callback() {
 
           if (insertError) {
             console.error("プロフィール登録エラー", insertError)
+            setMessage("プロフィールの登録に失敗しました。再度ログインしてください。")
             return
           }
         }
@@ -67,6 +71,7 @@ export default function Callback() {
 
       } catch (error) {
         console.error("ログイン処理中にエラーが発生しました", error)
+        setMessage("ログイン処理中にエラーが発生しました。再度お試しください。")
         // エラーが発生した場合、ログインページにリダイレクト
         router.push("/login")
       }
@@ -76,6 +81,8 @@ export default function Callback() {
   }, [router, supabase])
 
   return (
-    <div className="text-white p-4 text-center">ログイン中...</div>
+    <div className="text-white p-4 text-center">
+      {message ? <p>{message}</p> : "ログイン中..."}
+    </div>
   )
 }
