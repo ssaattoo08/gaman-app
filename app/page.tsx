@@ -16,8 +16,8 @@ export default function Home() {
         </p>
 
         <ul className="text-sm text-gray-400 space-y-1">
-          <li>✔︎ ガマンを投稿するだけ、振り返り機能も搭載予定</li>
-          <li>✔︎ 完全匿名性・登録時に自動で食べ物ニックネームがつきます</li>
+          <li>✔︎ ガマンを投稿するだけ、振り返り機能も搭載してます</li>
+          <li>✔︎ 完全匿名性・登録時に自動でニックネームがつきます</li>
         </ul>
 
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
