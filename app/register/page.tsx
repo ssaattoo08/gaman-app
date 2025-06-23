@@ -11,7 +11,6 @@ const RegisterPage = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const router = useRouter()
 
-  // handleSubmit関数の定義
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -23,34 +22,29 @@ const RegisterPage = () => {
     }
 
     // Supabaseで新規登録
-    const { data: user, error: signUpError } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     })
-
-    // デバッグ用ログ
-    console.log("ユーザー情報:", user)
-    console.log("エラー:", signUpError)
 
     if (signUpError) {
       setError(`登録エラー: ${signUpError.message}`)
       return
     }
 
-    if (user && user.id) {
-      // プロフィール作成
-      const nickname = `user_${user.id.slice(0, 8)}`
+    // user が null でないことを確認してから id にアクセス
+    if (data.user && data.user.id) {
+      // `user.id` を `profiles` テーブルに保存
+      const nickname = `user_${data.user.id.slice(0, 8)}` // 簡単なニックネーム生成
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert([
           {
-            user_id: user.id,
-            email,
-            nickname,
+            id: data.user.id, // user_idではなくidを使用
+            nickname,         // emailフィールドは削除
           },
         ])
 
-      // プロフィール作成エラー
       if (profileError) {
         setError(`プロフィール作成エラー: ${profileError.message}`)
         return
@@ -58,7 +52,7 @@ const RegisterPage = () => {
 
       setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
       setTimeout(() => {
-        router.push("/login")
+        router.push("/login")  // 登録後、ログインページへリダイレクト
       }, 2000)
     } else {
       setError("ユーザー情報が取得できませんでした。")
