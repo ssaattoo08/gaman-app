@@ -52,7 +52,7 @@ const RegisterPage = () => {
 
       setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
       setTimeout(() => {
-        router.push("/login")  // 登録後、ログインページへリダイレクト
+        router.push("/mypage")  // 登録後、ログインページへリダイレクト
       }, 2000)
     } else {
       setError("ユーザー情報が取得できませんでした。")
