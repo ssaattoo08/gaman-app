@@ -10,16 +10,24 @@ const supabase = createClient(
 
 export default function Login() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    const { error } = await supabase.auth.signInWithOtp({ email })
+    if (!email || !password) {
+      setMessage('メールアドレスとパスワードを入力してください')
+      return
+    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
     if (error) {
-      setMessage('ログインリンクの送信に失敗しました')
+      setMessage('ログインに失敗しました: ' + error.message)
     } else {
-      setMessage('メールを確認してください（ログインリンクを送りました）')
+      setMessage('ログイン成功！')
+      // 必要に応じてリダイレクト
     }
   }
 
@@ -35,8 +43,16 @@ export default function Login() {
           className="border p-2 w-full"
           required
         />
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">
-          ログインリンクを送信
+        <input
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 w-full"
+          required
+        />
+        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full">
+          ログイン
         </button>
       </form>
       {message && <p className="mt-4">{message}</p>}
