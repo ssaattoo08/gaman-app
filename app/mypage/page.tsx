@@ -42,6 +42,8 @@ export default function MyPage() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
 
+      console.log("userPosts", userPosts)
+
       setPosts(userPosts || [])
       setLoading(false)
     }
