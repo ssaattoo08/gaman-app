@@ -51,7 +51,15 @@ export default function MyPage() {
 
   const formatDate = (iso: string) => {
     const date = new Date(iso)
-    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`
+    return date.toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Tokyo"
+    })
   }
 
   return (
