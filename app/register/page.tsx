@@ -47,6 +47,7 @@ const RegisterPage = () => {
           {
             id: data.user.id, // user_idではなくidを使用
             nickname,
+            email, // emailも保存
           },
         ])
 
