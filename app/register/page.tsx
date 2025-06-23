@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"  // リダイレクトに必要
+import { generateUniqueNickname } from "@/lib/utils/generateNickname"
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("")
@@ -34,14 +35,14 @@ const RegisterPage = () => {
 
     // user が null でないことを確認してから id にアクセス
     if (data.user && data.user.id) {
-      // `user.id` を `profiles` テーブルに保存
-      const nickname = `user_${data.user.id.slice(0, 8)}` // 簡単なニックネーム生成
+      // 食べ物ニックネームを自動生成
+      const nickname = await generateUniqueNickname()
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert([
           {
             id: data.user.id, // user_idではなくidを使用
-            nickname,         // emailフィールドは削除
+            nickname,
           },
         ])
 
