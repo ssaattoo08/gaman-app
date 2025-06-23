@@ -1,7 +1,7 @@
-"use client"  // クライアントコンポーネントとして指定
+"use client"
 
 import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"  // Supabaseクライアントのインポート
+import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"  // リダイレクトに必要
 
 const RegisterPage = () => {
@@ -11,12 +11,12 @@ const RegisterPage = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const router = useRouter()
 
+  // handleSubmit関数の定義
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const supabase = createClient()
 
-    // メールアドレスとパスワードが入力されているか確認
     if (!email || !password) {
       setError("メールアドレスとパスワードを入力してください")
       return
@@ -28,33 +28,37 @@ const RegisterPage = () => {
       password,
     })
 
+    // デバッグ用ログ
+    console.log("ユーザー情報:", user)
+    console.log("エラー:", signUpError)
+
     if (signUpError) {
       setError(`登録エラー: ${signUpError.message}`)
       return
     }
 
-    // user が null でないことを確認してから id にアクセス
     if (user && user.id) {
-      // `user.id` を `profiles` テーブルに保存
-      const nickname = `user_${user.id.slice(0, 8)}` // 簡単なニックネーム生成
+      // プロフィール作成
+      const nickname = `user_${user.id.slice(0, 8)}`
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert([
           {
-            user_id: user.id, // `user_id` に `user.id` を設定
+            user_id: user.id,
             email,
             nickname,
           },
         ])
 
+      // プロフィール作成エラー
       if (profileError) {
-        setError(`プロフィールの作成に失敗しました: ${profileError.message}`)
+        setError(`プロフィール作成エラー: ${profileError.message}`)
         return
       }
 
       setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
       setTimeout(() => {
-        router.push("/login")  // 登録後、ログインページへリダイレクト
+        router.push("/login")
       }, 2000)
     } else {
       setError("ユーザー情報が取得できませんでした。")
