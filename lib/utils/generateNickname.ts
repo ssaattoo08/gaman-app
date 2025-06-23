@@ -1,28 +1,29 @@
 import { createClient } from "@/lib/supabase/client";
 import { foodNames } from "./foodNames";
 
-export const generateUniqueNickname = async (): Promise<string> => {
-  const supabase = createClient()
+export const generateUniqueNickname = async (): Promise<string | null> => {
+  const supabase = createClient();
 
-  let nickname = ""
-  let isUnique = false
+  // すでに使われているニックネームを取得
+  const { data: used, error } = await supabase
+    .from("profiles")
+    .select("nickname");
 
-  while (!isUnique) {
-    const food = foodNames[Math.floor(Math.random() * foodNames.length)]
-    const number = Math.floor(1000 + Math.random() * 9000)
-    nickname = `${food}${number}`
-
-    // `nickname` の重複チェック
-    const { data } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("nickname", nickname)
-      .single()
-
-    if (!data) {
-      isUnique = true
-    }
+  if (error) {
+    throw new Error("ニックネーム取得エラー: " + error.message);
   }
 
-  return nickname
-}
+  const usedNicknames = (used ?? []).map((row) => row.nickname);
+
+  // 未使用のニックネーム候補を抽出
+  const available = foodNames.filter((name) => !usedNicknames.includes(name));
+
+  if (available.length === 0) {
+    // 候補が足りない場合はnullを返す
+    return null;
+  }
+
+  // ランダムに1つ選ぶ
+  const nickname = available[Math.floor(Math.random() * available.length)];
+  return nickname;
+};

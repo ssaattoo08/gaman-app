@@ -37,6 +37,10 @@ const RegisterPage = () => {
     if (data.user && data.user.id) {
       // 食べ物ニックネームを自動生成
       const nickname = await generateUniqueNickname()
+      if (!nickname) {
+        setError("ニックネーム候補が足りません。管理者にご連絡ください。")
+        return
+      }
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert([
