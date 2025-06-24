@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 import BottomNav from "@/components/BottomNav"
+import Link from "next/link"
 
 export default function TimelinePage() {
   const supabase = createClient()
@@ -58,7 +59,9 @@ export default function TimelinePage() {
               >
                 <div className="text-sm text-gray-400 mb-2">
                   <span className="font-semibold text-blue-300">
-                    {post.profiles?.nickname ?? "名無し"}
+                    <Link href={`/user/${post.user_id}`} className="hover:underline">
+                      {post.profiles?.nickname ?? "名無し"}
+                    </Link>
                   </span>
                   {"｜"}
                   {formatDate(post.created_at)}
