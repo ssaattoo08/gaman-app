@@ -1,14 +1,31 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
 
 export default function Home() {
   const router = useRouter()
+  const [userCount, setUserCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      const supabase = createClient()
+      const { count, error } = await supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+      if (!error) setUserCount(count ?? 0)
+    }
+    fetchUserCount()
+  }, [])
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center space-y-6">
         <h1 className="text-5xl font-bold tracking-wide">g</h1>
+        {userCount !== null && (
+          <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
+        )}
 
         <p className="text-lg leading-relaxed text-gray-200">
           日々のガマンを記録し<br />
