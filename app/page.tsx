@@ -23,20 +23,6 @@ export default function Home() {
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center space-y-6">
         <h1 className="text-5xl font-bold tracking-wide">g</h1>
-        {userCount !== null && (
-          <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
-        )}
-
-        <p className="text-lg leading-relaxed text-gray-200">
-          日々のガマンを記録し<br />
-          見える化する習慣化サービス
-        </p>
-
-        <ul className="text-sm text-gray-400 space-y-1">
-          <li>✔︎ ガマンを投稿するだけ、振り返り機能も搭載してます</li>
-          <li>✔︎ 完全匿名性・登録時に自動でニックネームがつきます</li>
-        </ul>
-
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
           <button
             onClick={() => router.push("/register")}
@@ -51,6 +37,19 @@ export default function Home() {
             ログイン
           </button>
         </div>
+        {userCount !== null && (
+          <div className="mt-6 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
+        )}
+
+        <p className="text-lg leading-relaxed text-gray-200">
+          日々のガマンを記録し<br />
+          見える化する習慣化サービス
+        </p>
+
+        <ul className="text-sm text-gray-400 space-y-1">
+          <li>✔︎ ガマンを投稿するだけ、振り返り機能も搭載してます</li>
+          <li>✔︎ 完全匿名性・登録時に自動でニックネームがつきます</li>
+        </ul>
       </div>
     </main>
   )
