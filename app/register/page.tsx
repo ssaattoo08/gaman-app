@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"  // リダイレクトに必要
 import { generateUniqueNickname } from "@/lib/utils/generateNickname"
@@ -10,7 +10,19 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [userCount, setUserCount] = useState<number | null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      const supabase = createClient()
+      const { count, error } = await supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+      if (!error) setUserCount(count ?? 0)
+    }
+    fetchUserCount()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,6 +80,9 @@ const RegisterPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
       <h1 className="text-2xl mb-6">新規登録</h1>
+      {userCount !== null && (
+        <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
+      )}
 
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">

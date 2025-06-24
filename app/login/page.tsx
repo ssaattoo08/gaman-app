@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -10,6 +10,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const [userCount, setUserCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      const { count, error } = await supabase
+        .from('profiles')
+        .select('id', { count: 'exact', head: true })
+      if (!error) setUserCount(count ?? 0)
+    }
+    fetchUserCount()
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,6 +47,9 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
       <h1 className="text-2xl mb-6">メールログイン</h1>
+      {userCount !== null && (
+        <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
+      )}
       <form onSubmit={handleLogin} className="w-full max-w-md">
         <input
           type="email"
