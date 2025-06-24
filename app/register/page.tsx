@@ -80,9 +80,6 @@ const RegisterPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
       <h1 className="text-2xl mb-6">新規登録</h1>
-      {userCount !== null && (
-        <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
-      )}
 
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">

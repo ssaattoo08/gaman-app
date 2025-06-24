@@ -47,9 +47,6 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
       <h1 className="text-2xl mb-6">メールログイン</h1>
-      {userCount !== null && (
-        <div className="mb-4 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
-      )}
       <form onSubmit={handleLogin} className="w-full max-w-md">
         <input
           type="email"

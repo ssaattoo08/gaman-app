@@ -45,9 +45,6 @@ export default function Home() {
             ログイン
           </button>
         </div>
-        {userCount !== null && (
-          <div className="mt-6 text-white text-center text-sm">登録ユーザー：{userCount}人</div>
-        )}
       </div>
     </main>
   )
