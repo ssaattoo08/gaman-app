@@ -45,6 +45,7 @@ export default function TimelinePage() {
         setReactions(reactionsData)
         setComments(commentsData)
         console.log("postsData:", postsData)
+        console.log("cheat_day一覧:", postsData.map(p => p.cheat_day))
       }
       setLoading(false)
     }
@@ -122,8 +123,8 @@ export default function TimelinePage() {
   // 投稿の絞り込み
   const filteredPosts = posts.filter(post =>
     selectedTab === "gaman"
-      ? post.cheat_day === false || post.cheat_day === "FALSE" || post.cheat_day === null || post.cheat_day === undefined
-      : post.cheat_day === true || post.cheat_day === "TRUE"
+      ? post.cheat_day === "FALSE" || post.cheat_day === null || post.cheat_day === undefined
+      : post.cheat_day === "TRUE"
   );
 
   return (
