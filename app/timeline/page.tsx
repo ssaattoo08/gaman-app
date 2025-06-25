@@ -19,6 +19,7 @@ export default function TimelinePage() {
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
+  const [selectedTab, setSelectedTab] = useState<"gaman" | "cheatday">("gaman")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,6 +118,10 @@ export default function TimelinePage() {
     }
   }
 
+  const filteredPosts = posts.filter(post =>
+    selectedTab === "gaman" ? !post.cheat_day : post.cheat_day
+  )
+
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -124,11 +129,26 @@ export default function TimelinePage() {
           HOME
         </h1>
 
+        <div className="flex mb-4">
+          <button
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "gaman" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
+            onClick={() => setSelectedTab("gaman")}
+          >
+            ガマン
+          </button>
+          <button
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-pink-500 text-white" : "bg-gray-700 text-gray-300"}`}
+            onClick={() => setSelectedTab("cheatday")}
+          >
+            チートデイ
+          </button>
+        </div>
+
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : (
           <div className="space-y-4">
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <div
                 key={post.id}
                 className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
