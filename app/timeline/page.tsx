@@ -15,6 +15,8 @@ export default function TimelinePage() {
   const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
   const [reactions, setReactions] = useState<any[]>([])
+  const [comments, setComments] = useState<any[]>([])
+  const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
 
@@ -29,12 +31,18 @@ export default function TimelinePage() {
         .from("reactions")
         .select("id, post_id, user_id, type")
 
+      const { data: commentsData, error: commentsError } = await supabase
+        .from("comments")
+        .select("id, post_id, user_id, content, created_at, profiles(nickname)")
+        .order("created_at", { ascending: true })
+
       const { data: { user } } = await supabase.auth.getUser()
       setUserId(user?.id ?? null)
 
-      if (!postsError && !reactionsError) {
+      if (!postsError && !reactionsError && !commentsError) {
         setPosts(postsData)
         setReactions(reactionsData)
+        setComments(commentsData)
       }
       setLoading(false)
     }
@@ -87,6 +95,28 @@ export default function TimelinePage() {
     }
   }
 
+  const handleCommentInput = (postId: string, value: string) => {
+    setCommentInputs((prev) => ({ ...prev, [postId]: value }))
+  }
+
+  const handleCommentSubmit = async (postId: string) => {
+    if (!userId) {
+      alert("ログインしてください")
+      return
+    }
+    const content = commentInputs[postId]?.trim()
+    if (!content) return
+    const { error, data } = await supabase.from("comments").insert({
+      post_id: postId,
+      user_id: userId,
+      content,
+    })
+    if (!error) {
+      setComments(prev => [...prev, { post_id: postId, user_id: userId, content, created_at: new Date().toISOString(), profiles: { nickname: "あなた" } }])
+      setCommentInputs((prev) => ({ ...prev, [postId]: "" }))
+    }
+  }
+
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -129,6 +159,33 @@ export default function TimelinePage() {
                       )}
                     </button>
                   ))}
+                </div>
+                <div className="mt-4">
+                  <div className="text-xs text-gray-400 mb-1">コメント</div>
+                  <div className="space-y-2">
+                    {comments.filter((c) => c.post_id === post.id).map((c) => (
+                      <div key={c.id} className="bg-gray-900 rounded px-3 py-2 text-xs text-white flex items-center gap-2">
+                        <span className="font-bold text-blue-300">{c.profiles?.nickname ?? "名無し"}</span>
+                        <span className="text-gray-400">{formatDate(c.created_at)}</span>
+                        <span className="ml-2">{c.content}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      value={commentInputs[post.id] || ""}
+                      onChange={e => handleCommentInput(post.id, e.target.value)}
+                      className="flex-1 rounded bg-gray-700 text-white px-2 py-1 text-xs"
+                      placeholder="コメントを書く"
+                    />
+                    <button
+                      onClick={() => handleCommentSubmit(post.id)}
+                      className="bg-blue-500 text-white rounded px-3 py-1 text-xs font-bold hover:bg-blue-600"
+                    >
+                      投稿
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
