@@ -25,5 +25,5 @@ body, html {
   background: var(--background);
   color: var(--foreground);
   font-family: "Meiryo UI", "Meiryo", sans-serif; /* フォントを統一 */
-  font-size: 14px;
+  font-size: 12px;
 }
