@@ -8,6 +8,7 @@ export default function NewPost() {
   const [content, setContent] = useState('')
   const [message, setMessage] = useState('')
   const [nickname, setNickname] = useState('')
+  const [cheatDay, setCheatDay] = useState(false)
 
   // ニックネームを取得
   useEffect(() => {
@@ -46,7 +47,8 @@ export default function NewPost() {
     const { error } = await supabase.from('gaman_logs').insert({
       content,
       user_id: user.id,
-      nickname, // ← 追加！
+      nickname,
+      cheat_day: cheatDay,
     })
 
     if (error) {
@@ -55,6 +57,7 @@ export default function NewPost() {
     } else {
       setMessage('投稿できました！')
       setContent('')
+      setCheatDay(false)
     }
   }
 
@@ -67,6 +70,15 @@ export default function NewPost() {
         placeholder="例：ビールを我慢した"
         className="w-full border rounded p-2 mb-4"
       />
+      <label className="flex items-center mb-4">
+        <input
+          type="checkbox"
+          checked={cheatDay}
+          onChange={e => setCheatDay(e.target.checked)}
+          className="mr-2"
+        />
+        チートデイとして投稿
+      </label>
       <button
         onClick={handleSubmit}
         className="bg-green-600 text-white px-4 py-2 rounded"
