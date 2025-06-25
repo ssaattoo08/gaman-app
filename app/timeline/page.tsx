@@ -125,10 +125,7 @@ export default function TimelinePage() {
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          HOME
-        </h1>
-
+        {/* タブUI追加 */}
         <div className="flex mb-4">
           <button
             className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "gaman" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
