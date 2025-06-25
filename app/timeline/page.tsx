@@ -164,10 +164,12 @@ export default function TimelinePage() {
                   <div className="text-xs text-gray-400 mb-1">コメント</div>
                   <div className="space-y-2">
                     {comments.filter((c) => c.post_id === post.id).map((c) => (
-                      <div key={c.id} className="bg-gray-900 rounded px-3 py-2 text-xs text-white flex items-center gap-2">
-                        <span className="font-bold text-blue-300">{c.profiles?.nickname ?? "名無し"}</span>
-                        <span className="text-gray-400">{formatDate(c.created_at)}</span>
-                        <span className="ml-2">{c.content}</span>
+                      <div key={c.id} className="bg-gray-900 rounded px-3 py-2 text-xs text-white">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-blue-300">{c.profiles?.nickname ?? "名無し"}</span>
+                          <span className="text-gray-400">{formatDate(c.created_at)}</span>
+                        </div>
+                        <div className="ml-1">{c.content}</div>
                       </div>
                     ))}
                   </div>
