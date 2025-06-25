@@ -65,14 +65,25 @@ export default function TimelinePage() {
       alert("ログインしてください")
       return
     }
-    if (hasReacted(postId, type)) return
-    const { error } = await supabase.from("reactions").insert({
-      post_id: postId,
-      user_id: userId,
-      type,
-    })
-    if (!error) {
-      setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+    if (hasReacted(postId, type)) {
+      const { error } = await supabase
+        .from("reactions")
+        .delete()
+        .match({ post_id: postId, user_id: userId, type })
+      if (!error) {
+        setReactions(prev => prev.filter(
+          r => !(r.post_id === postId && r.user_id === userId && r.type === type)
+        ))
+      }
+    } else {
+      const { error } = await supabase.from("reactions").insert({
+        post_id: postId,
+        user_id: userId,
+        type,
+      })
+      if (!error) {
+        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+      }
     }
   }
 
@@ -107,7 +118,7 @@ export default function TimelinePage() {
                     <button
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
-                      className={`px-3 py-1 rounded-full text-sm font-bold border transition-colors duration-150 ${
+                      className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors duration-150 ${
                         hasReacted(post.id, r.type)
                           ? "bg-blue-500 text-white border-blue-500"
                           : "bg-gray-700 text-gray-200 border-gray-500 hover:bg-blue-600 hover:text-white"
