@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, PlusSquare, User, Bell } from "lucide-react"
 import { useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 
 export default function BottomNav() {
   const pathname = usePathname()
@@ -15,6 +16,26 @@ export default function BottomNav() {
   if (hideOnPages.includes(pathname)) {
     return null
   }
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      const supabase = createClient()
+      // 自分のID取得
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      // 自分の投稿に対する未読リアクション数を取得
+      const { data, error } = await supabase
+        .from("reactions")
+        .select("id, read, gaman_logs(user_id)")
+        .eq("read", false)
+      if (!error && data) {
+        // 自分の投稿に対する未読のみカウント
+        const count = data.filter((r: any) => r.gaman_logs?.user_id === user.id).length
+        setUnreadCount(count)
+      }
+    }
+    fetchUnreadCount()
+  }, [])
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-black border-t border-gray-700 z-50 md:hidden">
