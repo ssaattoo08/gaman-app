@@ -2,10 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, PlusSquare, User } from "lucide-react"
+import { Home, PlusSquare, User, Bell } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const [unreadCount, setUnreadCount] = useState(0) // 仮実装
+  // 本来はuseEffectでSupabaseから未読件数を取得
 
   // 表示したくないページ
   const hideOnPages = ["/", "/login", "/register"]
@@ -23,6 +26,15 @@ export default function BottomNav() {
         <Link href="/post" className="flex flex-col items-center justify-center w-full h-full">
           <PlusSquare color={pathname === "/post" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/post" ? "text-white" : "text-gray-400"}`}>投稿</span>
+        </Link>
+        <Link href="/notifications" className="flex flex-col items-center justify-center w-full h-full relative">
+          <Bell color={pathname === "/notifications" ? "white" : "gray"} />
+          <span className={`text-xs ${pathname === "/notifications" ? "text-white" : "text-gray-400"}`}>通知</span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+              {unreadCount}
+            </span>
+          )}
         </Link>
         <Link href="/mypage" className="flex flex-col items-center justify-center w-full h-full">
           <User color={pathname === "/mypage" ? "white" : "gray"} />
