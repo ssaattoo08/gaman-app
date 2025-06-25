@@ -19,11 +19,17 @@ export default function NotificationsPage() {
       // 自分の投稿に対するリアクションを取得
       const { data, error } = await supabase
         .from("reactions")
-        .select(`id, type, created_at, user_id, post_id, profiles:nickname, gaman_logs(content)`) // profilesはリアクションした人
+        .select(`id, type, created_at, user_id, post_id, read, profiles:nickname, gaman_logs(content, user_id)`)
         .eq("gaman_logs.user_id", user.id)
         .order("created_at", { ascending: false })
       if (!error && data) {
         setNotifications(data)
+        // 未読（read=false）の通知IDを抽出
+        const unreadIds = data.filter((n: any) => n.read === false).map((n: any) => n.id)
+        if (unreadIds.length > 0) {
+          // 一括でread=trueに更新
+          await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
+        }
       }
       setLoading(false)
     }
