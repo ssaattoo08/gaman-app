@@ -5,26 +5,39 @@ import { useEffect, useState } from "react"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 
+const REACTION_TYPES = [
+  { type: "erai", label: "えらいね！" },
+  { type: "sugoi", label: "すごい！" },
+  { type: "shinpai", label: "心配！" },
+]
+
 export default function TimelinePage() {
   const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
+  const [reactions, setReactions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await supabase
+      const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
         .select("id, content, created_at, user_id, profiles(nickname)")
         .order("created_at", { ascending: false })
 
-      if (error) {
-        console.error("エラー:", error.message)
-      } else {
-        setPosts(data)
+      const { data: reactionsData, error: reactionsError } = await supabase
+        .from("reactions")
+        .select("id, post_id, user_id, type")
+
+      const { data: { user } } = await supabase.auth.getUser()
+      setUserId(user?.id ?? null)
+
+      if (!postsError && !reactionsError) {
+        setPosts(postsData)
+        setReactions(reactionsData)
       }
       setLoading(false)
     }
-
     fetchData()
   }, [])
 
@@ -39,6 +52,28 @@ export default function TimelinePage() {
       hour12: false,
       timeZone: "Asia/Tokyo"
     })
+  }
+
+  const getReactionCount = (postId: string, type: string) =>
+    reactions.filter(r => r.post_id === postId && r.type === type).length
+
+  const hasReacted = (postId: string, type: string) =>
+    reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
+
+  const handleReaction = async (postId: string, type: string) => {
+    if (!userId) {
+      alert("ログインしてください")
+      return
+    }
+    if (hasReacted(postId, type)) return
+    const { error } = await supabase.from("reactions").insert({
+      post_id: postId,
+      user_id: userId,
+      type,
+    })
+    if (!error) {
+      setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+    }
   }
 
   return (
@@ -67,6 +102,23 @@ export default function TimelinePage() {
                   {formatDate(post.created_at)}
                 </div>
                 <p className="text-base">{post.content}</p>
+                <div className="flex gap-2 mt-3">
+                  {REACTION_TYPES.map(r => (
+                    <button
+                      key={r.type}
+                      onClick={() => handleReaction(post.id, r.type)}
+                      className={`px-3 py-1 rounded-full text-sm font-bold border transition-colors duration-150 ${
+                        hasReacted(post.id, r.type)
+                          ? "bg-blue-500 text-white border-blue-500"
+                          : "bg-gray-700 text-gray-200 border-gray-500 hover:bg-blue-600 hover:text-white"
+                      }`}
+                    >
+                      {r.label} {getReactionCount(post.id, r.type) > 0 && (
+                        <span>({getReactionCount(post.id, r.type)})</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
