@@ -25,7 +25,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname)")
+        .select("id, content, created_at, user_id, profiles(nickname), cheat_day")
         .order("created_at", { ascending: false })
 
       const { data: reactionsData, error: reactionsError } = await supabase
@@ -44,6 +44,7 @@ export default function TimelinePage() {
         setPosts(postsData)
         setReactions(reactionsData)
         setComments(commentsData)
+        console.log("postsData:", postsData)
       }
       setLoading(false)
     }
