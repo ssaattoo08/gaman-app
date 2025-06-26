@@ -165,7 +165,7 @@ export default function TimelinePage() {
                 className={`rounded-2xl shadow-xl p-6 border border-gray-700 bg-black`}
               >
                 <div className="flex items-center mb-2">
-                  <span className={`font-bold text-lg flex items-center gap-2 text-white`}>
+                  <span className={`font-bold text-lg flex items-center gap-2 ${selectedTab === 'gaman' ? 'text-purple-300' : 'text-red-300'}`}>
                     <Link href={`/user/${post.user_id}`} className="hover:underline">
                       {post.profiles?.nickname ?? "名無し"}
                     </Link>
