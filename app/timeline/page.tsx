@@ -142,13 +142,13 @@ export default function TimelinePage() {
         {/* タブUI追加 */}
         <div className="flex mb-4">
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "gaman" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "gaman" ? "bg-blue-400 text-white" : "bg-gray-700 text-gray-300"}`}
             onClick={() => setSelectedTab("gaman")}
           >
             ガマン
           </button>
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-pink-500 text-white" : "bg-gray-700 text-gray-300"}`}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-blue-400 text-white" : "bg-gray-700 text-gray-300"}`}
             onClick={() => setSelectedTab("cheatday")}
           >
             チートデイ
@@ -181,7 +181,7 @@ export default function TimelinePage() {
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
                       className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm
-                        bg-blue-600 hover:bg-blue-400
+                        bg-blue-400 hover:bg-blue-300
                         ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}
                       `}
                     >
@@ -214,7 +214,7 @@ export default function TimelinePage() {
                     />
                     <button
                       onClick={() => handleCommentSubmit(post.id)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-bold transition"
+                      className="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded-xl font-bold transition"
                     >
                       投稿
                     </button>
