@@ -35,7 +35,7 @@ export default function LoginPage() {
       setMessage('ログインに失敗しました: ' + error.message)
     } else {
       setMessage('ログイン成功！')
-      router.push('/mypage')
+      window.location.href = '/mypage'
     }
   }
 
