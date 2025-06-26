@@ -89,9 +89,6 @@ export default function MyPage() {
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          マイページ
-        </h1>
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : (
