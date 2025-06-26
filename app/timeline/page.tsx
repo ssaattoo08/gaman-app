@@ -138,7 +138,7 @@ export default function TimelinePage() {
 
   return (
     <>
-      <main className="px-4 py-6 max-w-xl mx-auto">
+      <main className="px-4 py-4 max-w-[40rem] mx-auto">
         {/* タブUI追加 */}
         <div className="flex mb-4">
           <button
@@ -158,7 +158,7 @@ export default function TimelinePage() {
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
