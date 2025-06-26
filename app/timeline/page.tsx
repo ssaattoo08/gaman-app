@@ -180,7 +180,7 @@ export default function TimelinePage() {
                     <button
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
-                      className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm bg-black hover:bg-gray-800 ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}`}
+                      className={`rounded-full px-4 py-1 font-bold transition shadow text-xs text-gray-400 bg-black hover:bg-gray-800 ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}`}
                     >
                       {r.label} {getReactionCount(post.id, r.type) > 0 && (
                         <span>({getReactionCount(post.id, r.type)})</span>
