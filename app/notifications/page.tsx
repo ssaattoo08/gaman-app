@@ -25,7 +25,7 @@ export default function NotificationsPage() {
       // 自分の投稿に対するリアクションを取得
       const { data, error } = await supabase
         .from("reactions")
-        .select(`id, type, created_at, user_id, post_id, read, profiles:nickname`)
+        .select("id, type, created_at, user_id, post_id, read")
         .order("created_at", { ascending: false })
       
       if (!error && data && isMountedRef.current) {
