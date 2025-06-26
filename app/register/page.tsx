@@ -65,9 +65,9 @@ const RegisterPage = () => {
         return
       }
 
-      setSuccessMessage("新規登録が完了しました。ログインページへ移動します。")
+      setSuccessMessage("新規登録が完了しました。マイページへ移動します。")
       setTimeout(() => {
-        router.push("/mypage")  // 登録後、ログインページへリダイレクト
+        window.location.href = "/mypage";  // 登録後、マイページへリダイレクト
       }, 2000)
     } else {
       setError("ユーザー情報が取得できませんでした。")
