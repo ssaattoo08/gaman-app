@@ -148,7 +148,7 @@ export default function TimelinePage() {
             ガマン
           </button>
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-blue-400 text-white" : "bg-gray-700 text-gray-300"}`}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-red-400 text-white" : "bg-gray-700 text-gray-300"}`}
             onClick={() => setSelectedTab("cheatday")}
           >
             チートデイ
@@ -162,10 +162,10 @@ export default function TimelinePage() {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-2xl shadow-xl p-6 border border-gray-700"
+                className="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-2xl shadow-xl p-6 border-gray-700"
               >
                 <div className="flex items-center mb-2">
-                  <span className="font-bold text-lg text-blue-300 flex items-center gap-2">
+                  <span className={`font-bold text-lg flex items-center gap-2 ${selectedTab === 'gaman' ? 'text-blue-300' : 'text-red-300'}`}>
                     <Link href={`/user/${post.user_id}`} className="hover:underline">
                       {post.profiles?.nickname ?? "名無し"}
                     </Link>
@@ -181,7 +181,7 @@ export default function TimelinePage() {
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
                       className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm
-                        bg-blue-400 hover:bg-blue-300
+                        ${selectedTab === 'gaman' ? 'bg-blue-400 hover:bg-blue-300' : 'bg-red-400 hover:bg-red-300'}
                         ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}
                       `}
                     >
@@ -196,7 +196,7 @@ export default function TimelinePage() {
                     {comments.filter((c) => c.post_id === post.id).map((c) => (
                       <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-blue-300">{c.profiles?.nickname ?? "名無し"}</span>
+                          <span className={`font-bold ${selectedTab === 'gaman' ? 'text-blue-300' : 'text-red-300'}`}>{c.profiles?.nickname ?? "名無し"}</span>
                           <span className="text-gray-400">{formatDate(c.created_at)}</span>
                         </div>
                         <div className="ml-1">{c.content}</div>
@@ -208,12 +208,12 @@ export default function TimelinePage() {
                       type="text"
                       value={commentInputs[post.id] || ""}
                       onChange={e => handleCommentInput(post.id, e.target.value)}
-                      className="flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 ${selectedTab === 'gaman' ? 'focus:ring-blue-500' : 'focus:ring-red-500'}`}
                       placeholder="コメントを書く"
                     />
                     <button
                       onClick={() => handleCommentSubmit(post.id)}
-                      className="bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded-xl font-bold transition"
+                      className={`text-white px-4 py-2 rounded-xl font-bold transition ${selectedTab === 'gaman' ? 'bg-blue-400 hover:bg-blue-300' : 'bg-red-400 hover:bg-red-300'}`}
                     >
                       投稿
                     </button>
