@@ -19,17 +19,24 @@ export default function BottomNav() {
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
-      const supabase = createClient()
-      // 自分のID取得
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      // 自分の投稿に対する未読リアクション数を取得
-      const { data, error } = await supabase
-        .from("reactions")
-        .select("id, read")
-        .eq("read", false)
-      if (!error && data) {
-        setUnreadCount(data.length)
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          setUnreadCount(0)
+          return
+        }
+        const { data, error } = await supabase
+          .from("reactions")
+          .select("id, read")
+          .eq("read", false)
+        if (error) {
+          setUnreadCount(0)
+          return
+        }
+        setUnreadCount(Array.isArray(data) ? data.length : 0)
+      } catch (e) {
+        setUnreadCount(0)
       }
     }
     fetchUnreadCount()

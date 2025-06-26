@@ -12,15 +12,24 @@ export default function TopNav() {
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      const { data, error } = await supabase
-        .from("reactions")
-        .select("id, read")
-        .eq("read", false)
-      if (!error && data) {
-        setUnreadCount(data.length)
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          setUnreadCount(0)
+          return
+        }
+        const { data, error } = await supabase
+          .from("reactions")
+          .select("id, read")
+          .eq("read", false)
+        if (error) {
+          setUnreadCount(0)
+          return
+        }
+        setUnreadCount(Array.isArray(data) ? data.length : 0)
+      } catch (e) {
+        setUnreadCount(0)
       }
     }
     fetchUnreadCount()
