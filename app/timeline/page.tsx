@@ -148,7 +148,7 @@ export default function TimelinePage() {
             ガマン
           </button>
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-red-400 text-white" : "bg-gray-700 text-gray-300"}`}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-black text-white" : "bg-gray-700 text-gray-300"}`}
             onClick={() => setSelectedTab("cheatday")}
           >
             チートデイ
@@ -162,10 +162,10 @@ export default function TimelinePage() {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`rounded-2xl shadow-xl p-6 border border-gray-700 ${selectedTab === 'gaman' ? 'bg-black' : 'bg-gradient-to-r from-gray-800 via-gray-900 to-black'}`}
+                className={`rounded-2xl shadow-xl p-6 border border-gray-700 bg-black`}
               >
                 <div className="flex items-center mb-2">
-                  <span className={`font-bold text-lg flex items-center gap-2 ${selectedTab === 'gaman' ? 'text-white' : 'text-red-300'}`}>
+                  <span className={`font-bold text-lg flex items-center gap-2 text-white`}>
                     <Link href={`/user/${post.user_id}`} className="hover:underline">
                       {post.profiles?.nickname ?? "名無し"}
                     </Link>
@@ -180,10 +180,7 @@ export default function TimelinePage() {
                     <button
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
-                      className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm
-                        ${selectedTab === 'gaman' ? 'bg-black hover:bg-gray-800' : 'bg-red-400 hover:bg-red-300'}
-                        ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}
-                      `}
+                      className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm bg-black hover:bg-gray-800 ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}`}
                     >
                       {r.label} {getReactionCount(post.id, r.type) > 0 && (
                         <span>({getReactionCount(post.id, r.type)})</span>
@@ -196,7 +193,7 @@ export default function TimelinePage() {
                     {comments.filter((c) => c.post_id === post.id).map((c) => (
                       <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`font-bold ${selectedTab === 'gaman' ? 'text-white' : 'text-red-300'}`}>{c.profiles?.nickname ?? "名無し"}</span>
+                          <span className={`font-bold text-white`}>{c.profiles?.nickname ?? "名無し"}</span>
                           <span className="text-gray-400">{formatDate(c.created_at)}</span>
                         </div>
                         <div className="ml-1">{c.content}</div>
@@ -208,12 +205,12 @@ export default function TimelinePage() {
                       type="text"
                       value={commentInputs[post.id] || ""}
                       onChange={e => handleCommentInput(post.id, e.target.value)}
-                      className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 ${selectedTab === 'gaman' ? 'focus:ring-white' : 'focus:ring-red-500'}`}
+                      className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white`}
                       placeholder="コメントを書く"
                     />
                     <button
                       onClick={() => handleCommentSubmit(post.id)}
-                      className={`text-white px-4 py-2 rounded-xl font-bold transition ${selectedTab === 'gaman' ? 'bg-black hover:bg-gray-800' : 'bg-red-400 hover:bg-red-300'}`}
+                      className={`text-white px-4 py-2 rounded-xl font-bold transition bg-black hover:bg-gray-800`}
                     >
                       投稿
                     </button>
