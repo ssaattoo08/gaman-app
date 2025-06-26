@@ -6,9 +6,9 @@ import Link from "next/link"
 import { supabase } from "@/lib/supabase/client"
 
 const REACTION_TYPES = [
-  { type: "erai", label: "えらいね！" },
-  { type: "sugoi", label: "すごい！" },
-  { type: "shinpai", label: "心配！" },
+  { type: "erai", label: "えらい" },
+  { type: "sugoi", label: "すごい" },
+  { type: "shinpai", label: "心配" },
 ]
 
 export default function TimelinePage() {
