@@ -158,32 +158,35 @@ export default function TimelinePage() {
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+                className="bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-2xl shadow-xl p-6 border border-gray-700"
               >
-                <div className="text-sm text-gray-400 mb-2">
-                  <span className="font-semibold text-blue-300">
+                <div className="flex items-center mb-2">
+                  <span className="font-bold text-lg text-blue-300 flex items-center gap-2">
+                    <span className="inline-block w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center mr-2">🍖</span>
                     <Link href={`/user/${post.user_id}`} className="hover:underline">
                       {post.profiles?.nickname ?? "名無し"}
                     </Link>
                   </span>
-                  {"｜"}
-                  {formatDate(post.created_at)}
+                  <span className="text-xs text-gray-400 ml-2">{formatDate(post.created_at)}</span>
                 </div>
-                <p className="text-base">{post.content}</p>
-                <div className="flex gap-2 mt-3">
-                  {REACTION_TYPES.map(r => (
+                <div className="text-base text-white mt-2 mb-4">
+                  {post.content}
+                </div>
+                <div className="flex gap-2 mb-2">
+                  {REACTION_TYPES.map((r, i) => (
                     <button
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
-                      className={`px-3 py-1 rounded-full text-xs font-bold border transition-colors duration-150 ${
-                        hasReacted(post.id, r.type)
-                          ? "bg-blue-500 text-white border-blue-500"
-                          : "bg-gray-700 text-gray-200 border-gray-500 hover:bg-blue-600 hover:text-white"
-                      }`}
+                      className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm
+                        ${r.type === "erai" ? "bg-blue-600 hover:bg-blue-400" : ""}
+                        ${r.type === "sugoi" ? "bg-pink-600 hover:bg-pink-400" : ""}
+                        ${r.type === "shinpai" ? "bg-yellow-600 hover:bg-yellow-400 text-black" : ""}
+                        ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}
+                      `}
                     >
                       {r.label} {getReactionCount(post.id, r.type) > 0 && (
                         <span>({getReactionCount(post.id, r.type)})</span>
@@ -192,10 +195,10 @@ export default function TimelinePage() {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <div className="text-xs text-gray-400 mb-1">コメント</div>
+                  <div className="text-xs text-gray-400 mb-1">💬 コメント</div>
                   <div className="space-y-2">
                     {comments.filter((c) => c.post_id === post.id).map((c) => (
-                      <div key={c.id} className="bg-gray-900 rounded px-3 py-2 text-xs text-white">
+                      <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-bold text-blue-300">{c.profiles?.nickname ?? "名無し"}</span>
                           <span className="text-gray-400">{formatDate(c.created_at)}</span>
@@ -209,12 +212,12 @@ export default function TimelinePage() {
                       type="text"
                       value={commentInputs[post.id] || ""}
                       onChange={e => handleCommentInput(post.id, e.target.value)}
-                      className="flex-1 rounded bg-gray-700 text-white px-2 py-1 text-xs"
+                      className="flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="コメントを書く"
                     />
                     <button
                       onClick={() => handleCommentSubmit(post.id)}
-                      className="bg-blue-500 text-white rounded px-3 py-1 text-xs font-bold hover:bg-blue-600"
+                      className="bg-green-600 hover:bg-green-400 text-white px-4 py-2 rounded-xl font-bold transition"
                     >
                       投稿
                     </button>
