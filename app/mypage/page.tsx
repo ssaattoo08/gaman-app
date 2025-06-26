@@ -15,41 +15,46 @@ export default function MyPage() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser()
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser()
 
-      if (error || !user) {
-        console.error("ユーザーが取得できませんでした", error)
-        router.push("/login")
-        return
+        if (error || !user) {
+          console.error("ユーザーが取得できませんでした", error)
+          router.push("/login")
+          return
+        }
+
+        setUserId(user.id)
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("nickname")
+          .eq("id", user.id)
+          .single()
+
+        setNickname(profile?.nickname || "名無し")
+
+        const { data: userPosts } = await supabase
+          .from("gaman_logs")
+          .select("id, content, created_at, user_id")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+
+        console.log("userPosts", userPosts)
+
+        setPosts(userPosts || [])
+      } catch (e) {
+        console.error("データ取得時にエラー", e)
+      } finally {
+        setLoading(false)
       }
-
-      setUserId(user.id)
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("nickname")
-        .eq("id", user.id)
-        .single()
-
-      setNickname(profile?.nickname || "名無し")
-
-      const { data: userPosts } = await supabase
-        .from("gaman_logs")
-        .select("id, content, created_at, user_id")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-
-      console.log("userPosts", userPosts)
-
-      setPosts(userPosts || [])
-      setLoading(false)
     }
 
     fetchUserData()
-  }, [router])
+  }, [router, supabase])
 
   const formatDate = (iso: string) => {
     const date = new Date(iso)
