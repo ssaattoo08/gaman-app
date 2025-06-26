@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
@@ -12,26 +12,40 @@ export default function UserProfilePage() {
   const [posts, setPosts] = useState<any[]>([])
   const [nickname, setNickname] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const isMountedRef = useRef(true)
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchUserData = async () => {
-      if (!userId) return
+      if (!userId || !isMountedRef.current) return
+      
       const { data: profile } = await supabase
         .from("profiles")
         .select("nickname")
         .eq("id", userId)
         .single()
-      setNickname(profile?.nickname || "名無し")
+      
+      if (isMountedRef.current) {
+        setNickname(profile?.nickname || "名無し")
+      }
 
       const { data: userPosts } = await supabase
         .from("gaman_logs")
         .select("id, content, created_at, user_id")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
-      setPosts(userPosts || [])
-      setLoading(false)
+      
+      if (isMountedRef.current) {
+        setPosts(userPosts || [])
+        setLoading(false)
+      }
     }
     fetchUserData()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [userId])
 
   const formatDate = (iso: string) => {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { createClient } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
 
@@ -9,20 +9,28 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const isMountedRef = useRef(true)
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchNotifications = async () => {
       // 自分のID取得
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      setUserId(user.id)
+      if (!user || !isMountedRef.current) return
+      
+      if (isMountedRef.current) {
+        setUserId(user.id)
+      }
+      
       // 自分の投稿に対するリアクションを取得
       const { data, error } = await supabase
         .from("reactions")
         .select(`id, type, created_at, user_id, post_id, read, profiles:nickname, gaman_logs(content, user_id)`)
         .eq("gaman_logs.user_id", user.id)
         .order("created_at", { ascending: false })
-      if (!error && data) {
+      
+      if (!error && data && isMountedRef.current) {
         setNotifications(data)
         // 未読（read=false）の通知IDを抽出
         const unreadIds = data.filter((n: any) => n.read === false).map((n: any) => n.id)
@@ -31,9 +39,16 @@ export default function NotificationsPage() {
           await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
         }
       }
-      setLoading(false)
+      
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
     fetchNotifications()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [])
 
   const formatDate = (iso: string) => {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { createClient } from "../../lib/supabase/client"
 import BottomNav from "../../components/BottomNav"
 import { useRouter } from "next/navigation"
@@ -12,8 +12,11 @@ export default function MyPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [nickname, setNickname] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const isMountedRef = useRef(true)
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchUserData = async () => {
       try {
         const {
@@ -21,13 +24,17 @@ export default function MyPage() {
           error,
         } = await supabase.auth.getUser()
 
-        if (error || !user) {
-          console.error("ユーザーが取得できませんでした", error)
-          router.push("/login")
+        if (error || !user || !isMountedRef.current) {
+          if (isMountedRef.current) {
+            console.error("ユーザーが取得できませんでした", error)
+            router.push("/login")
+          }
           return
         }
 
-        setUserId(user.id)
+        if (isMountedRef.current) {
+          setUserId(user.id)
+        }
 
         const { data: profile } = await supabase
           .from("profiles")
@@ -35,7 +42,9 @@ export default function MyPage() {
           .eq("id", user.id)
           .single()
 
-        setNickname(profile?.nickname || "名無し")
+        if (isMountedRef.current) {
+          setNickname(profile?.nickname || "名無し")
+        }
 
         const { data: userPosts } = await supabase
           .from("gaman_logs")
@@ -45,15 +54,23 @@ export default function MyPage() {
 
         console.log("userPosts", userPosts)
 
-        setPosts(userPosts || [])
+        if (isMountedRef.current) {
+          setPosts(userPosts || [])
+        }
       } catch (e) {
         console.error("データ取得時にエラー", e)
       } finally {
-        setLoading(false)
+        if (isMountedRef.current) {
+          setLoading(false)
+        }
       }
     }
 
     fetchUserData()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [router, supabase])
 
   const formatDate = (iso: string) => {

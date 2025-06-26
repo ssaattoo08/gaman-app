@@ -1,7 +1,7 @@
 "use client"
 
 import { createClient } from "@/lib/supabase/client"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 
@@ -20,8 +20,11 @@ export default function TimelinePage() {
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<"gaman" | "cheatday">("gaman")
+  const isMountedRef = useRef(true)
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
@@ -38,18 +41,25 @@ export default function TimelinePage() {
         .order("created_at", { ascending: true })
 
       const { data: { user } } = await supabase.auth.getUser()
-      setUserId(user?.id ?? null)
+      
+      if (isMountedRef.current) {
+        setUserId(user?.id ?? null)
 
-      if (!postsError && !reactionsError && !commentsError) {
-        setPosts(postsData)
-        setReactions(reactionsData)
-        setComments(commentsData)
-        console.log("postsData:", postsData)
-        console.log("cheat_day一覧:", postsData.map(p => p.cheat_day))
+        if (!postsError && !reactionsError && !commentsError) {
+          setPosts(postsData)
+          setReactions(reactionsData)
+          setComments(commentsData)
+          console.log("postsData:", postsData)
+          console.log("cheat_day一覧:", postsData.map(p => p.cheat_day))
+        }
+        setLoading(false)
       }
-      setLoading(false)
     }
     fetchData()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [])
 
   const formatDate = (iso: string) => {

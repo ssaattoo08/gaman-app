@@ -1,10 +1,9 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
-const supabase = createSupabaseClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
+// グローバルなsupabaseインスタンスをやめ、毎回新規生成する
 export const createClient = () => {
-  return supabase
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 }

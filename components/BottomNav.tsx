@@ -3,12 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, PlusSquare, User, Bell } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { createClient } from "@/lib/supabase/client"
 
 export default function BottomNav() {
   const pathname = usePathname()
   const [unreadCount, setUnreadCount] = useState(0) // 仮実装
+  const isMountedRef = useRef(true)
   // 本来はuseEffectでSupabaseから未読件数を取得
 
   // 表示したくないページ
@@ -18,28 +19,42 @@ export default function BottomNav() {
   }
 
   useEffect(() => {
+    isMountedRef.current = true
+
     const fetchUnreadCount = async () => {
       try {
         const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) {
-          setUnreadCount(0)
+        if (!user || !isMountedRef.current) {
+          if (isMountedRef.current) {
+            setUnreadCount(0)
+          }
           return
         }
         const { data, error } = await supabase
           .from("reactions")
           .select("id, read")
           .eq("read", false)
-        if (error) {
-          setUnreadCount(0)
+        if (error || !isMountedRef.current) {
+          if (isMountedRef.current) {
+            setUnreadCount(0)
+          }
           return
         }
-        setUnreadCount(Array.isArray(data) ? data.length : 0)
+        if (isMountedRef.current) {
+          setUnreadCount(Array.isArray(data) ? data.length : 0)
+        }
       } catch (e) {
-        setUnreadCount(0)
+        if (isMountedRef.current) {
+          setUnreadCount(0)
+        }
       }
     }
     fetchUnreadCount()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [])
 
   return (
