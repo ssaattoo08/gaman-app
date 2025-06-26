@@ -15,6 +15,7 @@ export default function NotificationsPage() {
   const handleMarkAllAsRead = async () => {
     setMarkingRead(true)
     const unreadIds = notifications.filter((n) => n.read === false).map((n) => n.id)
+    console.log('unreadIds:', unreadIds)
     if (unreadIds.length > 0) {
       await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
       // 再取得
