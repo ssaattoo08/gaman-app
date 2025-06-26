@@ -29,9 +29,24 @@ export default function NotificationsPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user || !isMountedRef.current) return
     setUserId(user.id)
+
+    // 1. 自分の投稿ID一覧を取得
+    const { data: myPosts } = await supabase
+      .from("gaman_logs")
+      .select("id")
+      .eq("user_id", user.id)
+    const myPostIds = (myPosts ?? []).map(p => p.id)
+    if (myPostIds.length === 0) {
+      setNotifications([])
+      setLoading(false)
+      return
+    }
+
+    // 2. 自分の投稿への通知だけ取得
     const { data, error } = await supabase
       .from("reactions")
       .select("id, type, created_at, user_id, post_id, read")
+      .in("post_id", myPostIds)
       .order("created_at", { ascending: false })
     if (!error && data && isMountedRef.current) {
       const notificationsWithDetails = await Promise.all(
