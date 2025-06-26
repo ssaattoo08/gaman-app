@@ -9,61 +9,59 @@ export default function NotificationsPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
+  const [markingRead, setMarkingRead] = useState(false)
+
+  // すべて既読にする処理
+  const handleMarkAllAsRead = async () => {
+    setMarkingRead(true)
+    const unreadIds = notifications.filter((n) => n.read === false).map((n) => n.id)
+    if (unreadIds.length > 0) {
+      await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
+      // 再取得
+      await fetchNotifications()
+    }
+    setMarkingRead(false)
+  }
+
+  // fetchNotificationsをuseEffect外でも使えるように修正
+  const fetchNotifications = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || !isMountedRef.current) return
+    setUserId(user.id)
+    const { data, error } = await supabase
+      .from("reactions")
+      .select("id, type, created_at, user_id, post_id, read")
+      .order("created_at", { ascending: false })
+    if (!error && data && isMountedRef.current) {
+      const notificationsWithDetails = await Promise.all(
+        data.map(async (n) => {
+          let nickname = "名無し"
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("nickname")
+            .eq("id", n.user_id)
+            .single()
+          if (profile && profile.nickname) nickname = profile.nickname
+          let postContent = ""
+          const { data: post } = await supabase
+            .from("gaman_logs")
+            .select("content")
+            .eq("id", n.post_id)
+            .single()
+          if (post && post.content) postContent = post.content
+          return { ...n, nickname, postContent }
+        })
+      )
+      setNotifications(notificationsWithDetails)
+    }
+    if (isMountedRef.current) {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     isMountedRef.current = true
-
-    const fetchNotifications = async () => {
-      // 自分のID取得
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user || !isMountedRef.current) return
-      setUserId(user.id)
-
-      // reactionsテーブルから通知データ取得
-      const { data, error } = await supabase
-        .from("reactions")
-        .select("id, type, created_at, user_id, post_id, read")
-        .order("created_at", { ascending: false })
-
-      if (!error && data && isMountedRef.current) {
-        // 各通知ごとにnicknameと投稿内容を取得
-        const notificationsWithDetails = await Promise.all(
-          data.map(async (n) => {
-            // ニックネーム取得
-            let nickname = "名無し"
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("nickname")
-              .eq("id", n.user_id)
-              .single()
-            if (profile && profile.nickname) nickname = profile.nickname
-
-            // 投稿内容取得
-            let postContent = ""
-            const { data: post } = await supabase
-              .from("gaman_logs")
-              .select("content")
-              .eq("id", n.post_id)
-              .single()
-            if (post && post.content) postContent = post.content
-
-            return { ...n, nickname, postContent }
-          })
-        )
-        setNotifications(notificationsWithDetails)
-        // 未読（read=false）の通知IDを抽出
-        const unreadIds = notificationsWithDetails.filter((n) => n.read === false).map((n) => n.id)
-        if (unreadIds.length > 0) {
-          // 一括でread=trueに更新
-          await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
-        }
-      }
-      if (isMountedRef.current) {
-        setLoading(false)
-      }
-    }
     fetchNotifications()
-
     return () => {
       isMountedRef.current = false
     }
@@ -93,6 +91,15 @@ export default function NotificationsPage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">通知</h1>
+        {notifications.some(n => n.read === false) && (
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={markingRead}
+            className="mb-4 px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+          >
+            {markingRead ? "既読にしています..." : "すべて既読にする"}
+          </button>
+        )}
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : notifications.length === 0 ? (
