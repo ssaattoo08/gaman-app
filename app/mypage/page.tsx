@@ -12,6 +12,7 @@ export default function MyPage() {
   const [nickname, setNickname] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
+  const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
 
   useEffect(() => {
     isMountedRef.current = true
@@ -47,7 +48,7 @@ export default function MyPage() {
 
         const { data: userPosts } = await supabase
           .from("gaman_logs")
-          .select("id, content, created_at, user_id")
+          .select("id, content, created_at, user_id, cheat_day")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
 
@@ -103,22 +104,41 @@ export default function MyPage() {
               <div className="text-lg font-bold text-white">{nickname}</div>
               <div className="text-sm text-gray-400 mt-1">投稿数: {posts.length}</div>
             </div>
+            {/* 投稿タブ */}
+            <div className="flex mb-4">
+              <button
+                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'gaman' ? 'bg-blue-400 text-white' : 'bg-gray-700 text-gray-300'}`}
+                onClick={() => setSelectedTab('gaman')}
+              >
+                ガマン
+              </button>
+              <button
+                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'cheatday' ? 'bg-red-400 text-white' : 'bg-gray-700 text-gray-300'}`}
+                onClick={() => setSelectedTab('cheatday')}
+              >
+                チートデイ
+              </button>
+            </div>
             {/* 投稿一覧 */}
             <div className="space-y-4">
               {posts.length === 0 ? (
                 <p className="text-center text-gray-400">まだ投稿がありません</p>
               ) : (
-                posts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
-                  >
-                    <div className="flex items-center mb-2">
-                      <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
+                posts
+                  .filter(post => selectedTab === 'gaman'
+                    ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
+                    : post.cheat_day === true)
+                  .map((post) => (
+                    <div
+                      key={post.id}
+                      className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+                    >
+                      <div className="flex items-center mb-2">
+                        <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
+                      </div>
+                      <p className="text-base whitespace-pre-line break-words">{post.content}</p>
                     </div>
-                    <p className="text-base whitespace-pre-line break-words">{post.content}</p>
-                  </div>
-                ))
+                  ))
               )}
             </div>
           </>
