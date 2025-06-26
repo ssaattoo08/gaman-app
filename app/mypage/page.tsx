@@ -13,6 +13,9 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
   const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
+  const [reactions, setReactions] = useState<any[]>([])
+  const [comments, setComments] = useState<any[]>([])
+  const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
 
   useEffect(() => {
     isMountedRef.current = true
@@ -57,6 +60,20 @@ export default function MyPage() {
         if (isMountedRef.current) {
           setPosts(userPosts || [])
         }
+
+        // リアクション・コメントも取得
+        const { data: reactionsData } = await supabase
+          .from("reactions")
+          .select("id, post_id, user_id, type")
+        const { data: commentsData } = await supabase
+          .from("comments")
+          .select("id, post_id, user_id, content, created_at, profiles(nickname)")
+          .order("created_at", { ascending: true })
+
+        if (isMountedRef.current) {
+          setReactions(reactionsData || [])
+          setComments(commentsData || [])
+        }
       } catch (e) {
         console.error("データ取得時にエラー", e)
       } finally {
@@ -84,6 +101,74 @@ export default function MyPage() {
       hour12: false,
       timeZone: "Asia/Tokyo"
     })
+  }
+
+  // タイムラインと同じリアクション種別
+  const GAMAN_REACTIONS = [
+    { type: "erai", label: "えらい" },
+    { type: "sugoi", label: "すごい" },
+    { type: "shinpai", label: "心配" },
+  ]
+  const CHEATDAY_REACTIONS = [
+    { type: "ii", label: "たまにはいいよね" },
+    { type: "eh", label: "えっ" },
+    { type: "ganbaro", label: "明日からがんばろ" },
+  ]
+  const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
+
+  const getReactionCount = (postId: string, type: string) =>
+    reactions.filter(r => r.post_id === postId && r.type === type).length
+
+  const hasReacted = (postId: string, type: string) =>
+    reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
+
+  const handleReaction = async (postId: string, type: string) => {
+    if (!userId) {
+      alert("ログインしてください")
+      return
+    }
+    if (hasReacted(postId, type)) {
+      const { error } = await supabase
+        .from("reactions")
+        .delete()
+        .match({ post_id: postId, user_id: userId, type })
+      if (!error) {
+        setReactions(prev => prev.filter(
+          r => !(r.post_id === postId && r.user_id === userId && r.type === type)
+        ))
+      }
+    } else {
+      const { error } = await supabase.from("reactions").insert({
+        post_id: postId,
+        user_id: userId,
+        type,
+      })
+      if (!error) {
+        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+      }
+    }
+  }
+
+  const handleCommentInput = (postId: string, value: string) => {
+    setCommentInputs((prev) => ({ ...prev, [postId]: value }))
+  }
+
+  const handleCommentSubmit = async (postId: string) => {
+    if (!userId) {
+      alert("ログインしてください")
+      return
+    }
+    const content = commentInputs[postId]?.trim()
+    if (!content) return
+    const { error, data } = await supabase.from("comments").insert({
+      post_id: postId,
+      user_id: userId,
+      content,
+    })
+    if (!error) {
+      setComments(prev => [...prev, { post_id: postId, user_id: userId, content, created_at: new Date().toISOString(), profiles: { nickname: "あなた" } }])
+      setCommentInputs((prev) => ({ ...prev, [postId]: "" }))
+    }
   }
 
   return (
@@ -134,7 +219,50 @@ export default function MyPage() {
                       <div className="flex items-center mb-2">
                         <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
                       </div>
-                      <p className="text-base whitespace-pre-line break-words">{post.content}</p>
+                      <p className="text-base whitespace-pre-line break-words mb-4">{post.content}</p>
+                      {/* リアクションボタン */}
+                      <div className="flex gap-2 mb-2">
+                        {REACTION_TYPES.map((r, i) => (
+                          <button
+                            key={r.type}
+                            onClick={() => handleReaction(post.id, r.type)}
+                            className={`rounded-full px-4 py-1 font-bold transition shadow text-xs text-gray-400 bg-black hover:bg-gray-800`}
+                          >
+                            {r.label} {getReactionCount(post.id, r.type) > 0 && (
+                              <span>({getReactionCount(post.id, r.type)})</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                      {/* コメント欄 */}
+                      <div className="mt-4">
+                        <div className="space-y-2">
+                          {comments.filter((c) => c.post_id === post.id).map((c) => (
+                            <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className={`font-bold text-white`}>{c.profiles?.nickname ?? "名無し"}</span>
+                                <span className="text-gray-400">{formatDate(c.created_at)}</span>
+                              </div>
+                              <div className="ml-1">{c.content}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 mt-2">
+                          <input
+                            type="text"
+                            value={commentInputs[post.id] || ""}
+                            onChange={e => handleCommentInput(post.id, e.target.value)}
+                            className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white`}
+                            placeholder="コメントを書く"
+                          />
+                          <button
+                            onClick={() => handleCommentSubmit(post.id)}
+                            className={`text-white px-4 py-2 rounded-xl font-bold transition bg-black hover:bg-gray-800`}
+                          >
+                            投稿
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))
               )}
