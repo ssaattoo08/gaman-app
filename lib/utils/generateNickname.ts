@@ -1,9 +1,7 @@
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { foodNames } from "./foodNames";
 
 export const generateUniqueNickname = async (): Promise<string | null> => {
-  const supabase = createClient();
-
   // すでに使われているニックネームを取得
   const { data: used, error } = await supabase
     .from("profiles")

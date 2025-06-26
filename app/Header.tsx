@@ -1,10 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 
 export default function Header() {
-  const supabase = createClient()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {

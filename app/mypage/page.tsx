@@ -1,13 +1,12 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { createClient } from "../../lib/supabase/client"
+import { supabase } from '../../lib/supabase/client'
 import BottomNav from "../../components/BottomNav"
 import { useRouter } from "next/navigation"
 
 export default function MyPage() {
   const router = useRouter()
-  const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [nickname, setNickname] = useState<string | null>(null)

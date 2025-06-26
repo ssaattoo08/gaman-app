@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "../../lib/supabase/client"
+import { supabase } from '../../lib/supabase/client'
 
 export default function PostPage() {
-  const supabase = createClient()
   const router = useRouter()
   const [content, setContent] = useState("")
   const [loading, setLoading] = useState(false)

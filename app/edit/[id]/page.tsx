@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from '@/lib/supabase/client'
 
 export default function EditPage() {
-  const supabase = createClient()
   const router = useRouter()
   const params = useParams()
   const postId = params.id as string

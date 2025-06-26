@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 
 // 食べ物リスト（必要ならもっと追加できます）
 const foodNames = [
@@ -19,7 +19,6 @@ function generateRandomNickname() {
 
 export default function Callback() {
   const router = useRouter()
-  const supabase = createClient()
   const [message, setMessage] = useState<string | null>(null) // メッセージ表示用
 
   useEffect(() => {

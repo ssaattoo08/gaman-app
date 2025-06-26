@@ -2,13 +2,12 @@
 
 import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
 
 export default function UserProfilePage() {
   const params = useParams()
   const userId = params.id as string
-  const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
   const [nickname, setNickname] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)

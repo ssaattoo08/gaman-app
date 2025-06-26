@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"  // リダイレクトに必要
 import { generateUniqueNickname } from "@/lib/utils/generateNickname"
+import { supabase } from "@/lib/supabase/client"
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("")
@@ -15,7 +15,6 @@ const RegisterPage = () => {
 
   useEffect(() => {
     const fetchUserCount = async () => {
-      const supabase = createClient()
       const { count, error } = await supabase
         .from("profiles")
         .select("id", { count: "exact", head: true })
@@ -26,8 +25,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    const supabase = createClient()
 
     if (!email || !password) {
       setError("メールアドレスとパスワードを入力してください")

@@ -1,11 +1,10 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
 
 export default function NotificationsPage() {
-  const supabase = createClient()
   const [notifications, setNotifications] = useState<any[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 
 export default function Home() {
   const router = useRouter()
@@ -10,7 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     const fetchUserCount = async () => {
-      const supabase = createClient()
       const { count, error } = await supabase
         .from("profiles")
         .select("id", { count: "exact", head: true })

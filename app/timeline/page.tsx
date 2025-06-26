@@ -1,9 +1,9 @@
 "use client"
 
-import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState, useRef } from "react"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
+import { supabase } from "@/lib/supabase/client"
 
 const REACTION_TYPES = [
   { type: "erai", label: "えらいね！" },
@@ -12,7 +12,6 @@ const REACTION_TYPES = [
 ]
 
 export default function TimelinePage() {
-  const supabase = createClient()
   const [posts, setPosts] = useState<any[]>([])
   const [reactions, setReactions] = useState<any[]>([])
   const [comments, setComments] = useState<any[]>([])

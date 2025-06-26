@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, PlusSquare, User, Bell } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 
 export default function BottomNav() {
   const pathname = usePathname()
@@ -23,7 +23,6 @@ export default function BottomNav() {
 
     const fetchUnreadCount = async () => {
       try {
-        const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
         if (!user || !isMountedRef.current) {
           if (isMountedRef.current) {
