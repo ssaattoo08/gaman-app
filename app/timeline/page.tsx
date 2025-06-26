@@ -192,7 +192,6 @@ export default function TimelinePage() {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <div className="text-xs text-gray-400 mb-1">💬 コメント</div>
                   <div className="space-y-2">
                     {comments.filter((c) => c.post_id === post.id).map((c) => (
                       <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
