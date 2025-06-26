@@ -17,11 +17,10 @@ export default function TopNav() {
       if (!user) return
       const { data, error } = await supabase
         .from("reactions")
-        .select("id, read, gaman_logs(user_id)")
+        .select("id, read")
         .eq("read", false)
       if (!error && data) {
-        const count = data.filter((r: any) => r.gaman_logs?.user_id === user.id).length
-        setUnreadCount(count)
+        setUnreadCount(data.length)
       }
     }
     fetchUnreadCount()

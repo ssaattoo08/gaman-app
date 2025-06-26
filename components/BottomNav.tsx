@@ -26,12 +26,10 @@ export default function BottomNav() {
       // 自分の投稿に対する未読リアクション数を取得
       const { data, error } = await supabase
         .from("reactions")
-        .select("id, read, gaman_logs(user_id)")
+        .select("id, read")
         .eq("read", false)
       if (!error && data) {
-        // 自分の投稿に対する未読のみカウント
-        const count = data.filter((r: any) => r.gaman_logs?.user_id === user.id).length
-        setUnreadCount(count)
+        setUnreadCount(data.length)
       }
     }
     fetchUnreadCount()
