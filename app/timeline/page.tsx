@@ -166,7 +166,6 @@ export default function TimelinePage() {
               >
                 <div className="flex items-center mb-2">
                   <span className="font-bold text-lg text-blue-300 flex items-center gap-2">
-                    <span className="inline-block w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center mr-2">🍖</span>
                     <Link href={`/user/${post.user_id}`} className="hover:underline">
                       {post.profiles?.nickname ?? "名無し"}
                     </Link>
@@ -182,9 +181,7 @@ export default function TimelinePage() {
                       key={r.type}
                       onClick={() => handleReaction(post.id, r.type)}
                       className={`rounded-full px-4 py-1 font-bold transition shadow text-white text-sm
-                        ${r.type === "erai" ? "bg-blue-600 hover:bg-blue-400" : ""}
-                        ${r.type === "sugoi" ? "bg-pink-600 hover:bg-pink-400" : ""}
-                        ${r.type === "shinpai" ? "bg-yellow-600 hover:bg-yellow-400 text-black" : ""}
+                        bg-blue-600 hover:bg-blue-400
                         ${hasReacted(post.id, r.type) ? "ring-2 ring-white" : ""}
                       `}
                     >
@@ -217,7 +214,7 @@ export default function TimelinePage() {
                     />
                     <button
                       onClick={() => handleCommentSubmit(post.id)}
-                      className="bg-green-600 hover:bg-green-400 text-white px-4 py-2 rounded-xl font-bold transition"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-bold transition"
                     >
                       投稿
                     </button>
