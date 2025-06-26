@@ -5,10 +5,15 @@ import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase/client"
 
-const REACTION_TYPES = [
+const GAMAN_REACTIONS = [
   { type: "erai", label: "えらい" },
   { type: "sugoi", label: "すごい" },
   { type: "shinpai", label: "心配" },
+]
+const CHEATDAY_REACTIONS = [
+  { type: "ii", label: "たまにはいいよね" },
+  { type: "eh", label: "えっ" },
+  { type: "ganbaro", label: "明日からがんばろ" },
 ]
 
 export default function TimelinePage() {
@@ -135,6 +140,8 @@ export default function TimelinePage() {
       ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
       : post.cheat_day === true
   );
+
+  const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
 
   return (
     <>
