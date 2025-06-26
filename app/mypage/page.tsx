@@ -190,16 +190,16 @@ export default function MyPage() {
             {/* 投稿タブ */}
             <div className="flex mb-4">
               <button
-                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'gaman' ? 'bg-black text-white border-b-4 border-white' : 'bg-gray-700 text-gray-300'}`}
+                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'gaman' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
                 onClick={() => setSelectedTab('gaman')}
               >
-                ガマン
+                <span className={selectedTab === 'gaman' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>ガマン</span>
               </button>
               <button
-                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'cheatday' ? 'bg-black text-white border-b-4 border-white' : 'bg-gray-700 text-gray-300'}`}
+                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'cheatday' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
                 onClick={() => setSelectedTab('cheatday')}
               >
-                チートデイ
+                <span className={selectedTab === 'cheatday' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>チートデイ</span>
               </button>
             </div>
             {/* 投稿一覧 */}
