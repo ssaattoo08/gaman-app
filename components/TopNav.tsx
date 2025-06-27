@@ -11,43 +11,42 @@ export default function TopNav() {
   const [unreadCount, setUnreadCount] = useState(0)
   const isMountedRef = useRef(true)
 
-  useEffect(() => {
-    isMountedRef.current = true
-
-    const fetchUnreadCount = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user || !isMountedRef.current) {
-          if (isMountedRef.current) {
-            setUnreadCount(0)
-          }
-          return
-        }
-        const { data, error } = await supabase
-          .from("reactions")
-          .select("id, read")
-          .eq("read", false)
-        if (error || !isMountedRef.current) {
-          if (isMountedRef.current) {
-            setUnreadCount(0)
-          }
-          return
-        }
-        if (isMountedRef.current) {
-          setUnreadCount(Array.isArray(data) ? data.length : 0)
-        }
-      } catch (e) {
-        if (isMountedRef.current) {
-          setUnreadCount(0)
-        }
-      }
-    }
-    fetchUnreadCount()
-
-    return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+  // useEffectで未読件数取得も一時的にクローズ
+  // useEffect(() => {
+  //   isMountedRef.current = true
+  //   const fetchUnreadCount = async () => {
+  //     try {
+  //       const { data: { user } } = await supabase.auth.getUser()
+  //       if (!user || !isMountedRef.current) {
+  //         if (isMountedRef.current) {
+  //           setUnreadCount(0)
+  //         }
+  //         return
+  //       }
+  //       const { data, error } = await supabase
+  //         .from("reactions")
+  //         .select("id, read")
+  //         .eq("read", false)
+  //       if (error || !isMountedRef.current) {
+  //         if (isMountedRef.current) {
+  //           setUnreadCount(0)
+  //         }
+  //         return
+  //       }
+  //       if (isMountedRef.current) {
+  //         setUnreadCount(Array.isArray(data) ? data.length : 0)
+  //       }
+  //     } catch (e) {
+  //       if (isMountedRef.current) {
+  //         setUnreadCount(0)
+  //       }
+  //     }
+  //   }
+  //   fetchUnreadCount()
+  //   return () => {
+  //     isMountedRef.current = false
+  //   }
+  // }, [])
 
   // トップページ（'/'）では何も表示しない
   if (pathname === "/") return null;
@@ -59,6 +58,7 @@ export default function TopNav() {
         <Link href="/post" className={pathname === "/post" ? "font-bold underline" : ""}>投稿</Link>
         <Link href="/mypage" className={pathname === "/mypage" ? "font-bold underline" : ""}>マイページ</Link>
       </div>
+      {/* 通知ボタンを一時的に非表示
       <div className="relative ml-8">
         <Link href="/notifications" className="flex items-center">
           <Bell color={pathname === "/notifications" ? "white" : "gray"} />
@@ -69,6 +69,7 @@ export default function TopNav() {
           )}
         </Link>
       </div>
+      */}
     </nav>
   )
 }
