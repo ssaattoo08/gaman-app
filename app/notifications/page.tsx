@@ -20,9 +20,8 @@ export default function NotificationsPage() {
     const unreadIds = notifications.filter((n) => n.read === false).map((n) => n.id)
     if (unreadIds.length > 0) {
       await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
-      // 通知のreadを即時反映
-      setNotifications(prev => prev.map(n => unreadIds.includes(n.id) ? { ...n, read: true } : n))
     }
+    await fetchNotifications();
     setMarkingRead(false)
   }
 
