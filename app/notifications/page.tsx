@@ -15,11 +15,10 @@ export default function NotificationsPage() {
   const handleMarkAllAsRead = async () => {
     setMarkingRead(true)
     const unreadIds = notifications.filter((n) => n.read === false).map((n) => n.id)
-    console.log('unreadIds:', unreadIds)
     if (unreadIds.length > 0) {
       await supabase.from("reactions").update({ read: true }).in("id", unreadIds)
-      // 再取得
-      await fetchNotifications()
+      // 通知のreadを即時反映
+      setNotifications(prev => prev.map(n => unreadIds.includes(n.id) ? { ...n, read: true } : n))
     }
     setMarkingRead(false)
   }
@@ -107,7 +106,7 @@ export default function NotificationsPage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">通知</h1>
-        {notifications.some(n => n.read === false) && (
+        {(notifications.some(n => n.read === false) || markingRead) && (
           <button
             onClick={handleMarkAllAsRead}
             disabled={markingRead}
