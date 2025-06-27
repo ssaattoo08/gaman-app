@@ -182,7 +182,7 @@ export default function TimelinePage() {
                   </span>
                   <span className="text-xs text-gray-400 ml-2">{formatDate(post.created_at)}</span>
                 </div>
-                <div className="text-base text-white mt-2 mb-4">
+                <div className="text-base text-white mt-2 mb-2">
                   {post.content}
                 </div>
                 
