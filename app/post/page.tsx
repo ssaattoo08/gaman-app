@@ -10,6 +10,10 @@ export default function PostPage() {
   const [loading, setLoading] = useState(false)
   const [cheatDay, setCheatDay] = useState(false)
 
+  const placeholder = cheatDay
+    ? "大好きなお酒を思う存分飲みまくった"
+    : "飲み会を断って生成AIの勉強をした"
+
   const handleSubmit = async () => {
     setLoading(true)
 
@@ -42,17 +46,14 @@ export default function PostPage() {
   }
 
   return (
-    <main className="px-4 py-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold text-white mb-6 text-center">
-        我慢したことを記録する
-      </h1>
+    <main className="px-4 py-12 max-w-xl mx-auto flex flex-col items-center">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="w-full h-32 p-4 rounded-xl bg-gray-800 text-white"
-        placeholder="例：夜のラーメンを我慢した"
+        className="w-full h-32 p-4 rounded-xl bg-gray-800 text-white mb-4"
+        placeholder={placeholder}
       />
-      <label className="flex items-center mt-4 mb-2">
+      <label className="flex items-center mb-4 self-start">
         <input
           type="checkbox"
           checked={cheatDay}
@@ -64,7 +65,7 @@ export default function PostPage() {
       <button
         onClick={handleSubmit}
         disabled={loading || !content.trim()}
-        className="mt-2 w-full py-3 rounded-xl bg-blue-500 text-white font-bold hover:bg-blue-600 disabled:opacity-50"
+        className="w-full py-3 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
       >
         {loading ? "投稿中..." : "投稿する"}
       </button>
