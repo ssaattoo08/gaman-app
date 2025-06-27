@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 
 // リアクション・コメント機能を一時的にクローズ
 const GAMAN_REACTIONS = [
@@ -26,6 +27,10 @@ export default function TimelinePage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<"gaman" | "cheatday">("gaman")
   const isMountedRef = useRef(true)
+  const [content, setContent] = useState("")
+  const [posting, setPosting] = useState(false)
+  const [cheatDay, setCheatDay] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     isMountedRef.current = true
@@ -146,9 +151,71 @@ export default function TimelinePage() {
 
   // const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
 
+  const handlePostSubmit = async () => {
+    setPosting(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert("ログインが必要です")
+      router.push("/login")
+      return
+    }
+    const { error } = await supabase.from("gaman_logs").insert({
+      user_id: user.id,
+      content: content.trim(),
+      cheat_day: cheatDay,
+    })
+    if (error) {
+      alert("投稿に失敗しました")
+      console.error(error)
+    } else {
+      setContent("")
+      setCheatDay(false)
+      // 投稿後に再取得
+      setLoading(true)
+      const { data: postsData, error: postsError } = await supabase
+        .from("gaman_logs")
+        .select("id, content, created_at, user_id, profiles(nickname), cheat_day")
+        .order("created_at", { ascending: false })
+      if (!postsError) {
+        setPosts(postsData)
+      }
+      setLoading(false)
+    }
+    setPosting(false)
+  }
+
+  const postPlaceholder = cheatDay
+    ? "例：大好きなお酒を思う存分飲みまくった"
+    : "例：飲み会を断って生成AIの勉強をした"
+
   return (
     <>
       <main className="px-4 py-4 max-w-[40rem] mx-auto">
+        {/* 投稿フォーム */}
+        <div className="mb-8">
+          <textarea
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            className="w-full h-32 p-4 rounded-xl bg-gray-800 text-white mb-4"
+            placeholder={postPlaceholder}
+          />
+          <label className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              checked={cheatDay}
+              onChange={e => setCheatDay(e.target.checked)}
+              className="mr-2"
+            />
+            チートデイとして投稿
+          </label>
+          <button
+            onClick={handlePostSubmit}
+            disabled={posting || !content.trim()}
+            className="w-full py-3 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
+          >
+            {posting ? "投稿中..." : "投稿する"}
+          </button>
+        </div>
         {/* タブUI追加 */}
         <div className="flex mb-4">
           <button
