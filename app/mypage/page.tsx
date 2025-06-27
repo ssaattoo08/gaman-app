@@ -221,12 +221,7 @@ export default function MyPage() {
                       </div>
                       <p className="text-base whitespace-pre-line break-words mb-4">{post.content}</p>
                       
-                      {/* リアクション・コメント機能を一時的にクローズ */}
-                      <div className="bg-gray-700 rounded-xl p-3 text-center">
-                        <div className="text-gray-400 text-sm">
-                          リアクション・コメント機能は現在一時的にご利用いただけません
-                        </div>
-                      </div>
+                      {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
                       
                       {/* リアクション・コメント機能を一時的にクローズ
                       <div className="flex gap-2 mb-2">

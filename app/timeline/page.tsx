@@ -186,12 +186,7 @@ export default function TimelinePage() {
                   {post.content}
                 </div>
                 
-                {/* リアクション・コメント機能を一時的にクローズ */}
-                <div className="bg-gray-800 rounded-xl p-4 text-center">
-                  <div className="text-gray-400 text-sm">
-                    リアクション・コメント機能は現在一時的にご利用いただけません
-                  </div>
-                </div>
+                {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
                 
                 {/* リアクション・コメント機能を一時的にクローズ
                 <div className="flex gap-2 mb-2">
