@@ -11,7 +11,7 @@ export default function PostPage() {
   const [cheatDay, setCheatDay] = useState(false)
 
   const placeholder = cheatDay
-    ? "大好きなお酒を思う存分飲みまくった"
+    ? "例：大好きなお酒を思う存分飲みまくった"
     : "例：飲み会を断って生成AIの勉強をした"
 
   const handleSubmit = async () => {
