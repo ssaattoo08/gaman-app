@@ -11,6 +11,9 @@ export default function NotificationsPage() {
   const isMountedRef = useRef(true)
   const [markingRead, setMarkingRead] = useState(false)
 
+  // 未読件数
+  const unreadCount = notifications.filter(n => n.read === false).length;
+
   // すべて既読にする処理
   const handleMarkAllAsRead = async () => {
     setMarkingRead(true)
@@ -106,13 +109,20 @@ export default function NotificationsPage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">通知</h1>
-        <button
-          onClick={handleMarkAllAsRead}
-          disabled={markingRead || notifications.every(n => n.read)}
-          className="mb-4 px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-        >
-          {markingRead ? "既読にしています..." : "すべて既読にする"}
-        </button>
+        <div className="flex items-center mb-4 gap-2">
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={markingRead || unreadCount === 0}
+            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+          >
+            {markingRead ? "既読にしています..." : "すべて既読にする"}
+          </button>
+          {unreadCount > 0 && (
+            <span className="ml-2 inline-block bg-red-500 text-white text-xs font-bold rounded-full px-2 py-0.5 align-middle">
+              {unreadCount}
+            </span>
+          )}
+        </div>
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : notifications.length === 0 ? (
