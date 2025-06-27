@@ -62,11 +62,7 @@ export default function BottomNav() {
       <div className="flex justify-around items-center h-16">
         <Link href="/timeline" className="flex flex-col items-center justify-center w-full h-full">
           <Home color={pathname === "/timeline" ? "white" : "gray"} />
-          <span className={`text-xs ${pathname === "/timeline" ? "text-white" : "text-gray-400"}`}>ホーム</span>
-        </Link>
-        <Link href="/post" className="flex flex-col items-center justify-center w-full h-full">
-          <PlusSquare color={pathname === "/post" ? "white" : "gray"} />
-          <span className={`text-xs ${pathname === "/post" ? "text-white" : "text-gray-400"}`}>投稿</span>
+          <span className={`text-xs ${pathname === "/timeline" ? "text-white" : "text-gray-400"}`}>Timeline</span>
         </Link>
         {/* 通知ボタンを完全に非表示
         <Link href="/notifications" className="flex flex-col items-center justify-center w-full h-full relative">
@@ -76,7 +72,7 @@ export default function BottomNav() {
         */}
         <Link href="/mypage" className="flex flex-col items-center justify-center w-full h-full">
           <User color={pathname === "/mypage" ? "white" : "gray"} />
-          <span className={`text-xs ${pathname === "/mypage" ? "text-white" : "text-gray-400"}`}>マイページ</span>
+          <span className={`text-xs ${pathname === "/mypage" ? "text-white" : "text-gray-400"}`}>My Page</span>
         </Link>
       </div>
     </nav>
