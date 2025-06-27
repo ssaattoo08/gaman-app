@@ -67,16 +67,16 @@ export default function TimelinePage() {
   }, [])
 
   const formatDate = (iso: string) => {
-    const date = new Date(iso)
-    return date.toLocaleString("ja-JP", {
+    const date = new Date(iso);
+    const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    return jstDate.toLocaleString("ja-JP", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-      timeZone: "Asia/Tokyo"
-    })
+    });
   }
 
   const getReactionCount = (postId: string, type: string) =>
