@@ -141,9 +141,6 @@ export default function UserProfilePage() {
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          ユーザープロフィール
-        </h1>
         {loading ? (
           <p className="text-white text-center">読み込み中...</p>
         ) : (
@@ -189,7 +186,8 @@ export default function UserProfilePage() {
                         <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
                       </div>
                       <p className="text-base whitespace-pre-line break-words mb-4">{post.content}</p>
-                      {/* リアクションボタン */}
+                      {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
+                      {/*
                       <div className="flex gap-2 mb-2">
                         {REACTION_TYPES.map((r, i) => (
                           <button
@@ -203,7 +201,6 @@ export default function UserProfilePage() {
                           </button>
                         ))}
                       </div>
-                      {/* コメント欄 */}
                       <div className="mt-4">
                         <div className="space-y-2">
                           {comments.filter((c) => c.post_id === post.id).map((c) => (
@@ -232,6 +229,7 @@ export default function UserProfilePage() {
                           </button>
                         </div>
                       </div>
+                      */}
                     </div>
                   ))
               )}
