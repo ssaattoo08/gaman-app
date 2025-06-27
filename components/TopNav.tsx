@@ -55,7 +55,7 @@ export default function TopNav() {
     <nav className="hidden md:flex justify-between items-center px-6 py-4 bg-black text-white">
       <div className="flex space-x-8">
         <Link href="/timeline" className={pathname === "/timeline" ? "font-bold underline" : ""}>HOME</Link>
-        <Link href="/post" className={pathname === "/post" ? "font-bold underline" : ""}>投稿</Link>
+        {/* <Link href="/post" className={pathname === "/post" ? "font-bold underline" : ""}>投稿</Link> */}
         <Link href="/mypage" className={pathname === "/mypage" ? "font-bold underline" : ""}>マイページ</Link>
       </div>
       {/* 通知ボタンを一時的に非表示

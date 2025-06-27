@@ -196,7 +196,7 @@ export default function TimelinePage() {
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
-            className="w-full h-32 p-4 rounded-xl bg-gray-800 text-white mb-4"
+            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4"
             placeholder={postPlaceholder}
           />
           <label className="flex items-center mb-4">
@@ -211,7 +211,7 @@ export default function TimelinePage() {
           <button
             onClick={handlePostSubmit}
             disabled={posting || !content.trim()}
-            className="w-full py-3 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
+            className="w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
           >
             {posting ? "投稿中..." : "投稿する"}
           </button>
