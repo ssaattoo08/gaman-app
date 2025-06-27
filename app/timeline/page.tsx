@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase/client"
 
+// リアクション・コメント機能を一時的にクローズ
 const GAMAN_REACTIONS = [
   { type: "erai", label: "えらい" },
   { type: "sugoi", label: "すごい" },
@@ -18,9 +19,9 @@ const CHEATDAY_REACTIONS = [
 
 export default function TimelinePage() {
   const [posts, setPosts] = useState<any[]>([])
-  const [reactions, setReactions] = useState<any[]>([])
-  const [comments, setComments] = useState<any[]>([])
-  const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
+  // const [reactions, setReactions] = useState<any[]>([])
+  // const [comments, setComments] = useState<any[]>([])
+  // const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<"gaman" | "cheatday">("gaman")
@@ -35,24 +36,25 @@ export default function TimelinePage() {
         .select("id, content, created_at, user_id, profiles(nickname), cheat_day")
         .order("created_at", { ascending: false })
 
-      const { data: reactionsData, error: reactionsError } = await supabase
-        .from("reactions")
-        .select("id, post_id, user_id, type")
+      // リアクション・コメント機能を一時的にクローズ
+      // const { data: reactionsData, error: reactionsError } = await supabase
+      //   .from("reactions")
+      //   .select("id, post_id, user_id, type")
 
-      const { data: commentsData, error: commentsError } = await supabase
-        .from("comments")
-        .select("id, post_id, user_id, content, created_at, profiles(nickname)")
-        .order("created_at", { ascending: true })
+      // const { data: commentsData, error: commentsError } = await supabase
+      //   .from("comments")
+      //   .select("id, post_id, user_id, content, created_at, profiles(nickname)")
+      //   .order("created_at", { ascending: true })
 
       const { data: { user } } = await supabase.auth.getUser()
       
       if (isMountedRef.current) {
         setUserId(user?.id ?? null)
 
-        if (!postsError && !reactionsError && !commentsError) {
+        if (!postsError) {
           setPosts(postsData)
-          setReactions(reactionsData)
-          setComments(commentsData)
+          // setReactions(reactionsData)
+          // setComments(commentsData)
           console.log("postsData:", postsData)
           console.log("cheat_day一覧:", postsData.map(p => p.cheat_day))
         }
@@ -79,60 +81,61 @@ export default function TimelinePage() {
     });
   }
 
-  const getReactionCount = (postId: string, type: string) =>
-    reactions.filter(r => r.post_id === postId && r.type === type).length
+  // リアクション・コメント機能を一時的にクローズ
+  // const getReactionCount = (postId: string, type: string) =>
+  //   reactions.filter(r => r.post_id === postId && r.type === type).length
 
-  const hasReacted = (postId: string, type: string) =>
-    reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
+  // const hasReacted = (postId: string, type: string) =>
+  //   reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
 
-  const handleReaction = async (postId: string, type: string) => {
-    if (!userId) {
-      alert("ログインしてください")
-      return
-    }
-    if (hasReacted(postId, type)) {
-      const { error } = await supabase
-        .from("reactions")
-        .delete()
-        .match({ post_id: postId, user_id: userId, type })
-      if (!error) {
-        setReactions(prev => prev.filter(
-          r => !(r.post_id === postId && r.user_id === userId && r.type === type)
-        ))
-      }
-    } else {
-      const { error } = await supabase.from("reactions").insert({
-        post_id: postId,
-        user_id: userId,
-        type,
-      })
-      if (!error) {
-        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
-      }
-    }
-  }
+  // const handleReaction = async (postId: string, type: string) => {
+  //   if (!userId) {
+  //     alert("ログインしてください")
+  //     return
+  //   }
+  //   if (hasReacted(postId, type)) {
+  //     const { error } = await supabase
+  //       .from("reactions")
+  //       .delete()
+  //       .match({ post_id: postId, user_id: userId, type })
+  //     if (!error) {
+  //       setReactions(prev => prev.filter(
+  //         r => !(r.post_id === postId && r.user_id === userId && r.type === type)
+  //       ))
+  //     }
+  //   } else {
+  //     const { error } = await supabase.from("reactions").insert({
+  //       post_id: postId,
+  //       user_id: userId,
+  //       type,
+  //     })
+  //     if (!error) {
+  //       setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+  //     }
+  //   }
+  // }
 
-  const handleCommentInput = (postId: string, value: string) => {
-    setCommentInputs((prev) => ({ ...prev, [postId]: value }))
-  }
+  // const handleCommentInput = (postId: string, value: string) => {
+  //   setCommentInputs((prev) => ({ ...prev, [postId]: value }))
+  // }
 
-  const handleCommentSubmit = async (postId: string) => {
-    if (!userId) {
-      alert("ログインしてください")
-      return
-    }
-    const content = commentInputs[postId]?.trim()
-    if (!content) return
-    const { error, data } = await supabase.from("comments").insert({
-      post_id: postId,
-      user_id: userId,
-      content,
-    })
-    if (!error) {
-      setComments(prev => [...prev, { post_id: postId, user_id: userId, content, created_at: new Date().toISOString(), profiles: { nickname: "あなた" } }])
-      setCommentInputs((prev) => ({ ...prev, [postId]: "" }))
-    }
-  }
+  // const handleCommentSubmit = async (postId: string) => {
+  //   if (!userId) {
+  //     alert("ログインしてください")
+  //     return
+  //   }
+  //   const content = commentInputs[postId]?.trim()
+  //   if (!content) return
+  //   const { error, data } = await supabase.from("comments").insert({
+  //     post_id: postId,
+  //     user_id: userId,
+  //     content,
+  //   })
+  //   if (!error) {
+  //     setComments(prev => [...prev, { post_id: postId, user_id: userId, content, created_at: new Date().toISOString(), profiles: { nickname: "あなた" } }])
+  //     setCommentInputs((prev) => ({ ...prev, [postId]: "" }))
+  //   }
+  // }
 
   // 投稿の絞り込み
   const filteredPosts = posts.filter(post =>
@@ -141,7 +144,7 @@ export default function TimelinePage() {
       : post.cheat_day === true
   );
 
-  const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
+  // const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
 
   return (
     <>
@@ -182,6 +185,15 @@ export default function TimelinePage() {
                 <div className="text-base text-white mt-2 mb-4">
                   {post.content}
                 </div>
+                
+                {/* リアクション・コメント機能を一時的にクローズ */}
+                <div className="bg-gray-800 rounded-xl p-4 text-center">
+                  <div className="text-gray-400 text-sm">
+                    リアクション・コメント機能は現在一時的にご利用いただけません
+                  </div>
+                </div>
+                
+                {/* リアクション・コメント機能を一時的にクローズ
                 <div className="flex gap-2 mb-2">
                   {REACTION_TYPES.map((r, i) => (
                     <button
@@ -223,6 +235,7 @@ export default function TimelinePage() {
                     </button>
                   </div>
                 </div>
+                */}
               </div>
             ))}
           </div>
