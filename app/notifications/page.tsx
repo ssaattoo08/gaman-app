@@ -1,8 +1,19 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import BottomNav from "@/components/BottomNav"
 
 export default function NotificationsPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // モバイル判定（シンプルにwindow.innerWidthで）
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      router.replace("/timeline")
+    }
+  }, [router])
+
   return (
     <>
       <main className="px-4 py-8 max-w-[40rem] mx-auto">

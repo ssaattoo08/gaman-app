@@ -68,17 +68,12 @@ export default function BottomNav() {
           <PlusSquare color={pathname === "/post" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/post" ? "text-white" : "text-gray-400"}`}>投稿</span>
         </Link>
+        {/* 通知ボタンを完全に非表示
         <Link href="/notifications" className="flex flex-col items-center justify-center w-full h-full relative">
           <Bell color={pathname === "/notifications" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/notifications" ? "text-white" : "text-gray-400"}`}>通知</span>
-          {/* 通知機能を一時的にクローズ
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
-              {unreadCount}
-            </span>
-          )}
-          */}
         </Link>
+        */}
         <Link href="/mypage" className="flex flex-col items-center justify-center w-full h-full">
           <User color={pathname === "/mypage" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/mypage" ? "text-white" : "text-gray-400"}`}>マイページ</span>
