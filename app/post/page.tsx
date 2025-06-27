@@ -12,7 +12,7 @@ export default function PostPage() {
 
   const placeholder = cheatDay
     ? "大好きなお酒を思う存分飲みまくった"
-    : "飲み会を断って生成AIの勉強をした"
+    : "例：飲み会を断って生成AIの勉強をした"
 
   const handleSubmit = async () => {
     setLoading(true)
