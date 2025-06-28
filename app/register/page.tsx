@@ -44,18 +44,20 @@ const RegisterPage = () => {
 
     // user が null でないことを確認してから id にアクセス
     if (data.user && data.user.id) {
-      // 食べ物ニックネームを自動生成
-      const nickname = await generateUniqueNickname()
-      if (!nickname) {
+      // 食べ物ニックネームと英語usernameを自動生成
+      const result = await generateUniqueNickname()
+      if (!result) {
         setError("ニックネーム候補が足りません。管理者にご連絡ください。")
         return
       }
+      const { nickname, username } = result
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert([
           {
             id: data.user.id, // user_idではなくidを使用
             nickname,
+            username,
             email, // emailも保存
           },
         ])
@@ -75,46 +77,8 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white px-4">
-      <h1 className="text-2xl mb-6">新規登録</h1>
-
-      <form onSubmit={handleSubmit} className="w-full max-w-md">
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-bold mb-2">メールアドレス</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-white text-black"
-            placeholder="メールアドレス"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-bold mb-2">パスワード</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-white text-black"
-            placeholder="パスワード"
-            required
-          />
-        </div>
-
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
-
-        <button
-          type="submit"
-          className="w-full py-3 mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full"
-        >
-          登録
-        </button>
-      </form>
+    <div>
+      {/* フォーム部分 */}
     </div>
   )
 }
