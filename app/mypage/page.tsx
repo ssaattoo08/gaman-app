@@ -29,14 +29,14 @@ export default function MyPage() {
 
         if (error || !user || !isMountedRef.current) {
           if (isMountedRef.current) {
-            console.error("ユーザーが取得できませんでした", error)
-            router.push("/login")
+          console.error("ユーザーが取得できませんでした", error)
+          router.push("/login")
           }
           return
         }
 
         if (isMountedRef.current) {
-          setUserId(user.id)
+        setUserId(user.id)
         }
 
         const { data: profile } = await supabase
@@ -46,7 +46,7 @@ export default function MyPage() {
           .single()
 
         if (isMountedRef.current) {
-          setNickname(profile?.nickname || "名無し")
+        setNickname(profile?.nickname || "名無し")
         }
 
         const { data: userPosts } = await supabase
@@ -58,7 +58,7 @@ export default function MyPage() {
         console.log("userPosts", userPosts)
 
         if (isMountedRef.current) {
-          setPosts(userPosts || [])
+        setPosts(userPosts || [])
         }
 
         // リアクション・コメント機能を一時的にクローズ
@@ -78,7 +78,7 @@ export default function MyPage() {
         console.error("データ取得時にエラー", e)
       } finally {
         if (isMountedRef.current) {
-          setLoading(false)
+        setLoading(false)
         }
       }
     }
@@ -235,13 +235,13 @@ export default function MyPage() {
                     ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
                     : post.cheat_day === true)
                   .map((post) => (
-                    <div
-                      key={post.id}
-                      className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
-                    >
-                      <div className="flex items-center mb-2">
-                        <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
-                      </div>
+                  <div
+                    key={post.id}
+                    className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+                  >
+                    <div className="flex items-center mb-2">
+                      <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
+                    </div>
                       <p className="text-base whitespace-pre-line break-words mb-4">{post.content}</p>
                       
                       {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
@@ -289,8 +289,8 @@ export default function MyPage() {
                         </div>
                       </div>
                       */}
-                    </div>
-                  ))
+                  </div>
+                ))
               )}
             </div>
           </>

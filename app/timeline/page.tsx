@@ -190,16 +190,16 @@ export default function TimelinePage() {
 
   return (
     <>
-      <main className="px-4 py-4 max-w-[40rem] mx-auto">
+      <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-8">
+        <div className="mb-6">
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
-            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4"
+            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
             placeholder={postPlaceholder}
           />
-          <label className="flex items-center mb-4">
+          <label className="flex items-center mb-4 text-gray-300 text-sm">
             <input
               type="checkbox"
               checked={cheatDay}
@@ -211,99 +211,46 @@ export default function TimelinePage() {
           <button
             onClick={handlePostSubmit}
             disabled={posting || !content.trim()}
-            className="w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
+            className="w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 text-base"
           >
             {posting ? "投稿中..." : "投稿する"}
           </button>
         </div>
-        {/* タブUI追加 */}
+        {/* タブUI */}
         <div className="flex mb-4">
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "gaman" ? "bg-black text-white" : "bg-gray-700 text-gray-300"}`}
-            onClick={() => setSelectedTab("gaman")}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'gaman' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setSelectedTab('gaman')}
           >
-            <span className={selectedTab === "gaman" ? "underline underline-offset-4 decoration-2 decoration-white" : ""}>ガマン</span>
+            <span className={selectedTab === 'gaman' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>ガマン</span>
           </button>
           <button
-            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === "cheatday" ? "bg-black text-white" : "bg-gray-700 text-gray-300"}`}
-            onClick={() => setSelectedTab("cheatday")}
+            className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'cheatday' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setSelectedTab('cheatday')}
           >
-            <span className={selectedTab === "cheatday" ? "underline underline-offset-4 decoration-2 decoration-white" : ""}>チートデイ</span>
+            <span className={selectedTab === 'cheatday' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>チートデイ</span>
           </button>
         </div>
-
-        {loading ? (
-          <p className="text-white text-center">読み込み中...</p>
-        ) : (
-          <div className="space-y-4">
-            {filteredPosts.map((post) => (
+        {/* 投稿一覧 */}
+        <div className="space-y-4">
+          {loading ? (
+            <p className="text-white text-center">読み込み中...</p>
+          ) : (
+            filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`rounded-2xl shadow-xl p-6 border border-gray-700 bg-black`}
+                className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
               >
                 <div className="flex items-center mb-2">
-                  <span className="font-bold text-lg flex items-center gap-2 text-gray-300">
-                    <Link href={`/user/${post.user_id}`} className="hover:underline">
-                      {post.profiles?.nickname ?? "名無し"}
-                    </Link>
-                  </span>
-                  <span className="text-xs text-gray-400 ml-2">{formatDate(post.created_at)}</span>
+                  <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
+                  <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
                 </div>
-                <div className="text-base text-white mt-2 mb-2">
-                  {post.content}
-                </div>
-                
-                {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
-                
-                {/* リアクション・コメント機能を一時的にクローズ
-                <div className="flex gap-2 mb-2">
-                  {REACTION_TYPES.map((r, i) => (
-                    <button
-                      key={r.type}
-                      onClick={() => handleReaction(post.id, r.type)}
-                      className={`rounded-full px-4 py-1 font-bold transition shadow text-xs text-gray-400 bg-black hover:bg-gray-800`}
-                    >
-                      {r.label} {getReactionCount(post.id, r.type) > 0 && (
-                        <span>({getReactionCount(post.id, r.type)})</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                <div className="mt-4">
-                  <div className="space-y-2">
-                    {comments.filter((c) => c.post_id === post.id).map((c) => (
-                      <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`font-bold text-white`}>{c.profiles?.nickname ?? "名無し"}</span>
-                          <span className="text-gray-400">{formatDate(c.created_at)}</span>
-                        </div>
-                        <div className="ml-1">{c.content}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <input
-                      type="text"
-                      value={commentInputs[post.id] || ""}
-                      onChange={e => handleCommentInput(post.id, e.target.value)}
-                      className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white`}
-                      placeholder="コメントを書く"
-                    />
-                    <button
-                      onClick={() => handleCommentSubmit(post.id)}
-                      className={`text-white px-4 py-2 rounded-xl font-bold transition bg-black hover:bg-gray-800`}
-                    >
-                      投稿
-                    </button>
-                  </div>
-                </div>
-                */}
+                <p className="text-base whitespace-pre-line break-words mb-2">{post.content}</p>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </main>
-
       <BottomNav />
     </>
   )
