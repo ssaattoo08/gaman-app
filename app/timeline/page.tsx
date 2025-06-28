@@ -242,7 +242,9 @@ export default function TimelinePage() {
                 className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
               >
                 <div className="flex items-center mb-2">
-                  <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
+                  <Link href={`/user/${post.user_id}`} className="text-sm text-gray-400 hover:underline">
+                    {post.profiles?.nickname ?? "名無し"}
+                  </Link>
                   <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
                 </div>
                 <p className="text-base whitespace-pre-line break-words mb-2">{post.content}</p>
