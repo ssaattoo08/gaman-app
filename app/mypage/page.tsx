@@ -103,6 +103,28 @@ export default function MyPage() {
     });
   }
 
+  // 連続記録日数を計算
+  const getStreak = () => {
+    if (!posts || posts.length === 0) return 0;
+    // 日付（YYYY-MM-DD）だけを抜き出し、重複排除
+    const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
+    let streak = 0;
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    for (let i = 0; i < days.length; i++) {
+      const d = new Date(days[i]);
+      d.setHours(0,0,0,0);
+      if (i === 0 && d.getTime() !== today.getTime()) break;
+      if (i > 0) {
+        const prev = new Date(days[i-1]);
+        prev.setHours(0,0,0,0);
+        if ((prev.getTime() - d.getTime()) !== 24*60*60*1000) break;
+      }
+      streak++;
+    }
+    return streak;
+  }
+
   // リアクション・コメント機能を一時的にクローズ
   // const GAMAN_REACTIONS = [
   //   { type: "erai", label: "えらい" },
@@ -185,6 +207,8 @@ export default function MyPage() {
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
                 &nbsp;&nbsp;
                 チートデイ：{posts.filter(p => p.cheat_day === true).length}
+                <br />
+                連続記録：{getStreak()}日
               </div>
             </div>
             {/* 投稿タブ */}
