@@ -147,16 +147,17 @@ export default function UserProfilePage() {
   const getStreak = () => {
     if (!posts || posts.length === 0) return 0;
     const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
+    if (days.length === 0) return 0;
     let streak = 1;
     for (let i = 1; i < days.length; i++) {
       const prev = new Date(days[i - 1]);
       prev.setHours(0, 0, 0, 0);
       const curr = new Date(days[i]);
       curr.setHours(0, 0, 0, 0);
-      if ((prev.getTime() - curr.getTime()) === 24 * 60 * 60 * 1000) {
-        streak++;
+      if ((prev.getTime() - curr.getTime()) !== 24 * 60 * 60 * 1000) {
+        return 0;
       } else {
-        break;
+        streak++;
       }
     }
     return streak;
