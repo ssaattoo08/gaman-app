@@ -38,7 +38,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname), cheat_day")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day")
         .order("created_at", { ascending: false })
 
       // リアクション・コメント機能を一時的にクローズ
@@ -174,7 +174,7 @@ export default function TimelinePage() {
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname), cheat_day")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
@@ -242,7 +242,7 @@ export default function TimelinePage() {
                 className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
               >
                 <div className="flex items-center mb-2">
-                  <Link href={`/user/${post.user_id}`} className="text-sm text-gray-400 hover:underline">
+                  <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm text-gray-400 hover:underline">
                     {post.profiles?.nickname ?? "名無し"}
                   </Link>
                   <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>

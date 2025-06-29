@@ -8,9 +8,10 @@ import Link from "next/link"
 
 export default function UserProfilePage() {
   const params = useParams()
-  const userId = params.id as string
+  const username = params.username as string
   const [posts, setPosts] = useState<any[]>([])
   const [nickname, setNickname] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
   const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
@@ -22,24 +23,30 @@ export default function UserProfilePage() {
     isMountedRef.current = true
 
     const fetchUserData = async () => {
-      if (!userId || !isMountedRef.current) return
-      
+      if (!username || !isMountedRef.current) return
+      // usernameからユーザー情報を取得
       const { data: profile } = await supabase
         .from("profiles")
-        .select("nickname")
-        .eq("id", userId)
+        .select("id, nickname")
+        .eq("username", username)
         .single()
-      
-      if (isMountedRef.current) {
-      setNickname(profile?.nickname || "名無し")
+      if (!profile) {
+        setNickname("名無し")
+        setUserId(null)
+        setPosts([])
+        setLoading(false)
+        return
       }
-
+      if (isMountedRef.current) {
+        setNickname(profile.nickname || "名無し")
+        setUserId(profile.id)
+      }
+      // 投稿一覧取得
       const { data: userPosts } = await supabase
         .from("gaman_logs")
         .select("id, content, created_at, user_id, cheat_day, profiles(nickname)")
-        .eq("user_id", userId)
+        .eq("user_id", profile.id)
         .order("created_at", { ascending: false })
-      
       // リアクション・コメントも取得
       const { data: reactionsData } = await supabase
         .from("reactions")
@@ -48,20 +55,18 @@ export default function UserProfilePage() {
         .from("comments")
         .select("id, post_id, user_id, content, created_at, profiles(nickname)")
         .order("created_at", { ascending: true })
-
       if (isMountedRef.current) {
-      setPosts(userPosts || [])
+        setPosts(userPosts || [])
         setReactions(reactionsData || [])
         setComments(commentsData || [])
-      setLoading(false)
+        setLoading(false)
       }
     }
     fetchUserData()
-
     return () => {
       isMountedRef.current = false
     }
-  }, [userId])
+  }, [username])
 
   const formatDate = (iso: string) => {
     const date = new Date(iso);
@@ -96,7 +101,7 @@ export default function UserProfilePage() {
     reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
 
   const handleReaction = async (postId: string, type: string) => {
-    // ログイン不要（他ユーザーなので）
+    if (!userId) return;
     if (hasReacted(postId, type)) {
       const { error } = await supabase
         .from("reactions")
@@ -124,7 +129,7 @@ export default function UserProfilePage() {
   }
 
   const handleCommentSubmit = async (postId: string) => {
-    // ログイン不要（他ユーザーなので）
+    if (!userId) return;
     const content = commentInputs[postId]?.trim()
     if (!content) return
     const { error, data } = await supabase.from("comments").insert({
@@ -141,7 +146,6 @@ export default function UserProfilePage() {
   // 連続記録日数を計算
   const getStreak = () => {
     if (!posts || posts.length === 0) return 0;
-    // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
     const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
     let streak = 1;
     for (let i = 1; i < days.length; i++) {

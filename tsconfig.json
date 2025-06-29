@@ -16,11 +16,11 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",  // 修正: react-jsx に変更
+    "jsx": "preserve", // 修正: react-jsx に変更
     "baseUrl": ".",
     "paths": {
       "@lib/*": [
-        "lib/*"  // 修正: @lib というエイリアスを lib/ フォルダにマップ
+        "lib/*" // 修正: @lib というエイリアスを lib/ フォルダにマップ
       ],
       "@/*": [
         "./*"
