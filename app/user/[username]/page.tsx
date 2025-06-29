@@ -68,6 +68,11 @@ export default function UserProfilePage() {
     }
   }, [username])
 
+  useEffect(() => {
+    // デバッグ用: getStreak実行時のdays配列を出力
+    getStreak();
+  }, [posts]);
+
   const formatDate = (iso: string) => {
     const date = new Date(iso);
     const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
@@ -151,6 +156,7 @@ export default function UserProfilePage() {
     if (gamanPosts.length === 0) return 0;
     // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
     const days = Array.from(new Set(gamanPosts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
+    console.warn('===DAYS DEBUG===', days);
     if (days.length === 0) return 0;
     // 1件だけの場合：今日の投稿なら1日、それ以外は0日
     if (days.length === 1) {
