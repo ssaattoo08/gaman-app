@@ -14,7 +14,7 @@ export default function BottomNav() {
 
   // 表示したくないページ
   const hideOnPages = ["/", "/login", "/register"]
-  if (hideOnPages.includes(pathname)) {
+  if (!pathname || hideOnPages.includes(pathname)) {
     return null
   }
 
