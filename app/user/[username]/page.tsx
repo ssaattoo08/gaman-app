@@ -146,7 +146,11 @@ export default function UserProfilePage() {
   // 連続記録日数を計算
   const getStreak = () => {
     if (!posts || posts.length === 0) return 0;
-    const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
+    // ガマン投稿のみ抽出
+    const gamanPosts = posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined);
+    if (gamanPosts.length === 0) return 0;
+    // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
+    const days = Array.from(new Set(gamanPosts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
     if (days.length === 0) return 0;
     // 1件だけの場合：今日の投稿なら1日、それ以外は0日
     if (days.length === 1) {
