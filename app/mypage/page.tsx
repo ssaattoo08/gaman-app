@@ -109,20 +109,17 @@ export default function MyPage() {
     // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
     const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
     if (days.length === 0) return 0;
-    let streak = 1;
+    if (days.length === 1) return 1;
     for (let i = 1; i < days.length; i++) {
       const prev = new Date(days[i - 1]);
       prev.setHours(0, 0, 0, 0);
       const curr = new Date(days[i]);
       curr.setHours(0, 0, 0, 0);
-      // 1日でも空いたら連続記録は0日
       if ((prev.getTime() - curr.getTime()) !== 24 * 60 * 60 * 1000) {
         return 0;
-      } else {
-        streak++;
       }
     }
-    return streak;
+    return days.length;
   }
 
   // リアクション・コメント機能を一時的にクローズ
