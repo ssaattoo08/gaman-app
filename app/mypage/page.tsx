@@ -109,7 +109,14 @@ export default function MyPage() {
     // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
     const days = Array.from(new Set(posts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
     if (days.length === 0) return 0;
-    if (days.length === 1) return 1;
+    
+    // 1件だけの場合：今日の投稿なら1日、それ以外は0日
+    if (days.length === 1) {
+      const today = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      return days[0] === today ? 1 : 0;
+    }
+    
+    // 2件以上の場合：1日でも空いていたら0日、すべて連続ならその日数
     for (let i = 1; i < days.length; i++) {
       const prev = new Date(days[i - 1]);
       prev.setHours(0, 0, 0, 0);
