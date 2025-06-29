@@ -229,7 +229,6 @@ export default function MyPage() {
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
                 &nbsp;&nbsp;
                 チートデイ：{posts.filter(p => p.cheat_day === true).length}
-                <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
               </div>
             </div>
             {/* 投稿タブ */}
