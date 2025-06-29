@@ -233,18 +233,44 @@ export default function MyPage() {
               </div>
             </div>
             {/* 投稿タブ */}
-            <div className="flex mb-4">
+            <div className="flex mb-4 gap-2">
               <button
-                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'gaman' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
+                className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+                style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
                 onClick={() => setSelectedTab('gaman')}
               >
-                <span className={selectedTab === 'gaman' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>ガマン</span>
+                <span className="block">
+                  ガマン
+                  {selectedTab === 'gaman' && (
+                    <span style={{
+                      display: 'block',
+                      margin: '4px auto 0',
+                      width: '40px',
+                      height: '4px',
+                      background: '#fff',
+                      borderRadius: '2px'
+                    }} />
+                  )}
+                </span>
               </button>
               <button
-                className={`flex-1 py-2 font-bold rounded-t-lg ${selectedTab === 'cheatday' ? 'bg-black text-white' : 'bg-gray-700 text-gray-300'}`}
+                className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+                style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
                 onClick={() => setSelectedTab('cheatday')}
               >
-                <span className={selectedTab === 'cheatday' ? 'underline underline-offset-4 decoration-2 decoration-white' : ''}>チートデイ</span>
+                <span className="block">
+                  チートデイ
+                  {selectedTab === 'cheatday' && (
+                    <span style={{
+                      display: 'block',
+                      margin: '4px auto 0',
+                      width: '40px',
+                      height: '4px',
+                      background: '#fff',
+                      borderRadius: '2px'
+                    }} />
+                  )}
+                </span>
               </button>
             </div>
             {/* 投稿一覧 */}
