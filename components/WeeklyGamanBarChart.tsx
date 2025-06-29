@@ -10,7 +10,7 @@ export default function WeeklyGamanBarChart({ data }: { data: { day: string, cou
           <XAxis dataKey="day" tick={{ fill: '#ccc', fontSize: 10, fontFamily: 'Meiryo UI, Meiryo, sans-serif' }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fill: '#aaa', fontSize: 8, fontFamily: 'Meiryo UI, Meiryo, sans-serif' }} axisLine={false} tickLine={false} width={24} />
           <Tooltip cursor={{ fill: '#222' }} contentStyle={{ background: '#222', border: 'none', color: '#fff', fontFamily: 'Meiryo UI, Meiryo, sans-serif', fontSize: 10 }} />
-          <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#888" barSize={24} >
+          <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#888" barSize={16} >
             <LabelList dataKey="count" position="top" fill="#bbb" fontSize={10} fontFamily="Meiryo UI, Meiryo, sans-serif" />
           </Bar>
         </BarChart>
