@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function UserProfilePage() {
   const params = useParams()
-  const username = params.username as string
+  const username = params?.username ? String(params.username) : ""
   const [posts, setPosts] = useState<any[]>([])
   const [nickname, setNickname] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
