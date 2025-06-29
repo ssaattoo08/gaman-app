@@ -69,7 +69,9 @@ export default function UserProfilePage() {
   }, [username])
 
   useEffect(() => {
-    // デバッグ用: getStreak実行時のdays配列を出力
+    // デバッグ用: postsとgetStreakの返り値を出力
+    console.warn('===POSTS DEBUG===', posts);
+    console.warn('===STREAK DEBUG===', getStreak());
     getStreak();
   }, [posts]);
 
