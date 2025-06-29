@@ -206,12 +206,16 @@ export default function UserProfilePage() {
         <div className="mb-6">
           <WeeklyGamanBarChart data={(() => {
             const week = ['月','火','水','木','金','土','日'];
-            const counts = week.map(day => ({ day, count: 0 }));
-            posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).forEach(p => {
+            const counts = week.map(day => ({ day, gaman: 0, cheat: 0 }));
+            posts.forEach(p => {
               const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
               const w = d.getDay(); // 0:日, 1:月...
               const idx = w === 0 ? 6 : w - 1;
-              counts[idx].count++;
+              if (p.cheat_day === true) {
+                counts[idx].cheat++;
+              } else {
+                counts[idx].gaman++;
+              }
             });
             return counts;
           })()} />
