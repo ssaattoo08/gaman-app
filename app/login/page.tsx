@@ -65,14 +65,14 @@ export default function LoginPage() {
         />
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full cursor-pointer"
         >
           ログイン
         </button>
       </form>
       <button
         onClick={goToRegister}
-        className="mt-4 text-blue-500 hover:text-blue-700"
+        className="mt-4 text-blue-500 hover:text-blue-700 cursor-pointer"
       >
         新規登録はこちら
       </button>

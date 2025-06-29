@@ -32,7 +32,7 @@ export default function BatchPage() {
           <button
             onClick={handleBatchAssign}
             disabled={isRunning}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             {isRunning ? "処理中..." : "既存ユーザーにusernameを一括付与"}
           </button>

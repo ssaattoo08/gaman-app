@@ -33,13 +33,13 @@ export default function Home() {
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
           <button
             onClick={() => router.push("/register")}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition"
+            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition cursor-pointer"
           >
             新規登録
           </button>
           <button
             onClick={() => router.push("/login")}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-full font-bold transition"
+            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-full font-bold transition cursor-pointer"
           >
             ログイン
           </button>

@@ -65,7 +65,7 @@ export default function PostPage() {
       <button
         onClick={handleSubmit}
         disabled={loading || !content.trim()}
-        className="w-full py-3 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50"
+        className="w-full py-3 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 cursor-pointer"
       >
         {loading ? "投稿中..." : "投稿する"}
       </button>

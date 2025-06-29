@@ -25,7 +25,7 @@ export default function Header() {
     <div className="text-right px-4 pt-4">
       <button
         onClick={handleLogout}
-        className="text-sm text-gray-400 hover:text-white underline"
+        className="text-sm text-gray-400 hover:text-white underline cursor-pointer"
       >
         ログアウト
       </button>
