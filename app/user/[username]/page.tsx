@@ -69,9 +69,18 @@ export default function UserProfilePage() {
   }, [username])
 
   useEffect(() => {
-    // デバッグ用: postsとgetStreakの返り値を出力
-    console.warn('===POSTS DEBUG===', posts);
+    // デバッグ用: posts, getStreak, daysを両方で出力
+    console.warn('===POSTS DEBUG===', JSON.stringify(posts));
+    console.log('===POSTS DEBUG===', JSON.stringify(posts));
     console.warn('===STREAK DEBUG===', getStreak());
+    console.log('===STREAK DEBUG===', getStreak());
+    // days配列も直接出力
+    if (posts && posts.length > 0) {
+      const gamanPosts = posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined);
+      const days = Array.from(new Set(gamanPosts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
+      console.warn('===DAYS DEBUG===', JSON.stringify(days));
+      console.log('===DAYS DEBUG===', JSON.stringify(days));
+    }
     getStreak();
   }, [posts]);
 
