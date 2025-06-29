@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client'
 export default function EditPage() {
   const router = useRouter()
   const params = useParams()
-  const postId = params.id as string
+  const postId = params?.id ? String(params.id) : ""
 
   const [content, setContent] = useState("")
 
