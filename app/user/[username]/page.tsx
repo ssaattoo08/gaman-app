@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import WeeklyGamanBarChart from "@/components/WeeklyGamanBarChart"
+import PostContent from "../../../components/PostContent"
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -274,7 +275,7 @@ export default function UserProfilePage() {
                     <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
                     <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
                   </div>
-                  <p className="text-base whitespace-pre-line break-words mb-2">{post.content}</p>
+                  <PostContent content={post.content} />
                 </div>
               ))
           )}

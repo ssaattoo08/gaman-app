@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.50.0",
+    "linkify-react": "^4.3.1",
     "lucide-react": "^0.522.0",
     "next": "15.3.4",
     "react": "^19.0.0",

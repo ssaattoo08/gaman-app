@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import PostContent from "../../components/PostContent"
 
 // リアクション・コメント機能を一時的にクローズ
 const GAMAN_REACTIONS = [
@@ -273,7 +274,7 @@ export default function TimelinePage() {
                   </Link>
                   <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
                 </div>
-                <p className="text-base whitespace-pre-line break-words mb-2">{post.content}</p>
+                <PostContent content={post.content} />
               </div>
             ))
           )}

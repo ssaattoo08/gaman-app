@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase/client'
 import BottomNav from "../../components/BottomNav"
 import { useRouter } from "next/navigation"
 import WeeklyGamanBarChart from "../../components/WeeklyGamanBarChart"
+import PostContent from "../../components/PostContent"
 
 export default function MyPage() {
   const router = useRouter()
@@ -305,53 +306,7 @@ export default function MyPage() {
                     <div className="flex items-center mb-2">
                       <span className="text-sm text-gray-400">{formatDate(post.created_at)}</span>
                     </div>
-                      <p className="text-base whitespace-pre-line break-words mb-4">{post.content}</p>
-                      
-                      {/* ここに何も表示しない（リアクション・コメント機能のUIも非表示のまま） */}
-                      
-                      {/* リアクション・コメント機能を一時的にクローズ
-                      <div className="flex gap-2 mb-2">
-                        {REACTION_TYPES.map((r, i) => (
-                          <button
-                            key={r.type}
-                            onClick={() => handleReaction(post.id, r.type)}
-                            className={`rounded-full px-4 py-1 font-bold transition shadow text-xs text-gray-400 bg-black hover:bg-gray-800`}
-                          >
-                            {r.label} {getReactionCount(post.id, r.type) > 0 && (
-                              <span>({getReactionCount(post.id, r.type)})</span>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="mt-4">
-                        <div className="space-y-2">
-                          {comments.filter((c) => c.post_id === post.id).map((c) => (
-                            <div key={c.id} className="bg-gray-900 rounded-xl px-3 py-2 text-xs text-white">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className={`font-bold text-white`}>{c.profiles?.nickname ?? "名無し"}</span>
-                                <span className="text-gray-400">{formatDate(c.created_at)}</span>
-                              </div>
-                              <div className="ml-1">{c.content}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex gap-2 mt-2">
-                          <input
-                            type="text"
-                            value={commentInputs[post.id] || ""}
-                            onChange={e => handleCommentInput(post.id, e.target.value)}
-                            className={`flex-1 rounded-xl bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white`}
-                            placeholder="コメントを書く"
-                          />
-                          <button
-                            onClick={() => handleCommentSubmit(post.id)}
-                            className={`text-white px-4 py-2 rounded-xl font-bold transition bg-black hover:bg-gray-800`}
-                          >
-                            投稿
-                          </button>
-                        </div>
-                      </div>
-                      */}
+                    <PostContent content={post.content} />
                   </div>
                 ))
               )}
