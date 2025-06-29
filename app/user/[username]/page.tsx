@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import { supabase } from "@/lib/supabase/client"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
+import WeeklyGamanBarChart from "@/components/WeeklyGamanBarChart"
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -200,10 +201,24 @@ export default function UserProfilePage() {
             <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
           </div>
         </div>
+        {/* 曜日ごとのガマン投稿数グラフ */}
+        <div className="mb-6">
+          <WeeklyGamanBarChart data={(() => {
+            const week = ['月','火','水','木','金','土','日'];
+            const counts = week.map(day => ({ day, count: 0 }));
+            posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).forEach(p => {
+              const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
+              const w = d.getDay(); // 0:日, 1:月...
+              const idx = w === 0 ? 6 : w - 1;
+              counts[idx].count++;
+            });
+            return counts;
+          })()} />
+        </div>
         {/* タブUI */}
         <div className="flex mb-4 gap-2">
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('gaman')}
           >
@@ -222,7 +237,7 @@ export default function UserProfilePage() {
             </span>
           </button>
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('cheatday')}
           >
