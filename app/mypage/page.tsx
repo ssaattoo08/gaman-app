@@ -224,7 +224,7 @@ export default function MyPage() {
         ) : (
           <>
             {/* プロフィールセクション */}
-            <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
+            <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
               <div className="text-lg font-bold text-white mb-1">{nickname}</div>
               <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
@@ -232,20 +232,20 @@ export default function MyPage() {
                 チートデイ：{posts.filter(p => p.cheat_day === true).length}
                 <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
               </div>
-            </div>
-            {/* 曜日ごとのガマン投稿数グラフ */}
-            <div className="mb-6">
-              <WeeklyGamanBarChart data={(() => {
-                const week = ['月','火','水','木','金','土','日'];
-                const counts = week.map(day => ({ day, count: 0 }));
-                posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).forEach(p => {
-                  const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-                  const w = d.getDay(); // 0:日, 1:月...
-                  const idx = w === 0 ? 6 : w - 1;
-                  counts[idx].count++;
-                });
-                return counts;
-              })()} />
+              {/* グラフをここに移動 */}
+              <div className="w-full mt-4">
+                <WeeklyGamanBarChart data={(() => {
+                  const week = ['月','火','水','木','金','土','日'];
+                  const counts = week.map(day => ({ day, count: 0 }));
+                  posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).forEach(p => {
+                    const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
+                    const w = d.getDay(); // 0:日, 1:月...
+                    const idx = w === 0 ? 6 : w - 1;
+                    counts[idx].count++;
+                  });
+                  return counts;
+                })()} />
+              </div>
             </div>
             {/* 投稿タブ */}
             <div className="flex mb-4 gap-2">
