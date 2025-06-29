@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { supabase } from '../../lib/supabase/client'
 import BottomNav from "../../components/BottomNav"
 import { useRouter } from "next/navigation"
+import WeeklyGamanBarChart from "../../components/WeeklyGamanBarChart"
 
 export default function MyPage() {
   const router = useRouter()
@@ -231,6 +232,20 @@ export default function MyPage() {
                 チートデイ：{posts.filter(p => p.cheat_day === true).length}
                 <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
               </div>
+            </div>
+            {/* 曜日ごとのガマン投稿数グラフ */}
+            <div className="mb-6">
+              <WeeklyGamanBarChart data={(() => {
+                const week = ['月','火','水','木','金','土','日'];
+                const counts = week.map(day => ({ day, count: 0 }));
+                posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).forEach(p => {
+                  const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
+                  const w = d.getDay(); // 0:日, 1:月...
+                  const idx = w === 0 ? 6 : w - 1;
+                  counts[idx].count++;
+                });
+                return counts;
+              })()} />
             </div>
             {/* 投稿タブ */}
             <div className="flex mb-4 gap-2">
