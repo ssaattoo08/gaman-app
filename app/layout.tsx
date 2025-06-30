@@ -1,14 +1,17 @@
 import "./globals.css"
 import BottomNav from "../components/BottomNav"
 import TopNav from "../components/TopNav"
+import { usePathname } from "next/navigation"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const hideNav = pathname === "/register" || pathname === "/login";
   return (
     <html lang="ja">
       <body className="bg-black text-white font-sans">
-        <TopNav />       {/* PC用ナビ */}
+        {!hideNav && <TopNav />}
         {children}
-        <BottomNav />    {/* モバイル用ナビ */}
+        {!hideNav && <BottomNav />}
       </body>
     </html>
   )
