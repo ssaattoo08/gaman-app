@@ -77,15 +77,17 @@ const RegisterPage = () => {
   }
 
   return (
-    <div style={{ color: "white", padding: 40 }}>
-      <h1>新規登録フォーム</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 320 }}>
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="メールアドレス" style={{ padding: 8 }} />
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="パスワード" style={{ padding: 8 }} />
-        <button type="submit" style={{ padding: 8, background: '#2563eb', color: 'white', border: 'none', borderRadius: 4 }}>新規登録</button>
-      </form>
-      {error && <div style={{ color: "red", marginTop: 16 }}>{error}</div>}
-      {successMessage && <div style={{ color: "green", marginTop: 16 }}>{successMessage}</div>}
+    <div style={{ color: "white", minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#111' }}>
+      <div style={{ width: 360, background: 'transparent', padding: 32, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
+        <h1 style={{ textAlign: 'center', marginBottom: 24 }}>新規登録フォーム</h1>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="メールアドレス" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="パスワード" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
+          <button type="submit" style={{ padding: 12, background: '#444', color: 'white', border: 'none', borderRadius: 6, fontWeight: 600, fontSize: 16, letterSpacing: 1 }}>新規登録</button>
+        </form>
+        {error && <div style={{ color: "#f87171", marginTop: 20, textAlign: 'center' }}>{error}</div>}
+        {successMessage && <div style={{ color: "#4ade80", marginTop: 20, textAlign: 'center' }}>{successMessage}</div>}
+      </div>
     </div>
   )
 }
