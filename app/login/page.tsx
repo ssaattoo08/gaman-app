@@ -46,7 +46,6 @@ export default function LoginPage() {
   return (
     <div style={{ color: "white", minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#111' }}>
       <div style={{ width: 360, background: 'transparent', padding: 32, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: 24 }}>メールログイン</h1>
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="メールアドレス" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="パスワード" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
@@ -54,7 +53,7 @@ export default function LoginPage() {
         </form>
         {message && <div style={{ color: message.includes('成功') ? "#4ade80" : "#f87171", marginTop: 20, textAlign: 'center' }}>{message}</div>}
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <a href="/register" style={{ color: '#60a5fa', textDecoration: 'underline', fontSize: 14 }}>新規登録はこちら</a>
+          <a href="/register" style={{ color: '#fff', textDecoration: 'underline', fontSize: 14 }}>新規登録はこちら</a>
         </div>
       </div>
     </div>
