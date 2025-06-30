@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #e5e7eb; /* 明るすぎないグレー */
+  --foreground: #222;
+  --button-bg: #444;
+  --button-text: #fff;
+  --input-bg: #f3f4f6;
+  --input-border: #bbb;
 }
 
 @theme inline {
@@ -16,6 +20,10 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --button-bg: #444;
+    --button-text: #fff;
+    --input-bg: #fef9c3;
+    --input-border: #444;
   }
 }
 
