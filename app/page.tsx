@@ -33,7 +33,7 @@ export default function Home() {
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
           <button
             onClick={() => router.push("/register")}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition cursor-pointer"
+            style={{ padding: '12px 32px', background: '#444', color: 'white', border: 'none', borderRadius: 9999, fontWeight: 700, fontSize: 16, letterSpacing: 1, minWidth: 120 }}
           >
             新規登録
           </button>
