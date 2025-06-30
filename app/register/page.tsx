@@ -77,8 +77,15 @@ const RegisterPage = () => {
   }
 
   return (
-    <div>
-      {/* フォーム部分 */}
+    <div style={{ color: "white", padding: 40 }}>
+      <h1>新規登録フォーム</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 320 }}>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="メールアドレス" style={{ padding: 8 }} />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="パスワード" style={{ padding: 8 }} />
+        <button type="submit" style={{ padding: 8, background: '#2563eb', color: 'white', border: 'none', borderRadius: 4 }}>新規登録</button>
+      </form>
+      {error && <div style={{ color: "red", marginTop: 16 }}>{error}</div>}
+      {successMessage && <div style={{ color: "green", marginTop: 16 }}>{successMessage}</div>}
     </div>
   )
 }
