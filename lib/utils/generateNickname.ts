@@ -1,6 +1,5 @@
 import { supabase } from "../supabase/client";
 import { foodNames } from "./foodNames";
-import supabaseAdmin from "../supabase/admin";
 
 export const generateUniqueNickname = async (): Promise<{ nickname: string, username: string } | null> => {
   // すでに使われているニックネーム・usernameを取得
@@ -32,6 +31,8 @@ export const generateUniqueNickname = async (): Promise<{ nickname: string, user
 
 // 既存ユーザーにusernameを一括付与するバッチ関数
 export const batchAssignUsernames = async () => {
+  // 必要なときだけadminを動的import
+  const { default: supabaseAdmin } = await import("../supabase/admin");
   // すでにusernameが設定されているユーザーはスキップ
   const { data: users, error } = await supabaseAdmin
     .from("profiles")
