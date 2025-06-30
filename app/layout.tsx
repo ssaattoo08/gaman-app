@@ -3,7 +3,7 @@ import "./globals.css"
 import BottomNav from "../components/BottomNav"
 import TopNav from "../components/TopNav"
 import { usePathname } from "next/navigation"
-import ThemeToggle from "../components/ThemeToggle"
+// import ThemeToggle from "../components/ThemeToggle"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body className="bg-black text-white font-sans">
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
         {!hideNav && <TopNav />}
         {children}
         {!hideNav && <BottomNav />}
