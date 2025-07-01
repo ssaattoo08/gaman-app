@@ -82,7 +82,7 @@ const RegisterPage = () => {
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="メールアドレス" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="パスワード" style={{ padding: 10, borderRadius: 6, border: '1px solid #444', background: '#fef9c3', color: '#222' }} />
-          <button type="submit" style={{ padding: 12, background: '#444', color: 'white', border: 'none', borderRadius: 6, fontWeight: 600, fontSize: 16, letterSpacing: 1 }}>新規登録</button>
+          <button type="submit" style={{ padding: 12, background: '#444', color: 'white', border: 'none', borderRadius: 6, fontWeight: 600, fontSize: 16, letterSpacing: 1, cursor: 'pointer' }}>新規登録</button>
         </form>
         {error && <div style={{ color: "#f87171", marginTop: 20, textAlign: 'center' }}>{error}</div>}
         {successMessage && <div style={{ color: "#4ade80", marginTop: 20, textAlign: 'center' }}>{successMessage}</div>}
