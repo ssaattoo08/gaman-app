@@ -226,50 +226,41 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
-              <div className="flex w-full items-center justify-between gap-4">
-                {/* 左側：テキスト */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-lg font-bold text-white mb-1 truncate">{nickname}</div>
-                  <div className="text-sm text-gray-400">
-                    ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
-                    &nbsp;&nbsp;
-                    チートデイ：{posts.filter(p => p.cheat_day === true).length}
-                  </div>
-                  <div className="text-sm text-gray-400 mt-1">連続記録：{getStreak()}日</div>
-                </div>
-                {/* 右側：キャラ画像（仮） */}
-                <div className="flex-shrink-0 flex items-center justify-center" style={{ width: 80, height: 80 }}>
-                  <img src="/character/level1.png" alt="キャラ" style={{ width: 72, height: 72, objectFit: 'contain', borderRadius: 16, background: '#222' }} />
-                </div>
+              <div className="text-lg font-bold text-white mb-1">{nickname}</div>
+              <div className="text-sm text-gray-400 mt-1">
+                ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
+                &nbsp;&nbsp;
+                チートデイ：{posts.filter(p => p.cheat_day === true).length}
+                <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
               </div>
-              {/* グラフをここに移動 */}
-              <div className="w-full mt-4">
-                <WeeklyGamanBarChart data={(() => {
-                  // 直近7日間の日付配列（新しい順）
-                  const today = new Date();
-                  today.setHours(today.getHours() + 9); // JST補正
-                  const days = [...Array(7)].map((_, i) => {
-                    const d = new Date(today);
-                    d.setDate(today.getDate() - (6 - i));
-                    const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
-                    return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0, dayNum: d.getDate() };
-                  });
-                  posts.forEach(p => {
-                    const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-                    const ymd = d.toISOString().slice(0, 10);
-                    const idx = days.findIndex(day => day.ymd === ymd);
-                    if (idx !== -1) {
-                      if (p.cheat_day === true) {
-                        days[idx].cheat++;
-                      } else {
-                        days[idx].gaman++;
-                      }
+            </div>
+            {/* グラフをここに移動 */}
+            <div className="w-full mt-4">
+              <WeeklyGamanBarChart data={(() => {
+                // 直近7日間の日付配列（新しい順）
+                const today = new Date();
+                today.setHours(today.getHours() + 9); // JST補正
+                const days = [...Array(7)].map((_, i) => {
+                  const d = new Date(today);
+                  d.setDate(today.getDate() - (6 - i));
+                  const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
+                  return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0, dayNum: d.getDate() };
+                });
+                posts.forEach(p => {
+                  const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
+                  const ymd = d.toISOString().slice(0, 10);
+                  const idx = days.findIndex(day => day.ymd === ymd);
+                  if (idx !== -1) {
+                    if (p.cheat_day === true) {
+                      days[idx].cheat++;
+                    } else {
+                      days[idx].gaman++;
                     }
-                  });
-                  // 0件の日付は除外。ただし10,20,30日は除外しない
-                  return days.filter(day => (day.gaman > 0 || day.cheat > 0) || [10,20,30].includes(day.dayNum));
-                })()} />
-              </div>
+                  }
+                });
+                // 0件の日付は除外。ただし10,20,30日は除外しない
+                return days.filter(day => (day.gaman > 0 || day.cheat > 0) || [10,20,30].includes(day.dayNum));
+              })()} />
             </div>
             {/* 投稿タブ */}
             <div className="flex mb-4 gap-2">
