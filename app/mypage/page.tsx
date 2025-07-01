@@ -226,12 +226,21 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
-              <div className="text-lg font-bold text-white mb-1">{nickname}</div>
-              <div className="text-sm text-gray-400 mt-1">
-                ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
-                &nbsp;&nbsp;
-                チートデイ：{posts.filter(p => p.cheat_day === true).length}
-                <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
+              <div className="flex w-full items-center justify-between gap-4">
+                {/* 左側：テキスト */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-lg font-bold text-white mb-1 truncate">{nickname}</div>
+                  <div className="text-sm text-gray-400">
+                    ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
+                    &nbsp;&nbsp;
+                    チートデイ：{posts.filter(p => p.cheat_day === true).length}
+                  </div>
+                  <div className="text-sm text-gray-400 mt-1">連続記録：{getStreak()}日</div>
+                </div>
+                {/* 右側：キャラ画像（仮） */}
+                <div className="flex-shrink-0 flex items-center justify-center" style={{ width: 80, height: 80 }}>
+                  <img src="/character/level1.png" alt="キャラ" style={{ width: 72, height: 72, objectFit: 'contain', borderRadius: 16, background: '#222' }} />
+                </div>
               </div>
               {/* グラフをここに移動 */}
               <div className="w-full mt-4">
