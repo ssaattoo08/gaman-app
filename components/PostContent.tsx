@@ -63,9 +63,18 @@ export default function PostContent({ content }: { content: string }) {
           className="block border border-gray-700 rounded-xl p-3 mb-2 bg-gray-900 hover:bg-gray-800 transition"
           style={{ maxWidth: 400 }}
         >
-          {ogp.image && (
-            <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} />
-          )}
+          {ogp.image
+            ? (
+              <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`; }} />
+            )
+            : (
+              <img src={`https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`}
+                   alt="favicon"
+                   className="w-16 h-16 object-contain rounded-md mb-2 mx-auto"
+                   onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/noimage.png'; }}
+              />
+            )
+          }
           <div className="font-bold text-white text-sm mb-1">{ogp.title}</div>
           <div className="text-xs text-gray-400 mb-1">{ogp.description}</div>
           <div className="text-xs text-blue-400 break-all">{ogp.url}</div>
