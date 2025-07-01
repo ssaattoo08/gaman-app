@@ -205,19 +205,28 @@ export default function UserProfilePage() {
         {/* 曜日ごとのガマン投稿数グラフ */}
         <div className="mb-6">
           <WeeklyGamanBarChart data={(() => {
-            const week = ['月','火','水','木','金','土','日'];
-            const counts = week.map(day => ({ day, gaman: 0, cheat: 0 }));
+            // 直近7日間の日付配列（新しい順）
+            const today = new Date();
+            today.setHours(today.getHours() + 9); // JST補正
+            const days = [...Array(7)].map((_, i) => {
+              const d = new Date(today);
+              d.setDate(today.getDate() - (6 - i));
+              const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
+              return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0 };
+            });
             posts.forEach(p => {
               const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-              const w = d.getDay(); // 0:日, 1:月...
-              const idx = w === 0 ? 6 : w - 1;
-              if (p.cheat_day === true) {
-                counts[idx].cheat++;
-              } else {
-                counts[idx].gaman++;
+              const ymd = d.toISOString().slice(0, 10);
+              const idx = days.findIndex(day => day.ymd === ymd);
+              if (idx !== -1) {
+                if (p.cheat_day === true) {
+                  days[idx].cheat++;
+                } else {
+                  days[idx].gaman++;
+                }
               }
             });
-            return counts;
+            return days;
           })()} />
         </div>
         {/* タブUI */}
