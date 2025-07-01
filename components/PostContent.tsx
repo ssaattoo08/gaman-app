@@ -55,10 +55,8 @@ export default function PostContent({ content }: { content: string }) {
         }}>{content}</Linkify>
       </div>
       {ogps.map(ogp => {
-        // エラーっぽいdescriptionやtitleは非表示
-        const isError =
-          (ogp.description && /access denied|reference/i.test(ogp.description)) ||
-          (ogp.title && /access denied|reference/i.test(ogp.title));
+        // descriptionがエラーっぽい場合は非表示
+        const isErrorDesc = ogp.description && /access denied|reference/i.test(ogp.description);
         return (
           <a
             key={ogp.url}
@@ -80,7 +78,7 @@ export default function PostContent({ content }: { content: string }) {
                 />
               )
             }
-            <div className="font-bold text-white text-sm mb-1 text-center">{!isError && ogp.title}</div>
+            <div className="font-bold text-white text-sm mb-1 text-center">{ogp.title}</div>
           </a>
         );
       })}
