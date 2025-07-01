@@ -80,8 +80,7 @@ export default function PostContent({ content }: { content: string }) {
                 />
               )
             }
-            <div className="font-bold text-white text-sm mb-1">{!isError && ogp.title}</div>
-            <div className="text-xs text-gray-400 mb-1">{!isError && ogp.description}</div>
+            <div className="font-bold text-white text-sm mb-1 text-center">{!isError && ogp.title}</div>
           </a>
         );
       })}
