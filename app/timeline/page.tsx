@@ -26,7 +26,7 @@ export default function TimelinePage() {
   // const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
-  const [selectedTab, setSelectedTab] = useState<"gaman" | "cheatday">("gaman")
+  const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
   const isMountedRef = useRef(true)
   const [content, setContent] = useState("")
   const [posting, setPosting] = useState(false)
@@ -146,7 +146,7 @@ export default function TimelinePage() {
 
   // 投稿の絞り込み
   const filteredPosts = posts.filter(post =>
-    selectedTab === "gaman"
+    selectedTab === 'gaman'
       ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
       : post.cheat_day === true
   );
@@ -231,7 +231,7 @@ export default function TimelinePage() {
             onClick={() => setSelectedTab('gaman')}
           >
             <span className="block">
-              ガマン
+              ガマン / MyRule
               {selectedTab === 'gaman' && (
                 <span style={{
                   display: 'block',

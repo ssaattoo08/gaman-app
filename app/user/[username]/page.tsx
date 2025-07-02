@@ -16,7 +16,7 @@ export default function UserProfilePage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
-  const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
+  const [selectedTab, setSelectedTab] = useState<'gaman' | 'myrule' | 'cheatday'>('gaman')
   const [reactions, setReactions] = useState<any[]>([])
   const [comments, setComments] = useState<any[]>([])
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
@@ -46,7 +46,7 @@ export default function UserProfilePage() {
       // 投稿一覧取得
       const { data: userPosts } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, cheat_day, profiles(nickname)")
+        .select("id, content, created_at, user_id, cheat_day, profiles(nickname), myrule")
         .eq("user_id", profile.id)
         .order("created_at", { ascending: false })
       // リアクション・コメントも取得
@@ -252,6 +252,25 @@ export default function UserProfilePage() {
             </span>
           </button>
           <button
+            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'myrule' ? 'bg-black text-yellow-900 relative z-10' : 'bg-yellow-100 text-yellow-900 opacity-70'}`}
+            style={selectedTab === 'myrule' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
+            onClick={() => setSelectedTab('myrule')}
+          >
+            <span className="block">
+              MyRule
+              {selectedTab === 'myrule' && (
+                <span style={{
+                  display: 'block',
+                  margin: '4px auto 0',
+                  width: '40px',
+                  height: '4px',
+                  background: '#eab308',
+                  borderRadius: '2px'
+                }} />
+              )}
+            </span>
+          </button>
+          <button
             className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('cheatday')}
@@ -277,9 +296,15 @@ export default function UserProfilePage() {
             <p className="text-white text-center">読み込み中...</p>
           ) : (
             posts
-              .filter(post => selectedTab === 'gaman'
-                ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
-                : post.cheat_day === true)
+              .filter(post => {
+                if (selectedTab === 'gaman') {
+                  return (post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined) && !post.myrule;
+                } else if (selectedTab === 'myrule') {
+                  return (post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined) && post.myrule;
+                } else {
+                  return post.cheat_day === true;
+                }
+              })
               .map((post) => (
                 <div
                   key={post.id}

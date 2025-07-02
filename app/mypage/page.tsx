@@ -56,7 +56,7 @@ export default function MyPage() {
 
         const { data: userPosts } = await supabase
           .from("gaman_logs")
-          .select("id, content, created_at, user_id, cheat_day")
+          .select("id, content, created_at, user_id, cheat_day, myrule")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
 
@@ -243,7 +243,7 @@ export default function MyPage() {
       setLoading(true);
       const { data: userPosts, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, cheat_day")
+        .select("id, content, created_at, user_id, cheat_day, myrule")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (!postsError) {
@@ -253,6 +253,13 @@ export default function MyPage() {
     }
     setPosting(false);
   };
+
+  // 投稿の絞り込み
+  const filteredPosts = posts.filter(post =>
+    selectedTab === 'gaman'
+      ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
+      : post.cheat_day === true
+  );
 
   return (
     <>
@@ -307,7 +314,7 @@ export default function MyPage() {
                 onClick={() => setSelectedTab('gaman')}
               >
                 <span className="block">
-                  ガマン
+                  ガマン / MyRule
                   {selectedTab === 'gaman' && (
                     <span style={{
                       display: 'block',
@@ -345,11 +352,7 @@ export default function MyPage() {
               {posts.length === 0 ? (
                 <p className="text-center text-gray-400">まだ投稿がありません</p>
               ) : (
-                posts
-                  .filter(post => selectedTab === 'gaman'
-                    ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
-                    : post.cheat_day === true)
-                  .map((post) => (
+                filteredPosts.map((post) => (
                   <div
                     key={post.id}
                     className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
