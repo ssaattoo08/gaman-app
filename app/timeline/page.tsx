@@ -40,7 +40,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule")
         .order("created_at", { ascending: false })
 
       // リアクション・コメント機能を一時的にクローズ
