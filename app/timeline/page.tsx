@@ -31,6 +31,7 @@ export default function TimelinePage() {
   const [content, setContent] = useState("")
   const [posting, setPosting] = useState(false)
   const [cheatDay, setCheatDay] = useState(false)
+  const [myRule, setMyRule] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -164,17 +165,19 @@ export default function TimelinePage() {
       user_id: user.id,
       content: content.trim(),
       cheat_day: cheatDay,
+      myrule: myRule,
     })
     if (error) {
       alert("投稿に失敗しました")
       console.error(error)
     } else {
       setContent("")
+      setMyRule(false)
       // 投稿後に再取得
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
@@ -195,6 +198,17 @@ export default function TimelinePage() {
             className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
             placeholder={selectedTab === 'cheatday' ? '例：大好きなお酒を思う存分飲みまくった' : '例：飲み会を断って生成AIの勉強をした'}
           />
+          {selectedTab === 'gaman' && (
+            <label className="flex items-center mb-4 text-gray-300 text-sm">
+              <input
+                type="checkbox"
+                checked={myRule}
+                onChange={e => setMyRule(e.target.checked)}
+                className="mr-2"
+              />
+              MyRuleとして投稿
+            </label>
+          )}
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
@@ -252,8 +266,12 @@ export default function TimelinePage() {
             filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+                className={`rounded-2xl shadow-md p-4 ${post.myrule ? 'bg-yellow-100' : 'bg-gray-800'} text-white relative`}
+                style={post.myrule ? { background: '#fef9c3', color: '#333' } : {}}
               >
+                {post.myrule && (
+                  <span className="absolute top-2 right-4 bg-yellow-300 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded" style={{letterSpacing: 1}}>MyRule</span>
+                )}
                 <div className="flex items-center mb-2">
                   <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm text-gray-400 hover:underline">
                     {post.profiles?.nickname ?? "名無し"}
