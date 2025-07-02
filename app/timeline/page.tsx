@@ -196,7 +196,13 @@ export default function TimelinePage() {
             value={content}
             onChange={e => setContent(e.target.value)}
             className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
-            placeholder={selectedTab === 'cheatday' ? '例：大好きなお酒を思う存分飲みまくった' : '例：飲み会を断って生成AIの勉強をした'}
+            placeholder={
+              selectedTab === 'cheatday'
+                ? '例：大好きなお酒を思う存分飲みまくった'
+                : myRule
+                  ? '例：通勤電車で寝ずに本を読んだ'
+                  : '例：飲み会を断って生成AIの勉強をした'
+            }
           />
           {selectedTab === 'gaman' && (
             <label className="flex items-center mb-4 text-gray-300 text-sm">
