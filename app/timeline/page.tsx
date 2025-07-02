@@ -272,7 +272,7 @@ export default function TimelinePage() {
             filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? 'myrule-card' : 'gaman-card'}`}
+                className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? '' : 'bg-gray-800 text-white'}`}
                 style={post.myrule ? { background: '#fffde7', color: '#333' } : {}}
               >
                 {post.myrule && (
