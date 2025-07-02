@@ -18,6 +18,9 @@ export default function MyPage() {
   // const [reactions, setReactions] = useState<any[]>([])
   // const [comments, setComments] = useState<any[]>([])
   // const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
+  // 投稿フォーム用の状態
+  const [content, setContent] = useState("");
+  const [posting, setPosting] = useState(false);
 
   useEffect(() => {
     isMountedRef.current = true
@@ -217,6 +220,40 @@ export default function MyPage() {
   //   }
   // }
 
+  // 投稿処理
+  const handlePostSubmit = async (cheatDay: boolean) => {
+    setPosting(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("ログインが必要です");
+      router.push("/login");
+      return;
+    }
+    const { error } = await supabase.from("gaman_logs").insert({
+      user_id: user.id,
+      content: content.trim(),
+      cheat_day: cheatDay,
+    });
+    if (error) {
+      alert("投稿に失敗しました");
+      console.error(error);
+    } else {
+      setContent("");
+      // 投稿後に再取得
+      setLoading(true);
+      const { data: userPosts, error: postsError } = await supabase
+        .from("gaman_logs")
+        .select("id, content, created_at, user_id, cheat_day")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      if (!postsError) {
+        setPosts(userPosts || []);
+      }
+      setLoading(false);
+    }
+    setPosting(false);
+  };
+
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -301,6 +338,22 @@ export default function MyPage() {
                     }} />
                   )}
                 </span>
+              </button>
+            </div>
+            {/* 投稿フォーム */}
+            <div className="mb-6">
+              <textarea
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
+                placeholder={selectedTab === 'cheatday' ? '例：大好きなお酒を思う存分飲みまくった' : '例：飲み会を断って生成AIの勉強をした'}
+              />
+              <button
+                onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
+                disabled={posting || !content.trim()}
+                className={`w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 text-base cursor-pointer`}
+              >
+                {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
               </button>
             </div>
             {/* 投稿一覧 */}

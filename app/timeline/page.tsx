@@ -152,7 +152,7 @@ export default function TimelinePage() {
 
   // const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
 
-  const handlePostSubmit = async () => {
+  const handlePostSubmit = async (cheatDay: boolean) => {
     setPosting(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
@@ -170,7 +170,6 @@ export default function TimelinePage() {
       console.error(error)
     } else {
       setContent("")
-      setCheatDay(false)
       // 投稿後に再取得
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
@@ -185,10 +184,6 @@ export default function TimelinePage() {
     setPosting(false)
   }
 
-  const postPlaceholder = cheatDay
-    ? "例：大好きなお酒を思う存分飲みまくった"
-    : "例：飲み会を断って生成AIの勉強をした"
-
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -198,23 +193,14 @@ export default function TimelinePage() {
             value={content}
             onChange={e => setContent(e.target.value)}
             className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
-            placeholder={postPlaceholder}
+            placeholder={selectedTab === 'cheatday' ? '例：大好きなお酒を思う存分飲みまくった' : '例：飲み会を断って生成AIの勉強をした'}
           />
-          <label className="flex items-center mb-4 text-gray-300 text-sm">
-            <input
-              type="checkbox"
-              checked={cheatDay}
-              onChange={e => setCheatDay(e.target.checked)}
-              className="mr-2"
-            />
-            チートデイとして投稿
-          </label>
           <button
-            onClick={handlePostSubmit}
+            onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
             className={`w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 text-base cursor-pointer`}
           >
-            {posting ? "投稿中..." : "投稿する"}
+            {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
           </button>
         </div>
         {/* タブUI */}
