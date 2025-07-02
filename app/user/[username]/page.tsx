@@ -309,7 +309,7 @@ export default function UserProfilePage() {
                 <div
                   key={post.id}
                   className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? 'myrule-card' : 'gaman-card'}`}
-                  style={post.myrule ? { background: '#fffde7', color: '#333' } : {}}
+                  style={post.myrule ? { background: '#ffd700', color: '#333' } : {}}
                 >
                   {post.myrule && (
                     <span className="absolute top-2 right-4 text-yellow-900 text-xs font-bold" style={{letterSpacing: 1}}>MyRule</span>
