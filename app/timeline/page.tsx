@@ -206,7 +206,7 @@ export default function TimelinePage() {
         {/* タブUI */}
         <div className="flex mb-4 gap-2">
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-[7] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('gaman')}
           >
@@ -225,7 +225,7 @@ export default function TimelinePage() {
             </span>
           </button>
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-[3] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('cheatday')}
           >
