@@ -340,22 +340,6 @@ export default function MyPage() {
                 </span>
               </button>
             </div>
-            {/* 投稿フォーム */}
-            <div className="mb-6">
-              <textarea
-                value={content}
-                onChange={e => setContent(e.target.value)}
-                className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
-                placeholder={selectedTab === 'cheatday' ? '例：大好きなお酒を思う存分飲みまくった' : '例：飲み会を断って生成AIの勉強をした'}
-              />
-              <button
-                onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
-                disabled={posting || !content.trim()}
-                className={`w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 text-base cursor-pointer`}
-              >
-                {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
-              </button>
-            </div>
             {/* 投稿一覧 */}
             <div className="space-y-4">
               {posts.length === 0 ? (
