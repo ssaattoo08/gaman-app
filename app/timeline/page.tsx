@@ -272,11 +272,11 @@ export default function TimelinePage() {
             filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`rounded-2xl shadow-md p-4 ${post.myrule ? 'bg-yellow-100' : 'bg-gray-800'} text-white relative`}
-                style={post.myrule ? { background: '#fef9c3', color: '#333' } : {}}
+                className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? 'myrule-card' : 'gaman-card'}`}
+                style={post.myrule ? { background: '#fffde7', color: '#333' } : {}}
               >
                 {post.myrule && (
-                  <span className="absolute top-2 right-4 bg-yellow-300 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded" style={{letterSpacing: 1}}>MyRule</span>
+                  <span className="absolute top-2 right-4 text-yellow-900 text-xs font-bold" style={{letterSpacing: 1}}>MyRule</span>
                 )}
                 <div className="flex items-center mb-2">
                   <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm text-gray-400 hover:underline">

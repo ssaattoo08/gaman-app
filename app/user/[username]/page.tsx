@@ -308,8 +308,12 @@ export default function UserProfilePage() {
               .map((post) => (
                 <div
                   key={post.id}
-                  className="bg-gray-800 rounded-2xl shadow-md p-4 text-white"
+                  className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? 'myrule-card' : 'gaman-card'}`}
+                  style={post.myrule ? { background: '#fffde7', color: '#333' } : {}}
                 >
+                  {post.myrule && (
+                    <span className="absolute top-2 right-4 text-yellow-900 text-xs font-bold" style={{letterSpacing: 1}}>MyRule</span>
+                  )}
                   <div className="flex items-center mb-2">
                     <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
                     <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
