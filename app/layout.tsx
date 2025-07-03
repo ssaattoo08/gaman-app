@@ -10,6 +10,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const hideNav = pathname === "/register" || pathname === "/login";
   return (
     <html lang="ja">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        {/* PNGアイコンも使いたい場合は下も追加 */}
+        {/* <link rel="icon" type="image/png" href="/icon.png" /> */}
+      </head>
       <body className="bg-black text-white font-sans">
         {/* <ThemeToggle /> */}
         {!hideNav && <TopNav />}
