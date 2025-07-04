@@ -355,13 +355,22 @@ export default function MyPage() {
                 filteredPosts.map((post) => (
                   <div
                     key={post.id}
-                    className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? '' : 'bg-gray-800 text-white'}`}
-                    style={post.myrule ? { background: '#ffff00', color: '#333' } : {}}
+                    className={`myrule-x-card rounded-2xl p-4 relative ${post.myrule ? '' : 'gaman-x-card'}`}
                   >
                     {post.myrule && (
                       <span
-                        className="absolute top-2 right-4 text-yellow-900 text-xs font-bold"
-                        style={{ letterSpacing: 1, fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}
+                        className="absolute top-2 right-4 text-xs font-bold"
+                        style={{
+                          color: '#bfa100',
+                          background: '#222',
+                          borderRadius: '8px',
+                          padding: '2px 8px',
+                          fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                          opacity: 0.85,
+                          fontWeight: 600,
+                          fontSize: '12px',
+                          letterSpacing: 1,
+                        }}
                       >
                         MyRule
                       </span>

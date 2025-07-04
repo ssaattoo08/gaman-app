@@ -24,3 +24,22 @@ body, html {
   font-family: "Meiryo UI", "Meiryo", sans-serif; /* フォントを統一 */
   font-size: 12px;
 }
+
+.myrule-x-card {
+  background: #181c20;
+  color: #ededed;
+  border: 1px solid #333;
+  border-radius: 16px;
+  box-shadow: none;
+  margin-bottom: 16px;
+  position: relative;
+}
+.gaman-x-card {
+  background: #222;
+  color: #ededed;
+  border: 1px solid #333;
+  border-radius: 16px;
+  box-shadow: none;
+  margin-bottom: 16px;
+  position: relative;
+}
