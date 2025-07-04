@@ -196,49 +196,38 @@ export default function UserProfilePage() {
         <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
           <div className="text-lg font-bold text-white mb-1">{nickname}</div>
           <div className="text-sm text-gray-400 mt-1">
-            ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
+            ガマン：{posts.filter(p => p.cheat_day === false || p.myrule === true).length}
             &nbsp;&nbsp;
             チートデイ：{posts.filter(p => p.cheat_day === true).length}
             <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
           </div>
         </div>
-        {/* 曜日ごとのガマン投稿数グラフ */}
+        {/* ヒートマップ（ガマンorMyRuleのみ・1年分グリッド） */}
         <div className="mb-6">
           <WeeklyGamanBarChart data={(() => {
-            // 直近7日間の日付配列（新しい順）
-            const today = new Date();
-            today.setHours(today.getHours() + 9); // JST補正
-            const days = [...Array(7)].map((_, i) => {
-              const d = new Date(today);
-              d.setDate(today.getDate() - (6 - i));
-              const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
-              return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0, dayNum: d.getDate() };
-            });
-            posts.forEach(p => {
+            if (posts.length === 0) return [];
+            const filtered = posts.filter(p => p.cheat_day === false || p.myrule === true);
+            const dateMap: { [date: string]: { date: string, gaman: number, cheat: number, dow: number } } = {};
+            filtered.forEach(p => {
               const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-              const ymd = d.toISOString().slice(0, 10);
-              const idx = days.findIndex(day => day.ymd === ymd);
-              if (idx !== -1) {
-                if (p.cheat_day === true) {
-                  days[idx].cheat++;
-                } else {
-                  days[idx].gaman++;
-                }
+              const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
+              if (!dateMap[ymd]) {
+                dateMap[ymd] = { date: ymd, gaman: 0, cheat: 0, dow: d.getDay() };
               }
+              dateMap[ymd].gaman++;
             });
-            // 0件の日付は除外。ただし10,20,30日は除外しない
-            return days.filter(day => (day.gaman > 0 || day.cheat > 0) || [10,20,30].includes(day.dayNum));
+            return Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
           })()} />
         </div>
-        {/* タブUI */}
+        {/* タブUI（MyPageと同じ分かれ方） */}
         <div className="flex mb-4 gap-2">
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-[7] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('gaman')}
           >
             <span className="block">
-              ガマン
+              ガマン / MyRule
               {selectedTab === 'gaman' && (
                 <span style={{
                   display: 'block',
@@ -252,26 +241,7 @@ export default function UserProfilePage() {
             </span>
           </button>
           <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'myrule' ? 'bg-black text-yellow-900 relative z-10' : 'bg-yellow-100 text-yellow-900 opacity-70'}`}
-            style={selectedTab === 'myrule' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
-            onClick={() => setSelectedTab('myrule')}
-          >
-            <span className="block">
-              MyRule
-              {selectedTab === 'myrule' && (
-                <span style={{
-                  display: 'block',
-                  margin: '4px auto 0',
-                  width: '40px',
-                  height: '4px',
-                  background: '#eab308',
-                  borderRadius: '2px'
-                }} />
-              )}
-            </span>
-          </button>
-          <button
-            className={`flex-1 py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
+            className={`flex-[3] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
             style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
             onClick={() => setSelectedTab('cheatday')}
           >
@@ -290,29 +260,39 @@ export default function UserProfilePage() {
             </span>
           </button>
         </div>
-        {/* 投稿一覧 */}
+        {/* 投稿一覧（MyPageと同じ分岐） */}
         <div className="space-y-4">
           {loading ? (
             <p className="text-white text-center">読み込み中...</p>
           ) : (
             posts
-              .filter(post => {
-                if (selectedTab === 'gaman') {
-                  return (post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined) && !post.myrule;
-                } else if (selectedTab === 'myrule') {
-                  return (post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined) && post.myrule;
-                } else {
-                  return post.cheat_day === true;
-                }
-              })
+              .filter(post =>
+                selectedTab === 'gaman'
+                  ? (post.cheat_day === false || post.myrule === true)
+                  : post.cheat_day === true
+              )
               .map((post) => (
                 <div
                   key={post.id}
-                  className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? 'myrule-card' : 'gaman-card'}`}
-                  style={post.myrule ? { background: '#ffd700', color: '#333' } : {}}
+                  className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
                 >
                   {post.myrule && (
-                    <span className="absolute top-2 right-4 text-yellow-900 text-xs font-bold" style={{letterSpacing: 1}}>MyRule</span>
+                    <span
+                      className="absolute top-2 right-4 text-xs font-bold"
+                      style={{
+                        color: '#bfa100',
+                        background: 'transparent',
+                        borderRadius: '8px',
+                        padding: '2px 8px',
+                        fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                        opacity: 0.85,
+                        fontWeight: 600,
+                        fontSize: '12px',
+                        letterSpacing: 1,
+                      }}
+                    >
+                      MyRule
+                    </span>
                   )}
                   <div className="flex items-center mb-2">
                     <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
