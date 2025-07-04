@@ -281,12 +281,14 @@ export default function MyPage() {
             {/* グラフをここに移動 */}
             <div className="w-full mt-4">
               <WeeklyGamanBarChart data={(() => {
-                // 直近7日間の日付配列（新しい順）
-                const today = new Date();
-                today.setHours(today.getHours() + 9); // JST補正
+                // 投稿があれば最新投稿日のJSTを基準に、なければ今
+                const latest = posts.length > 0
+                  ? new Date(new Date(posts[0].created_at).getTime() + 9 * 60 * 60 * 1000)
+                  : new Date();
+                latest.setHours(0, 0, 0, 0); // 時分秒を0に
                 const days = [...Array(7)].map((_, i) => {
-                  const d = new Date(today);
-                  d.setDate(today.getDate() - (6 - i));
+                  const d = new Date(latest);
+                  d.setDate(latest.getDate() - (6 - i));
                   const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
                   return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0, dayNum: d.getDate() };
                 });
@@ -302,7 +304,6 @@ export default function MyPage() {
                     }
                   }
                 });
-                // 0件の日付は除外。ただし10,20,30日は除外しない
                 return days.filter(day => (day.gaman > 0 || day.cheat > 0) || [10,20,30].includes(day.dayNum));
               })()} />
             </div>
