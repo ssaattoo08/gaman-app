@@ -3,29 +3,26 @@ import React from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 
-// props: [{ date: '06/25', gaman: 3, cheat: 1, dow: 2 }, ...]
+// props: [{ date: 'YYYY-MM-DD', gaman: number, cheat: number, dow: number }[] ]
 export default function WeeklyGamanBarChart({ data }: { data: { date: string, gaman: number, cheat: number, dow: number }[] }) {
-  // 日付をYYYY-MM-DD形式に変換（必要なら）
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 6);
+  if (!data || data.length === 0) return null;
 
-  // dataをCalendarHeatmap用に整形
-  const values = data.map(d => {
-    // 例: '06/25' → '2024-06-25'（今年で仮定）
-    const [month, day] = d.date.split('/');
-    const year = today.getFullYear();
-    return {
-      date: `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`,
-      count: d.gaman + d.cheat,
-    };
-  });
+  // dataのdateをYYYY-MM-DD形式に統一
+  const values = data.map(d => ({
+    date: d.date.length === 10 ? d.date : '', // 既にYYYY-MM-DDならそのまま
+    count: d.gaman + d.cheat,
+  })).filter(v => v.date);
+
+  // 日付範囲を全期間に
+  const dates = values.map(v => v.date).sort();
+  const startDate = dates[0];
+  const endDate = dates[dates.length - 1];
 
   return (
     <div style={{ width: '100%', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}>
       <CalendarHeatmap
         startDate={startDate}
-        endDate={today}
+        endDate={endDate}
         values={values}
         classForValue={(value: { date: string, count: number } | null) => {
           if (!value || !value.count) return 'color-empty';
@@ -34,8 +31,8 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
           if (value.count >= 1) return 'color-github-2';
           return 'color-github-1';
         }}
-        showWeekdayLabels={false}
-        gutterSize={4}
+        showWeekdayLabels={true}
+        gutterSize={2}
       />
       <style>{`
         .color-empty { fill: #222; }
