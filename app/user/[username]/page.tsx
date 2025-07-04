@@ -7,6 +7,7 @@ import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
 import WeeklyGamanBarChart from "@/components/WeeklyGamanBarChart"
 import PostContent from "../../../components/PostContent"
+import ThreeMonthCamelCalendar from "@/components/ThreeMonthCamelCalendar"
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -192,7 +193,7 @@ export default function UserProfilePage() {
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
-        {/* プロフィール欄 */}
+        {/* プロフィール欄＋カレンダーをまとめてカード化 */}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
           <div className="text-lg font-bold text-white mb-1">{nickname}</div>
           <div className="text-sm text-gray-400 mt-1">
@@ -200,6 +201,24 @@ export default function UserProfilePage() {
             &nbsp;&nbsp;
             チートデイ：{posts.filter(p => p.cheat_day === true).length}
             <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
+          </div>
+          {/* カレンダーをカード内に追加 */}
+          <div className="w-full mt-4 flex justify-center">
+            <ThreeMonthCamelCalendar data={(() => {
+              if (posts.length === 0) return [];
+              const filtered = posts.filter(p => p.cheat_day === false || p.myrule === true);
+              const dateMap: { [date: string]: { date: string, gaman: number, myrule: boolean } } = {};
+              filtered.forEach(p => {
+                const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
+                const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                if (!dateMap[ymd]) {
+                  dateMap[ymd] = { date: ymd, gaman: 0, myrule: false };
+                }
+                dateMap[ymd].gaman++;
+                if (p.myrule) dateMap[ymd].myrule = true;
+              });
+              return Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
+            })()} />
           </div>
         </div>
         {/* ヒートマップ（ガマンorMyRuleのみ・1年分グリッド） */}
