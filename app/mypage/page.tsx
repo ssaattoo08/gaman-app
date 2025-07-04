@@ -281,30 +281,23 @@ export default function MyPage() {
             {/* グラフをここに移動 */}
             <div className="w-full mt-4">
               <WeeklyGamanBarChart data={(() => {
-                // 投稿があれば最新投稿日のJSTを基準に、なければ今
-                const latest = posts.length > 0
-                  ? new Date(new Date(posts[0].created_at).getTime() + 9 * 60 * 60 * 1000)
-                  : new Date();
-                latest.setHours(0, 0, 0, 0); // 時分秒を0に
-                const days = [...Array(7)].map((_, i) => {
-                  const d = new Date(latest);
-                  d.setDate(latest.getDate() - (6 - i));
-                  const mmdd = (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getDate().toString().padStart(2, '0');
-                  return { date: mmdd, ymd: d.toISOString().slice(0, 10), dow: d.getDay(), gaman: 0, cheat: 0, dayNum: d.getDate() };
-                });
+                if (posts.length === 0) return [];
+                // created_atのJST日付ごとに集計
+                const dateMap: { [date: string]: { date: string, gaman: number, cheat: number, dow: number } } = {};
                 posts.forEach(p => {
                   const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-                  const ymd = d.toISOString().slice(0, 10);
-                  const idx = days.findIndex(day => day.ymd === ymd);
-                  if (idx !== -1) {
-                    if (p.cheat_day === true) {
-                      days[idx].cheat++;
-                    } else {
-                      days[idx].gaman++;
-                    }
+                  const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                  if (!dateMap[ymd]) {
+                    dateMap[ymd] = { date: ymd, gaman: 0, cheat: 0, dow: d.getDay() };
+                  }
+                  if (p.cheat_day === true) {
+                    dateMap[ymd].cheat++;
+                  } else {
+                    dateMap[ymd].gaman++;
                   }
                 });
-                return days.filter(day => (day.gaman > 0 || day.cheat > 0) || [10,20,30].includes(day.dayNum));
+                // 日付順に並べて配列化
+                return Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
               })()} />
             </div>
             {/* 投稿タブ */}
