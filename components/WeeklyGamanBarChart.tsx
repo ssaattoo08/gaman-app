@@ -20,7 +20,7 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
   const endDate = dates[dates.length - 1];
 
   return (
-    <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif', padding: '8px 0' }}>
+    <div style={{ width: '100%', maxWidth: 600, margin: '0 auto', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif', padding: '8px 0' }}>
       <CalendarHeatmap
         startDate={startDate}
         endDate={endDate}
@@ -34,14 +34,14 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
           return 'color-blue-1';
         }}
         showWeekdayLabels={true}
-        gutterSize={3}
+        gutterSize={2}
         horizontal={true}
         tooltipDataAttrs={(value: { date: string, count: number } | null) =>
           value && value.date
             ? { 'data-tip': `${value.date}: ${value.count}回投稿` }
             : { 'data-tip': '投稿なし' }
         }
-        rectSize={13}
+        rectSize={8}
       />
       <Tooltip id="heatmap-tooltip" style={{ background: '#222', color: '#fff', border: '1px solid #444', borderRadius: 4, fontSize: 12 }} />
       <style>{`
@@ -51,12 +51,12 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
         .color-blue-3 { fill: #1d4ed8; }
         .color-blue-4 { fill: #1e293b; }
         .react-calendar-heatmap .react-calendar-heatmap-week rect {
-          rx: 3px;
+          rx: 2px;
           stroke: #111;
           stroke-width: 1;
         }
         .react-calendar-heatmap text {
-          font-size: 12px;
+          font-size: 8px;
           fill: #aaa;
         }
       `}</style>
