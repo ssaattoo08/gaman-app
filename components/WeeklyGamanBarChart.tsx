@@ -1,41 +1,49 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import React from 'react';
+// @ts-ignore
+import CalendarHeatmap from 'react-calendar-heatmap';
+import 'react-calendar-heatmap/dist/styles.css';
 
 // props: [{ date: '06/25', gaman: 3, cheat: 1, dow: 2 }, ...]
 export default function WeeklyGamanBarChart({ data }: { data: { date: string, gaman: number, cheat: number, dow: number }[] }) {
-  // XAxisのカスタムtickレンダラー
-  const renderCustomTick = (props: any) => {
-    const { x, y, payload } = props;
-    // dow: 0=日, 6=土
-    const dow = data[payload.index]?.dow;
-    let color = '#ccc';
-    if (dow === 0) color = '#e53935'; // 日曜: 濃い赤
-    if (dow === 6) color = '#1e40af'; // 土曜: 濃い青
-    return (
-      <g transform={`translate(${x},${y + 8})`}>
-        <text x={0} y={0} dy={0} textAnchor="middle" fill={color} fontSize={10} fontFamily="Meiryo UI, Meiryo, sans-serif">
-          {payload.value}
-        </text>
-      </g>
-    );
-  };
+  // 日付をYYYY-MM-DD形式に変換（必要なら）
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - 6);
+
+  // dataをCalendarHeatmap用に整形
+  const values = data.map(d => {
+    // 例: '06/25' → '2024-06-25'（今年で仮定）
+    const [month, day] = d.date.split('/');
+    const year = today.getFullYear();
+    return {
+      date: `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`,
+      count: d.gaman + d.cheat,
+    };
+  });
 
   return (
-    <div style={{ width: '100%', height: 140, background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 16, right: 16, left: 16, bottom: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" vertical={false} />
-          <XAxis dataKey="date" tick={renderCustomTick} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: '#aaa', fontSize: 8, fontFamily: 'Meiryo UI, Meiryo, sans-serif' }} axisLine={false} tickLine={false} width={24} />
-          <Tooltip cursor={{ fill: '#222' }} contentStyle={{ background: '#222', border: 'none', color: '#fff', fontFamily: 'Meiryo UI, Meiryo, sans-serif', fontSize: 10 }} />
-          <Bar dataKey="gaman" name="ガマン" radius={[8, 8, 0, 0]} fill="#888" barSize={8} >
-            <LabelList dataKey="gaman" position="top" fill="#bbb" fontSize={10} fontFamily="Meiryo UI, Meiryo, sans-serif" />
-          </Bar>
-          <Bar dataKey="cheat" name="チートデイ" radius={[8, 8, 0, 0]} fill="#fca5a5" barSize={8} >
-            <LabelList dataKey="cheat" position="top" fill="#fca5a5" fontSize={10} fontFamily="Meiryo UI, Meiryo, sans-serif" />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div style={{ width: '100%', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}>
+      <CalendarHeatmap
+        startDate={startDate}
+        endDate={today}
+        values={values}
+        classForValue={(value: { date: string, count: number } | null) => {
+          if (!value || !value.count) return 'color-empty';
+          if (value.count >= 4) return 'color-github-4';
+          if (value.count >= 2) return 'color-github-3';
+          if (value.count >= 1) return 'color-github-2';
+          return 'color-github-1';
+        }}
+        showWeekdayLabels={false}
+        gutterSize={4}
+      />
+      <style>{`
+        .color-empty { fill: #222; }
+        .color-github-1 { fill: #9be9a8; }
+        .color-github-2 { fill: #40c463; }
+        .color-github-3 { fill: #30a14e; }
+        .color-github-4 { fill: #216e39; }
+      `}</style>
     </div>
   );
 } 
