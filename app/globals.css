@@ -26,7 +26,7 @@ body, html {
 }
 
 .myrule-x-card {
-  background: #181c20;
+  background: #222;
   color: #ededed;
   border: 1px solid #333;
   border-radius: 16px;
@@ -54,5 +54,5 @@ body, html {
   position: relative;
 }
 .myrule-x-post {
-  background: #222;
+  background: #222 !important;
 }
