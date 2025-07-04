@@ -10,14 +10,16 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
 
   // dataのdateをYYYY-MM-DD形式に統一
   const values = data.map(d => ({
-    date: d.date.length === 10 ? d.date : '', // 既にYYYY-MM-DDならそのまま
+    date: d.date.length === 10 ? d.date : '',
     count: d.gaman + d.cheat,
   })).filter(v => v.date);
 
-  // 日付範囲を全期間に
-  const dates = values.map(v => v.date).sort();
-  const startDate = dates[0];
-  const endDate = dates[dates.length - 1];
+  // 1年分のグリッドを常に表示
+  const today = new Date();
+  const endDate = today.toISOString().slice(0, 10);
+  const start = new Date(today);
+  start.setDate(today.getDate() - 364); // 1年前
+  const startDate = start.toISOString().slice(0, 10);
 
   return (
     <div style={{ width: '100%', maxWidth: 540, margin: '0 auto', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif', padding: '8px 0' }}>
