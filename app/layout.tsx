@@ -1,7 +1,6 @@
 import "./globals.css";
 import BottomNav from "../components/BottomNav";
 import TopNav from "../components/TopNav";
-import { usePathname } from "next/navigation";
 // import ThemeToggle from "../components/ThemeToggle";
 
 export const metadata = {
@@ -13,9 +12,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const hideNav = pathname === "/register" || pathname === "/login";
-
   return (
     <html lang="ja">
       <head>
@@ -23,9 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-black text-white font-sans">
         {/* <ThemeToggle /> */}
-        {!hideNav && <TopNav />}
+        <TopNav />
         {children}
-        {!hideNav && <BottomNav />}
+        <BottomNav />
       </body>
     </html>
   );
