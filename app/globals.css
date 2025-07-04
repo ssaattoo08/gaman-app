@@ -43,3 +43,16 @@ body, html {
   margin-bottom: 16px;
   position: relative;
 }
+
+.x-post {
+  border-bottom: 1px solid #222;
+  padding: 20px 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+  position: relative;
+}
+.myrule-x-post {
+  background: #181c20;
+}

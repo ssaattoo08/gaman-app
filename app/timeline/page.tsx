@@ -272,7 +272,7 @@ export default function TimelinePage() {
             filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`myrule-x-card rounded-2xl p-4 relative ${post.myrule ? '' : 'gaman-x-card'}`}
+                className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
               >
                 {post.myrule && (
                   <span
