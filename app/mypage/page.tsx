@@ -362,7 +362,7 @@ export default function MyPage() {
                         className="absolute top-2 right-4 text-xs font-bold"
                         style={{
                           color: '#bfa100',
-                          background: '#222',
+                          background: 'transparent',
                           borderRadius: '8px',
                           padding: '2px 8px',
                           fontFamily: 'Meiryo UI, Meiryo, sans-serif',

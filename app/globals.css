@@ -47,12 +47,12 @@ body, html {
 .x-post {
   border-bottom: 1px solid #222;
   padding: 20px 0;
-  background: transparent;
+  background: #222;
   border-radius: 0;
   box-shadow: none;
   margin-bottom: 0;
   position: relative;
 }
 .myrule-x-post {
-  background: #222 !important;
+  /* background指定を削除 */
 }
