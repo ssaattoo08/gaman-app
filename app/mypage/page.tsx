@@ -282,19 +282,16 @@ export default function MyPage() {
             <div className="w-full mt-4">
               <WeeklyGamanBarChart data={(() => {
                 if (posts.length === 0) return [];
-                // created_atのJST日付ごとに集計
+                // ガマン（cheat_dayがfalse）またはMyRule（myruleがtrue）のみ抽出
+                const filtered = posts.filter(p => p.cheat_day === false || p.myrule === true);
                 const dateMap: { [date: string]: { date: string, gaman: number, cheat: number, dow: number } } = {};
-                posts.forEach(p => {
+                filtered.forEach(p => {
                   const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
                   const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
                   if (!dateMap[ymd]) {
                     dateMap[ymd] = { date: ymd, gaman: 0, cheat: 0, dow: d.getDay() };
                   }
-                  if (p.cheat_day === true) {
-                    dateMap[ymd].cheat++;
-                  } else {
-                    dateMap[ymd].gaman++;
-                  }
+                  dateMap[ymd].gaman++;
                 });
                 // 日付順に並べて配列化
                 return Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
