@@ -222,22 +222,7 @@ export default function UserProfilePage() {
           </div>
         </div>
         {/* ヒートマップ（ガマンorMyRuleのみ・1年分グリッド） */}
-        <div className="mb-6">
-          <WeeklyGamanBarChart data={(() => {
-            if (posts.length === 0) return [];
-            const filtered = posts.filter(p => p.cheat_day === false || p.myrule === true);
-            const dateMap: { [date: string]: { date: string, gaman: number, cheat: number, dow: number } } = {};
-            filtered.forEach(p => {
-              const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-              const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
-              if (!dateMap[ymd]) {
-                dateMap[ymd] = { date: ymd, gaman: 0, cheat: 0, dow: d.getDay() };
-              }
-              dateMap[ymd].gaman++;
-            });
-            return Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
-          })()} />
-        </div>
+        {/* この部分を削除 */}
         {/* タブUI（MyPageと同じ分かれ方） */}
         <div className="flex mb-4 gap-2">
           <button
