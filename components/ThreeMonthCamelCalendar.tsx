@@ -63,10 +63,28 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
         color = '#60a5fa'; // 土曜: 青
       }
       week.push(
-        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
-          <div style={{ fontSize: 8, color, marginBottom: 0 }}>{day}</div>
-          {hasPost && (
-            <Image src="/camel-icon-transparent.png" alt="ラクダ" width={12} height={12} style={{ display: 'block', margin: '0 auto' }} />
+        <td key={dateStr} style={{ width: 24, height: 24, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
+          {hasPost ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: `2px solid ${color}`,
+                color: color,
+                fontWeight: 'bold',
+                fontSize: 12,
+                margin: '0 auto',
+                background: 'transparent',
+              }}
+            >
+              {day}
+            </div>
+          ) : (
+            <div style={{ fontSize: 12, color, margin: '0 auto', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{day}</div>
           )}
         </td>
       );
