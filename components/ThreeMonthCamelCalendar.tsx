@@ -1,5 +1,29 @@
 import React, { type JSX } from 'react';
 
+// 日本の祝日（簡易版）
+const JAPAN_HOLIDAYS = [
+  // 月-日
+  '01-01', // 元日
+  '02-11', // 建国記念の日
+  '02-23', // 天皇誕生日
+  '04-29', // 昭和の日
+  '05-03', // 憲法記念日
+  '05-04', // みどりの日
+  '05-05', // こどもの日
+  '07-15', // 海の日（例年変動あり、2025年は7/21）
+  '08-11', // 山の日
+  '09-16', // 敬老の日（例年変動あり、2025年は9/15）
+  '09-23', // 秋分の日（例年変動あり、2025年は9/23）
+  '10-14', // 体育の日（スポーツの日、例年変動あり、2025年は10/13）
+  '11-03', // 文化の日
+  '11-23', // 勤労感謝の日
+];
+
+function isHoliday(year: number, month: number, day: number) {
+  const md = `${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  return JAPAN_HOLIDAYS.includes(md);
+}
+
 // props: data = [{ date: 'YYYY-MM-DD', gaman: number, myrule: boolean }[] ]
 export default function ThreeMonthCamelCalendar({ data }: { data: { date: string, gaman: number, myrule: boolean }[] }) {
   // 今日を基準に直近3ヶ月分の年月を取得
@@ -29,9 +53,21 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const hasPost = postSet.has(dateStr);
+      // 曜日・祝日色分け
+      const dow = new Date(year, month, day).getDay();
+      let borderColor = '#222';
+      let bgColor = '#181a20';
+      let color = '#aaa';
+      if (dow === 0 || isHoliday(year, month, day)) {
+        color = '#e57373'; // 日曜・祝日: 赤
+        borderColor = '#e57373';
+      } else if (dow === 6) {
+        color = '#60a5fa'; // 土曜: 青
+        borderColor = '#60a5fa';
+      }
       week.push(
-        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
-          <div style={{ fontSize: 8, color: '#aaa', marginBottom: 0 }}>{day}</div>
+        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: bgColor, borderRadius: 4, border: `1px solid ${borderColor}`, position: 'relative', padding: 0 }}>
+          <div style={{ fontSize: 8, color, marginBottom: 0 }}>{day}</div>
           {hasPost && (
             <img src="/camel-icon-transparent.png" alt="ラクダ" style={{ width: 12, height: 12, display: 'block', margin: '0 auto' }} />
           )}
