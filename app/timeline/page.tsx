@@ -273,10 +273,15 @@ export default function TimelinePage() {
               <div
                 key={post.id}
                 className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? '' : 'bg-gray-800 text-white'}`}
-                style={post.myrule ? { background: '#ffd700', color: '#333' } : {}}
+                style={post.myrule ? { background: '#f0e68c', color: '#333' } : {}}
               >
                 {post.myrule && (
-                  <span className="absolute top-2 right-4 text-yellow-900 text-xs font-bold" style={{letterSpacing: 1}}>MyRule</span>
+                  <span
+                    className="absolute top-2 right-4 text-yellow-900 text-xs font-bold"
+                    style={{ letterSpacing: 1, fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}
+                  >
+                    MyRule
+                  </span>
                 )}
                 <div className="flex items-center mb-2">
                   <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm text-gray-400 hover:underline">
