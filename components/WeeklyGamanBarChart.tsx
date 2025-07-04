@@ -2,6 +2,7 @@ import React from 'react';
 // @ts-ignore
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
+import { Tooltip } from 'react-tooltip';
 
 // props: [{ date: 'YYYY-MM-DD', gaman: number, cheat: number, dow: number }[] ]
 export default function WeeklyGamanBarChart({ data }: { data: { date: string, gaman: number, cheat: number, dow: number }[] }) {
@@ -19,7 +20,7 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
   const endDate = dates[dates.length - 1];
 
   return (
-    <div style={{ width: '100%', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif' }}>
+    <div style={{ width: '100%', maxWidth: 700, margin: '0 auto', background: 'transparent', fontFamily: 'Meiryo UI, Meiryo, sans-serif', padding: '8px 0' }}>
       <CalendarHeatmap
         startDate={startDate}
         endDate={endDate}
@@ -32,14 +33,31 @@ export default function WeeklyGamanBarChart({ data }: { data: { date: string, ga
           return 'color-github-1';
         }}
         showWeekdayLabels={true}
-        gutterSize={2}
+        gutterSize={4}
+        horizontal={true}
+        tooltipDataAttrs={(value: { date: string, count: number } | null) =>
+          value && value.date
+            ? { 'data-tip': `${value.date}: ${value.count}回投稿` }
+            : { 'data-tip': '投稿なし' }
+        }
+        rectSize={15}
       />
+      <Tooltip id="heatmap-tooltip" style={{ background: '#222', color: '#fff', border: '1px solid #444', borderRadius: 4, fontSize: 12 }} />
       <style>{`
         .color-empty { fill: #222; }
         .color-github-1 { fill: #9be9a8; }
         .color-github-2 { fill: #40c463; }
         .color-github-3 { fill: #30a14e; }
         .color-github-4 { fill: #216e39; }
+        .react-calendar-heatmap .react-calendar-heatmap-week rect {
+          rx: 4px;
+          stroke: #111;
+          stroke-width: 1;
+        }
+        .react-calendar-heatmap text {
+          font-size: 12px;
+          fill: #aaa;
+        }
       `}</style>
     </div>
   );
