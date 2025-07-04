@@ -273,7 +273,7 @@ export default function TimelinePage() {
               <div
                 key={post.id}
                 className={`rounded-2xl shadow-md p-4 relative ${post.myrule ? '' : 'bg-gray-800 text-white'}`}
-                style={post.myrule ? { background: '#f0e68c', color: '#333' } : {}}
+                style={post.myrule ? { background: '#ffff00', color: '#333' } : {}}
               >
                 {post.myrule && (
                   <span
