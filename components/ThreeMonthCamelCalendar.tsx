@@ -1,4 +1,5 @@
 import React, { type JSX } from 'react';
+import Image from 'next/image';
 
 // 日本の祝日（簡易版）
 const JAPAN_HOLIDAYS = [
@@ -55,21 +56,17 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
       const hasPost = postSet.has(dateStr);
       // 曜日・祝日色分け
       const dow = new Date(year, month, day).getDay();
-      let borderColor = '#222';
-      let bgColor = '#181a20';
       let color = '#aaa';
       if (dow === 0 || isHoliday(year, month, day)) {
         color = '#e57373'; // 日曜・祝日: 赤
-        borderColor = '#e57373';
       } else if (dow === 6) {
         color = '#60a5fa'; // 土曜: 青
-        borderColor = '#60a5fa';
       }
       week.push(
-        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: bgColor, borderRadius: 4, border: `1px solid ${borderColor}`, position: 'relative', padding: 0 }}>
+        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
           <div style={{ fontSize: 8, color, marginBottom: 0 }}>{day}</div>
           {hasPost && (
-            <img src="/camel-icon-transparent.png" alt="ラクダ" style={{ width: 12, height: 12, display: 'block', margin: '0 auto' }} />
+            <Image src="/camel-icon-transparent.png" alt="ラクダ" width={12} height={12} style={{ display: 'block', margin: '0 auto' }} />
           )}
         </td>
       );
