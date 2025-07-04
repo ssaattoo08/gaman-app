@@ -56,7 +56,7 @@ export default function TopNav() {
       <div className="flex space-x-8">
         <Link href="/timeline" className={pathname === "/timeline" ? "font-bold underline" : ""}>Timeline</Link>
         {/* <Link href="/post" className={pathname === "/post" ? "font-bold underline" : ""}>投稿</Link> */}
-        <Link href="/mypage" className={pathname === "/mypage" ? "font-bold underline" : ""}>My Page</Link>
+        <Link href="/mypage" className={pathname === "/mypage" ? "font-bold underline" : ""}>MyPage</Link>
       </div>
       {/* 通知ボタンを一時的に非表示
       <div className="relative ml-8">
