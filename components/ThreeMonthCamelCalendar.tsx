@@ -63,20 +63,20 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
         color = '#60a5fa'; // 土曜: 青
       }
       week.push(
-        <td key={dateStr} style={{ width: 24, height: 24, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
+        <td key={dateStr} style={{ width: 18, height: 18, textAlign: 'center', verticalAlign: 'middle', background: '#181a20', borderRadius: 4, border: '1px solid #222', position: 'relative', padding: 0 }}>
           {hasPost ? (
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 20,
-                height: 20,
+                width: 14,
+                height: 14,
                 borderRadius: '50%',
-                border: `2px solid ${color}`,
+                border: `1.5px solid ${color}`,
                 color: color,
                 fontWeight: 'bold',
-                fontSize: 12,
+                fontSize: 9,
                 margin: '0 auto',
                 background: 'transparent',
               }}
@@ -84,7 +84,7 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
               {day}
             </div>
           ) : (
-            <div style={{ fontSize: 12, color, margin: '0 auto', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{day}</div>
+            <div style={{ fontSize: 9, color, margin: '0 auto', width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{day}</div>
           )}
         </td>
       );
@@ -103,7 +103,7 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
       <table style={{ borderCollapse: 'separate', borderSpacing: 2, background: 'transparent', margin: '0 2px', minWidth: 120 }}>
         <thead>
           <tr>
-            <th colSpan={7} style={{ textAlign: 'center', color: '#fff', fontWeight: 700, fontSize: 12, background: 'transparent', padding: 2 }}>{year}年{month + 1}月</th>
+            <th colSpan={7} style={{ textAlign: 'center', color: '#fff', fontWeight: 400, fontSize: 10, background: 'transparent', padding: 2, letterSpacing: 0.5 }}>{year}年{month + 1}月</th>
           </tr>
           <tr style={{ color: '#aaa', fontSize: 8 }}>
             <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
