@@ -27,10 +27,10 @@ function isHoliday(year: number, month: number, day: number) {
 
 // props: data = [{ date: 'YYYY-MM-DD', gaman: number, myrule: boolean }[] ]
 export default function ThreeMonthCamelCalendar({ data }: { data: { date: string, gaman: number, myrule: boolean }[] }) {
-  // 今日を基準に直近3ヶ月分の年月を取得
+  // 今日を基準に直近2ヶ月分の年月を取得
   const today = new Date();
   const months = [];
-  for (let i = 2; i >= 0; i--) {
+  for (let i = 1; i >= 0; i--) {
     const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
     months.push({ year: d.getFullYear(), month: d.getMonth() });
   }
