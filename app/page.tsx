@@ -24,7 +24,7 @@ export default function Home() {
         {/* ロゴ表示 */}
         <div className="flex justify-center">
           <img
-            src="/camel-logo-small.png"  // 必要に応じて camel-icon-transparent.png に変更可
+            src="/camel-icon-transparent.png"  // 必要に応じて camel-icon-transparent.png に変更可
             alt="がまんロゴ"
             width={80}
             height={80}
