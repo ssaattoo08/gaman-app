@@ -29,19 +29,43 @@ const fetchOgp = async (url: string): Promise<OgpData | null> => {
 
 const urlRegex = /(https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+)(?![^<]*>|[^\[]*\])/g;
 
+function extractUrls(text: string): string[] {
+  return Array.from(text.matchAll(/https?:\/\/[^\s]+/g)).map(m => m[0]);
+}
+
 function removeUrls(text: string) {
   return text.replace(/https?:\/\/[^\s]+/g, "");
 }
 
+function getDomain(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 export default function PostContent({ content }: { content: string }) {
+  const urls = extractUrls(content);
   return (
     <div>
-      {/* 本文＋URL自動リンク化 */}
-      <div className="whitespace-pre-line break-words">
-        <Linkify options={{ target: "_blank", rel: "noopener noreferrer" }}>
-          {content}
-        </Linkify>
+      {/* 本文（URL除外） */}
+      <div className="whitespace-pre-line break-words mb-2">
+        {removeUrls(content)}
       </div>
+      {/* ドメイン＋アイコンリンク */}
+      {urls.map(url => (
+        <div key={url} className="my-1">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-blue-300 hover:underline font-semibold"
+          >
+            <span className="mr-1">🔗</span>{getDomain(url)}
+          </a>
+        </div>
+      ))}
     </div>
   );
 } 
