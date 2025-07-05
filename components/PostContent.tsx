@@ -29,6 +29,10 @@ const fetchOgp = async (url: string): Promise<OgpData | null> => {
 
 const urlRegex = /(https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+)(?![^<]*>|[^\[]*\])/g;
 
+function removeUrls(text: string) {
+  return text.replace(/https?:\/\/[^\s]+/g, "");
+}
+
 export default function PostContent({ content }: { content: string }) {
   const [ogps, setOgps] = useState<OgpData[]>([]);
 
@@ -46,42 +50,8 @@ export default function PostContent({ content }: { content: string }) {
   }, [content]);
 
   return (
-    <div>
-      <div className="text-base whitespace-pre-line break-words mb-2">
-        <Linkify options={{
-          target: "_blank",
-          rel: "noopener noreferrer",
-          className: "text-blue-400 underline break-all"
-        }}>{content}</Linkify>
-      </div>
-      {ogps.map(ogp => {
-        // descriptionがエラーっぽい場合は非表示
-        const isErrorDesc = ogp.description && /access denied|reference/i.test(ogp.description);
-        return (
-          <a
-            key={ogp.url}
-            href={ogp.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block border border-gray-700 rounded-xl p-3 mb-2 bg-gray-900 hover:bg-gray-800 transition"
-            style={{ maxWidth: 400 }}
-          >
-            {ogp.image
-              ? (
-                <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`; }} />
-              )
-              : (
-                <img src={`https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`}
-                     alt="favicon"
-                     className="w-16 h-16 object-contain rounded-md mb-2 mx-auto"
-                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/noimage.png'; }}
-                />
-              )
-            }
-            <div className="font-bold text-white text-sm mb-1 text-center">{ogp.title}</div>
-          </a>
-        );
-      })}
+    <div className="whitespace-pre-line break-words">
+      {removeUrls(content)}
     </div>
   );
 } 
