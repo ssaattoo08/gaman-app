@@ -58,10 +58,25 @@ export default function ProfileEditPage() {
       setSaving(false);
       return;
     }
-    // 画像アップロード処理は後で実装
+    let icon_url = iconPreview;
+    if (iconFile) {
+      // 拡張子取得
+      const ext = iconFile.name.split('.').pop();
+      const filePath = `${user.id}.${ext}`;
+      // Storageにアップロード
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { upsert: true, contentType: iconFile.type });
+      if (uploadError) {
+        setMessage("画像アップロードに失敗しました");
+        setSaving(false);
+        return;
+      }
+      // 公開URL取得
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+      icon_url = data.publicUrl;
+    }
     const { error } = await supabase
       .from("profiles")
-      .update({ nickname, bio })
+      .update({ nickname, bio, icon_url })
       .eq("id", user.id);
     if (error) {
       setMessage("保存に失敗しました");
