@@ -201,8 +201,8 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-6 flex items-start gap-3">
-          <div className="flex-1 flex flex-col">
+        <div className="mb-6 flex items-start gap-3 w-full">
+          <div className="flex-1 flex flex-col w-full">
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
@@ -211,10 +211,10 @@ export default function TimelinePage() {
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
                   : myRule
-                    ? '例：通勤電車で寝ずに本を読んだ'
-                    : 'いまどうしてる？'
+                    ? 'ガマン例：飲み会を断り生成AIの勉強をした'
+                    : 'ガマン例：飲み会を断り生成AIの勉強をした'
               }
-              style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'16px'}}
+              style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'16px', width:'100%'}}
             />
             {selectedTab === 'gaman' && (
               <label className="flex items-center text-gray-300 text-xs mt-1 mb-1" style={{userSelect:'none'}}>
@@ -232,10 +232,10 @@ export default function TimelinePage() {
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`ml-2 px-3 py-1 rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
-            style={{ fontSize: '13px', minWidth: '60px', height: '30px', borderRadius: '9999px', alignSelf: 'flex-end' }}
+            className={`ml-2 px-2 py-1 rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+            style={{ fontSize: '11px', minWidth: '44px', height: '26px', borderRadius: '9999px', alignSelf: 'flex-end' }}
           >
-            {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
+            {posting ? '投稿中...' : '投稿'}
           </button>
         </div>
         {/* タブUI */}
