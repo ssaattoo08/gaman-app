@@ -70,13 +70,12 @@ export default function PostContent({ content }: { content: string }) {
           >
             {ogp.image
               ? (
-                <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`; }} />
+                <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/noimage.png'; }} />
               )
               : (
-                <img src={`https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(ogp.url)}`}
-                     alt="favicon"
+                <img src="/noimage.png"
+                     alt="noimage"
                      className="w-16 h-16 object-contain rounded-md mb-2 mx-auto"
-                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/noimage.png'; }}
                 />
               )
             }
