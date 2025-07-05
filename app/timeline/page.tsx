@@ -201,37 +201,38 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-6 flex items-center gap-2">
-          {/* プロフィール画像枠（ダミー）を左に追加したい場合はここに */}
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white text-base resize-none"
-            placeholder={
-              selectedTab === 'cheatday'
-                ? '例：大好きなお酒を思う存分飲みまくった'
-                : myRule
-                  ? '例：通勤電車で寝ずに本を読んだ'
-                  : '例：飲み会を断って生成AIの勉強をした'
-            }
-          />
-          {selectedTab === 'gaman' && (
-            <label className="flex items-center ml-2 mr-2 text-gray-300 text-sm whitespace-nowrap" style={{height:'38px'}}>
-              <input
-                type="checkbox"
-                checked={myRule}
-                onChange={e => setMyRule(e.target.checked)}
-                className="mr-1 accent-blue-500 w-4 h-4"
-                style={{verticalAlign:'middle'}}
-              />
-              <span style={{lineHeight:'1'}}>MyRuleとして投稿</span>
-            </label>
-          )}
+        <div className="mb-6 flex items-start gap-3">
+          {/* プロフィール画像枠（ダミー） */}
+          <div style={{width:40,height:40,background:'#333',borderRadius:8,marginTop:2,flexShrink:0}}></div>
+          <div className="flex-1 flex flex-col">
+            <textarea
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              className="w-full h-12 p-3 rounded-xl bg-gray-800 text-white text-base resize-none mb-2"
+              placeholder={
+                selectedTab === 'cheatday'
+                  ? '例：大好きなお酒を思う存分飲みまくった'
+                  : myRule
+                    ? '例：通勤電車で寝ずに本を読んだ'
+                    : 'いまどうしてる？'
+              }
+              style={{minHeight:'40px',maxHeight:'80px'}}
+            />
+            {/* アイコン群（ダミー） */}
+            <div className="flex items-center mt-1 mb-1 gap-3 text-blue-400 text-xl">
+              <span className="cursor-pointer">🖼️</span>
+              <span className="cursor-pointer">GIF</span>
+              <span className="cursor-pointer">🖊️</span>
+              <span className="cursor-pointer">😊</span>
+              <span className="cursor-pointer">📷</span>
+              <span className="cursor-pointer">📍</span>
+            </div>
+          </div>
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-blue-400' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
-            style={{ fontSize: '15px', minWidth: '80px', height: '38px', borderRadius: '9999px', marginLeft: '2px' }}
+            className={`ml-2 px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-blue-400' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+            style={{ fontSize: '15px', minWidth: '80px', height: '38px', borderRadius: '9999px', alignSelf: 'flex-end' }}
           >
             {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
           </button>
