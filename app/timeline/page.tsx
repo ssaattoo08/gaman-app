@@ -206,7 +206,7 @@ export default function TimelinePage() {
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full p-4 rounded-xl bg-gray-800 text-white resize-none mb-2"
+              className="w-full p-4 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs"
               placeholder={
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
