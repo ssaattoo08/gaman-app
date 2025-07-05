@@ -201,12 +201,12 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-6 flex items-end">
+        <div className="mb-6 flex items-center gap-2">
           {/* プロフィール画像枠（ダミー）を左に追加したい場合はここに */}
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
-            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white mb-4 text-base"
+            className="w-full h-20 p-4 rounded-xl bg-gray-800 text-white text-base resize-none"
             placeholder={
               selectedTab === 'cheatday'
                 ? '例：大好きなお酒を思う存分飲みまくった'
@@ -216,21 +216,22 @@ export default function TimelinePage() {
             }
           />
           {selectedTab === 'gaman' && (
-            <label className="flex items-center mb-4 text-gray-300 text-sm">
+            <label className="flex items-center ml-2 mr-2 text-gray-300 text-sm whitespace-nowrap" style={{height:'38px'}}>
               <input
                 type="checkbox"
                 checked={myRule}
                 onChange={e => setMyRule(e.target.checked)}
-                className="mr-2"
+                className="mr-1 accent-blue-500 w-4 h-4"
+                style={{verticalAlign:'middle'}}
               />
-              MyRuleとして投稿
+              <span style={{lineHeight:'1'}}>MyRuleとして投稿</span>
             </label>
           )}
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`ml-2 mb-4 px-5 py-2 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600 disabled:opacity-50 text-base cursor-pointer transition-all duration-150 shadow ${posting || !content.trim() ? 'opacity-60' : ''}`}
-            style={{ fontSize: '15px', minWidth: '90px', height: '38px', borderRadius: '9999px' }}
+            className={`px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-blue-400' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+            style={{ fontSize: '15px', minWidth: '80px', height: '38px', borderRadius: '9999px', marginLeft: '2px' }}
           >
             {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
           </button>
