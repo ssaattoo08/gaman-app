@@ -51,38 +51,10 @@ export default function PostContent({ content }: { content: string }) {
 
   return (
     <div>
-      {/* 本文（URL非表示） */}
+      {/* 本文のみ表示（OGPカード・画像リンクは非表示） */}
       <div className="whitespace-pre-line break-words">
         {removeUrls(content)}
       </div>
-      {/* OGPカードや画像リンクは従来通り表示 */}
-      {ogps.map(ogp => {
-        // descriptionがエラーっぽい場合は非表示
-        const isErrorDesc = ogp.description && /access denied|reference/i.test(ogp.description);
-        return (
-          <a
-            key={ogp.url}
-            href={ogp.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block border border-gray-700 rounded-xl p-3 mb-2 bg-gray-900 hover:bg-gray-800 transition"
-            style={{ maxWidth: 400 }}
-          >
-            {ogp.image
-              ? (
-                <img src={ogp.image} alt={ogp.title} className="w-full h-40 object-cover rounded-md mb-2" style={{ maxHeight: 160 }} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/noimage.png'; }} />
-              )
-              : (
-                <img src="/noimage.png"
-                     alt="noimage"
-                     className="w-16 h-16 object-contain rounded-md mb-2 mx-auto"
-                />
-              )
-            }
-            <div className="font-bold text-white text-sm mb-1 text-center">{ogp.title}</div>
-          </a>
-        );
-      })}
     </div>
   );
 } 
