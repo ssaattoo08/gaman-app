@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase/client"
+import Image from 'next/image'
 
 export default function Home() {
   const router = useRouter()
@@ -21,7 +22,15 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center space-y-6">
-        <h1 className="text-5xl font-bold tracking-wide">g</h1>
+        <div className="flex items-center justify-center">
+          <Image
+            src="/camel-logo.png"
+            alt="ラクダロゴ"
+            width={64}
+            height={64}
+            priority
+          />
+        </div>
         <p className="text-lg leading-relaxed text-gray-200">
           日々のガマンを記録し<br />
           見える化する習慣化サービス
