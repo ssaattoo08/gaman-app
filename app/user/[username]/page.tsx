@@ -196,12 +196,12 @@ export default function UserProfilePage() {
         {/* プロフィール欄＋カレンダーをまとめてカード化 */}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
           <div className="text-lg font-bold text-white mb-1">{nickname}</div>
-          <div className="text-sm text-gray-400 mt-1">
+          {/* <div className="text-sm text-gray-400 mt-1">
             ガマン：{posts.filter(p => p.cheat_day === false || p.myrule === true).length}
             &nbsp;&nbsp;
             チートデイ：{posts.filter(p => p.cheat_day === true).length}
             <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
-          </div>
+          </div> */}
           {/* カレンダーをカード内に追加 */}
           <div className="w-full mt-4 flex justify-center">
             <ThreeMonthCamelCalendar data={(() => {
