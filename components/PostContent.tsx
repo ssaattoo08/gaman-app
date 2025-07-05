@@ -36,9 +36,11 @@ function removeUrls(text: string) {
 export default function PostContent({ content }: { content: string }) {
   return (
     <div>
-      {/* 本文のみ表示 */}
+      {/* 本文＋URL自動リンク化 */}
       <div className="whitespace-pre-line break-words">
-        {removeUrls(content)}
+        <Linkify options={{ target: "_blank", rel: "noopener noreferrer" }}>
+          {content}
+        </Linkify>
       </div>
     </div>
   );
