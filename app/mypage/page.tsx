@@ -277,8 +277,8 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション＋カレンダーをまとめてカード化 */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full relative">
-              <a href="/profile/edit" className="absolute top-3 right-3 p-1 bg-yellow-600 rounded-full hover:bg-yellow-700 transition" style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center'}} title="プロフィール編集">
-                <Pencil size={16} color="#fff" />
+              <a href="/profile/edit" className="absolute top-3 right-3 p-1 bg-[#444] rounded-full hover:bg-[#666] transition" style={{width:20,height:20,display:'flex',alignItems:'center',justifyContent:'center'}} title="プロフィール編集">
+                <Pencil size={12} color="#ccc" />
               </a>
               <div className="flex items-center mb-1">
                 <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
