@@ -283,28 +283,30 @@ export default function UserProfilePage() {
                   key={post.id}
                   className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
                 >
-                  {post.myrule && (
-                    <span
-                      className="absolute top-2 right-4 text-xs font-bold"
-                      style={{
-                        color: '#bfa100',
-                        background: 'transparent',
-                        borderRadius: '8px',
-                        padding: '2px 8px',
-                        fontFamily: 'Meiryo UI, Meiryo, sans-serif',
-                        opacity: 0.85,
-                        fontWeight: 600,
-                        fontSize: '12px',
-                        letterSpacing: 1,
-                      }}
-                    >
-                      MyRule
-                    </span>
-                  )}
-                  <div className="flex items-center mb-2">
-                    <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
-                    <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
-                    <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
+                  <div className="flex items-center mb-2 justify-between">
+                    <div className="flex items-center">
+                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                      <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
+                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
+                    </div>
+                    {post.myrule && (
+                      <span
+                        className="text-xs font-bold"
+                        style={{
+                          color: '#bfa100',
+                          background: 'transparent',
+                          borderRadius: '8px',
+                          padding: '2px 8px',
+                          fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                          opacity: 0.85,
+                          fontWeight: 600,
+                          fontSize: '12px',
+                          letterSpacing: 1,
+                        }}
+                      >
+                        MyRule
+                      </span>
+                    )}
                   </div>
                   <PostContent content={post.content} url_title={post.url_title} />
                 </div>
