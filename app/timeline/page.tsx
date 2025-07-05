@@ -202,12 +202,11 @@ export default function TimelinePage() {
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
         <div className="mb-6 flex items-start gap-3">
-          {/* プロフィール画像枠（ダミー）削除 */}
           <div className="flex-1 flex flex-col">
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full h-12 p-3 rounded-xl bg-gray-800 text-white text-base resize-none mb-2"
+              className="w-full p-4 rounded-xl bg-gray-800 text-white text-base resize-none mb-2"
               placeholder={
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
@@ -215,15 +214,26 @@ export default function TimelinePage() {
                     ? '例：通勤電車で寝ずに本を読んだ'
                     : 'いまどうしてる？'
               }
-              style={{minHeight:'40px',maxHeight:'80px'}}
+              style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'16px'}}
             />
-            {/* アイコン群（ダミー）削除 */}
+            {selectedTab === 'gaman' && (
+              <label className="flex items-center text-gray-300 text-xs mt-1 mb-1" style={{userSelect:'none'}}>
+                <input
+                  type="checkbox"
+                  checked={myRule}
+                  onChange={e => setMyRule(e.target.checked)}
+                  className="mr-1 accent-blue-500 w-4 h-4"
+                  style={{verticalAlign:'middle'}}
+                />
+                <span style={{lineHeight:'1.2'}}>MyRuleとして投稿</span>
+              </label>
+            )}
           </div>
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`ml-2 px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
-            style={{ fontSize: '15px', minWidth: '80px', height: '38px', borderRadius: '9999px', alignSelf: 'flex-end' }}
+            className={`ml-2 px-3 py-1 rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+            style={{ fontSize: '13px', minWidth: '60px', height: '30px', borderRadius: '9999px', alignSelf: 'flex-end' }}
           >
             {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
           </button>
