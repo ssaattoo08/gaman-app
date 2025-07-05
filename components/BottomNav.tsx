@@ -64,12 +64,9 @@ export default function BottomNav() {
           <Home color={pathname === "/timeline" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/timeline" ? "text-white" : "text-gray-400"}`}>Timeline</span>
         </Link>
-        {/* 通知ボタンを完全に非表示
-        <Link href="/notifications" className="flex flex-col items-center justify-center w-full h-full relative">
-          <Bell color={pathname === "/notifications" ? "white" : "gray"} />
-          <span className={`text-xs ${pathname === "/notifications" ? "text-white" : "text-gray-400"}`}>通知</span>
-        </Link>
-        */}
+        <div className="flex flex-col items-center justify-center w-full h-full pointer-events-none select-none">
+          <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block' }} />
+        </div>
         <Link href="/mypage" className="flex flex-col items-center justify-center w-full h-full">
           <User color={pathname === "/mypage" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/mypage" ? "text-white" : "text-gray-400"}`}>My Page</span>
