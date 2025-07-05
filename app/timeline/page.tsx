@@ -206,7 +206,7 @@ export default function TimelinePage() {
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full p-4 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
+              className="w-full p-4 pb-10 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
               placeholder={
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
@@ -228,11 +228,11 @@ export default function TimelinePage() {
                 <span style={{lineHeight:'1.2'}}>MyRuleとして投稿</span>
               </label>
             )}
-            {/* Postボタンを右下に絶対配置 */}
+            {/* Postボタンをテキストエリア内右下にしっかり収める */}
             <button
               onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
               disabled={posting || !content.trim()}
-              className={`absolute bottom-3 right-3 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+              className={`absolute bottom-4 right-4 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
               style={{ fontSize: '11px', width: '36px', height: '36px', borderRadius: '50%' }}
             >
               Post
