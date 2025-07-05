@@ -303,6 +303,7 @@ export default function TimelinePage() {
                   </span>
                 )}
                 <div className="flex items-center mb-2">
+                  <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
                   <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm hover:underline" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>
                     {post.profiles?.nickname ? post.profiles.nickname : ""}
                   </Link>
