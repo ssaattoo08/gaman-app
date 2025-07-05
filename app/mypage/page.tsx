@@ -374,6 +374,7 @@ export default function MyPage() {
                       </span>
                     )}
                     <div className="flex items-center mb-2">
+                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
                       <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ? post.profiles.nickname : ""}</span>
                       <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{toJstYmd(post.created_at)}</span>
                     </div>

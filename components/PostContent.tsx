@@ -66,7 +66,7 @@ export default function PostContent({ content, url_title }: { content: string, u
             className="block hover:underline"
           >
             <div className="flex items-center mb-1">
-              <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+              {/* <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div> */}
               <span className="inline-block mr-2">🔗</span>
               <span className="text-blue-300 font-semibold text-base">
                 {url_title ? url_title : getDomain(url)}
