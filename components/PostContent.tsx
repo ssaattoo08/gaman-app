@@ -71,7 +71,6 @@ export default function PostContent({ content, url_title }: { content: string, u
                 {url_title ? url_title : getDomain(url)}
               </span>
             </div>
-            <div className="text-xs text-gray-400 break-all mt-1">{url}</div>
           </a>
         </div>
       ))}
