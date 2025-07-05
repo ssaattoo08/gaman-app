@@ -293,10 +293,10 @@ export default function TimelinePage() {
                   </span>
                 )}
                 <div className="flex items-center mb-2">
-                  <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm text-gray-400 hover:underline">
-                    {post.profiles?.nickname ?? "名無し"}
+                  <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm hover:underline" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>
+                    {post.profiles?.nickname ? post.profiles.nickname : ""}
                   </Link>
-                  <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
+                  <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                 </div>
                 <PostContent content={post.content} />
               </div>

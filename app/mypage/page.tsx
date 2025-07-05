@@ -271,7 +271,7 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション＋カレンダーをまとめてカード化 */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
-              <div className="text-lg font-bold text-white mb-1">{nickname}</div>
+              <div className="text-lg font-bold text-white mb-1">{nickname ? nickname : ""}</div>
               <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
                 &nbsp;&nbsp;
