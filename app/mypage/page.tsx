@@ -279,6 +279,7 @@ export default function MyPage() {
               <div className="flex items-center mb-1">
                 <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
+                <a href="/profile/edit" className="ml-3 px-3 py-1 rounded bg-yellow-600 text-white text-xs font-bold hover:bg-yellow-700 transition">編集</a>
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
