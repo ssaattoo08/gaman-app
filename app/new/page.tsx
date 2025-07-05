@@ -43,20 +43,28 @@ export default function NewPost() {
       return
     }
 
-    const { error } = await supabase.from('gaman_logs').insert({
-      content,
-      user_id: user.id,
-      nickname,
-      cheat_day: cheatDay,
-    })
-
-    if (error) {
-      console.error(error)
-      setMessage('投稿に失敗しました')
-    } else {
+    try {
+      const res = await fetch("/api/postWithTitle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          content,
+          nickname,
+          cheat_day: cheatDay,
+        })
+      })
+      const result = await res.json()
+      if (!res.ok) {
+        setMessage('投稿に失敗しました: ' + (result.error || ''))
+        return
+      }
       setMessage('投稿できました！')
       setContent('')
       setCheatDay(false)
+    } catch (e) {
+      setMessage('投稿に失敗しました')
+      console.error(e)
     }
   }
 

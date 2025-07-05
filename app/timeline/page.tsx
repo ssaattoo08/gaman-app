@@ -161,28 +161,38 @@ export default function TimelinePage() {
       router.push("/login")
       return
     }
-    const { error } = await supabase.from("gaman_logs").insert({
-      user_id: user.id,
-      content: content.trim(),
-      cheat_day: cheatDay,
-      myrule: myRule,
-    })
-    if (error) {
-      alert("投稿に失敗しました")
-      console.error(error)
-    } else {
-      setContent("")
-      setMyRule(false)
+    try {
+      const res = await fetch("/api/postWithTitle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          content: content.trim(),
+          cheat_day: cheatDay,
+          myrule: myRule,
+        })
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        alert("投稿に失敗しました: " + (result.error || ""));
+        setPosting(false);
+        return;
+      }
+      setContent("");
+      setMyRule(false);
       // 投稿後に再取得
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
       }
       setLoading(false)
+    } catch (e) {
+      alert("投稿に失敗しました");
+      console.error(e);
     }
     setPosting(false)
   }

@@ -27,21 +27,29 @@ export default function PostPage() {
       return
     }
 
-    const { error } = await supabase.from("gaman_logs").insert({
-      user_id: user.id,
-      content: content.trim(),
-      cheat_day: cheatDay,
-    })
-
-    if (error) {
-      alert("投稿に失敗しました")
-      console.error(error)
-    } else {
+    try {
+      const res = await fetch("/api/postWithTitle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          content: content.trim(),
+          cheat_day: cheatDay,
+        })
+      })
+      const result = await res.json()
+      if (!res.ok) {
+        alert("投稿に失敗しました: " + (result.error || ""))
+        setLoading(false)
+        return
+      }
       setContent("")
       setCheatDay(false)
       router.push("/mypage")
+    } catch (e) {
+      alert("投稿に失敗しました")
+      console.error(e)
     }
-
     setLoading(false)
   }
 

@@ -22,6 +22,7 @@ export default function MyPage() {
   // 投稿フォーム用の状態
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
+  const [cheatDay, setCheatDay] = useState(false);
 
   useEffect(() => {
     isMountedRef.current = true
@@ -230,27 +231,38 @@ export default function MyPage() {
       router.push("/login");
       return;
     }
-    const { error } = await supabase.from("gaman_logs").insert({
-      user_id: user.id,
-      content: content.trim(),
-      cheat_day: cheatDay,
-    });
-    if (error) {
-      alert("投稿に失敗しました");
-      console.error(error);
-    } else {
+    try {
+      const res = await fetch("/api/postWithTitle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          content: content.trim(),
+          cheat_day: cheatDay,
+        })
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        alert("投稿に失敗しました: " + (result.error || ""));
+        setPosting(false);
+        return;
+      }
       setContent("");
+      setCheatDay(false);
       // 投稿後に再取得
       setLoading(true);
       const { data: userPosts, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, cheat_day, myrule")
+        .select("id, content, created_at, user_id, cheat_day, myrule, url_title")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (!postsError) {
         setPosts(userPosts || []);
       }
       setLoading(false);
+    } catch (e) {
+      alert("投稿に失敗しました");
+      console.error(e);
     }
     setPosting(false);
   };
