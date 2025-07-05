@@ -241,52 +241,13 @@ export default function TimelinePage() {
           </div>
         </div>
         {/* タブUI */}
-        <div className="flex mb-4 gap-2">
-          <button
-            className={`flex-[7] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
-            style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
-            onClick={() => setSelectedTab('gaman')}
-          >
-            <span className="block">
-              ガマン / MyRule
-              {selectedTab === 'gaman' && (
-                <span style={{
-                  display: 'block',
-                  margin: '4px auto 0',
-                  width: '40px',
-                  height: '4px',
-                  background: '#fff',
-                  borderRadius: '2px'
-                }} />
-              )}
-            </span>
-          </button>
-          <button
-            className={`flex-[3] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
-            style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
-            onClick={() => setSelectedTab('cheatday')}
-          >
-            <span className="block">
-              チートデイ
-              {selectedTab === 'cheatday' && (
-                <span style={{
-                  display: 'block',
-                  margin: '4px auto 0',
-                  width: '40px',
-                  height: '4px',
-                  background: '#fff',
-                  borderRadius: '2px'
-                }} />
-              )}
-            </span>
-          </button>
-        </div>
+        {/* <div className="flex mb-4 gap-2"> ... </div> */}
         {/* 投稿一覧 */}
         <div className="space-y-4">
           {loading ? (
             <p className="text-white text-center">読み込み中...</p>
           ) : (
-            filteredPosts.map((post) => (
+            posts.filter(post => post.cheat_day !== true).map((post) => (
               <div
                 key={post.id}
                 className={`x-post${post.myrule ? ' myrule-x-post' : ''} border-b border-gray-500`}

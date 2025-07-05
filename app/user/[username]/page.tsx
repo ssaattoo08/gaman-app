@@ -227,90 +227,45 @@ export default function UserProfilePage() {
         {/* ヒートマップ（ガマンorMyRuleのみ・1年分グリッド） */}
         {/* この部分を削除 */}
         {/* タブUI（MyPageと同じ分かれ方） */}
-        <div className="flex mb-4 gap-2">
-          <button
-            className={`flex-[7] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'gaman' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
-            style={selectedTab === 'gaman' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
-            onClick={() => setSelectedTab('gaman')}
-          >
-            <span className="block">
-              ガマン / MyRule
-              {selectedTab === 'gaman' && (
-                <span style={{
-                  display: 'block',
-                  margin: '4px auto 0',
-                  width: '40px',
-                  height: '4px',
-                  background: '#fff',
-                  borderRadius: '2px'
-                }} />
-              )}
-            </span>
-          </button>
-          <button
-            className={`flex-[3] py-2 font-bold transition rounded-t-2xl shadow cursor-pointer ${selectedTab === 'cheatday' ? 'bg-black text-white relative z-10' : 'bg-gray-700 text-gray-400 opacity-70'}`}
-            style={selectedTab === 'cheatday' ? { boxShadow: '0 4px 12px rgba(0,0,0,0.2)' } : {}}
-            onClick={() => setSelectedTab('cheatday')}
-          >
-            <span className="block">
-              チートデイ
-              {selectedTab === 'cheatday' && (
-                <span style={{
-                  display: 'block',
-                  margin: '4px auto 0',
-                  width: '40px',
-                  height: '4px',
-                  background: '#fff',
-                  borderRadius: '2px'
-                }} />
-              )}
-            </span>
-          </button>
-        </div>
+        {/* <div className="flex mb-4 gap-2"> ... </div> */}
         {/* 投稿一覧（MyPageと同じ分岐） */}
         <div className="space-y-4">
           {loading ? (
             <p className="text-white text-center">読み込み中...</p>
           ) : (
-            posts
-              .filter(post =>
-                selectedTab === 'gaman'
-                  ? (post.cheat_day === false || post.myrule === true)
-                  : post.cheat_day === true
-              )
-              .map((post) => (
-                <div
-                  key={post.id}
-                  className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
-                >
-                  <div className="flex items-center mb-2 justify-between">
-                    <div className="flex items-center">
-                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
-                      <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
-                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
-                    </div>
-                    {post.myrule && (
-                      <span
-                        className="text-xs font-bold"
-                        style={{
-                          color: '#bfa100',
-                          background: 'transparent',
-                          borderRadius: '8px',
-                          padding: '2px 8px',
-                          fontFamily: 'Meiryo UI, Meiryo, sans-serif',
-                          opacity: 0.85,
-                          fontWeight: 600,
-                          fontSize: '12px',
-                          letterSpacing: 1,
-                        }}
-                      >
-                        MyRule
-                      </span>
-                    )}
+            posts.filter(post => post.cheat_day !== true).map((post) => (
+              <div
+                key={post.id}
+                className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
+              >
+                <div className="flex items-center mb-2 justify-between">
+                  <div className="flex items-center">
+                    <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                    <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
+                    <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                   </div>
-                  <PostContent content={post.content} url_title={post.url_title} />
+                  {post.myrule && (
+                    <span
+                      className="text-xs font-bold"
+                      style={{
+                        color: '#bfa100',
+                        background: 'transparent',
+                        borderRadius: '8px',
+                        padding: '2px 8px',
+                        fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                        opacity: 0.85,
+                        fontWeight: 600,
+                        fontSize: '12px',
+                        letterSpacing: 1,
+                      }}
+                    >
+                      MyRule
+                    </span>
+                  )}
                 </div>
-              ))
+                <PostContent content={post.content} url_title={post.url_title} />
+              </div>
+            ))
           )}
         </div>
       </main>
