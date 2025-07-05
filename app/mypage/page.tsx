@@ -113,18 +113,12 @@ export default function MyPage() {
     getStreak();
   }, [posts]);
 
-  const formatDate = (iso: string) => {
+  // JST日付変換の共通関数
+  const toJstYmd = (iso: string) => {
     const date = new Date(iso);
     const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-    return jstDate.toLocaleString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  }
+    return jstDate.toISOString().slice(0, 10); // 'YYYY-MM-DD'
+  };
 
   // 連続記録日数を計算
   const getStreak = () => {
@@ -133,12 +127,11 @@ export default function MyPage() {
     const gamanPosts = posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined);
     if (gamanPosts.length === 0) return 0;
     // 日付（YYYY-MM-DD）だけを抜き出し、重複排除＆降順ソート
-    const days = Array.from(new Set(gamanPosts.map(p => new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)))).sort((a, b) => b.localeCompare(a));
-    console.warn('===DAYS DEBUG===', days);
+    const days = Array.from(new Set(gamanPosts.map(p => toJstYmd(p.created_at)))).sort((a, b) => b.localeCompare(a));
     if (days.length === 0) return 0;
     // 1件だけの場合：今日の投稿なら1日、それ以外は0日
     if (days.length === 1) {
-      const today = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const today = toJstYmd(new Date().toISOString());
       return days[0] === today ? 1 : 0;
     }
     // 2件以上の場合：最新日から1日ずつ連続しているか全てチェック
@@ -297,8 +290,7 @@ export default function MyPage() {
                   const filtered = posts.filter(p => p.cheat_day === false || p.myrule === true);
                   const dateMap: { [date: string]: { date: string, gaman: number, myrule: boolean } } = {};
                   filtered.forEach(p => {
-                    const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-                    const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                    const ymd = toJstYmd(p.created_at);
                     if (!dateMap[ymd]) {
                       dateMap[ymd] = { date: ymd, gaman: 0, myrule: false };
                     }
@@ -380,7 +372,7 @@ export default function MyPage() {
                     )}
                     <div className="flex items-center mb-2">
                       <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ? post.profiles.nickname : ""}</span>
-                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
+                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{toJstYmd(post.created_at)}</span>
                     </div>
                     <PostContent content={post.content} url_title={post.url_title} />
                   </div>
