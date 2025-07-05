@@ -8,6 +8,8 @@ export default function ProfileEditPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [iconPreview, setIconPreview] = useState<string>("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,17 +21,32 @@ export default function ProfileEditPage() {
       }
       const { data, error } = await supabase
         .from("profiles")
-        .select("nickname, bio")
+        .select("nickname, bio, icon_url")
         .eq("id", user.id)
         .single();
       if (!error && data) {
         setNickname(data.nickname || "");
         setBio(data.bio || "");
+        if (data.icon_url) setIconPreview(data.icon_url);
       }
       setLoading(false);
     };
     fetchProfile();
   }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setIconFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setIconPreview(ev.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setIconPreview("");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +58,7 @@ export default function ProfileEditPage() {
       setSaving(false);
       return;
     }
+    // 画像アップロード処理は後で実装
     const { error } = await supabase
       .from("profiles")
       .update({ nickname, bio })
@@ -60,6 +78,19 @@ export default function ProfileEditPage() {
         <p className="text-gray-400">読み込み中...</p>
       ) : (
         <form onSubmit={handleSubmit}>
+          <label className="block mb-4 text-gray-300">
+            プロフィール画像
+            <input
+              type="file"
+              accept="image/*"
+              className="block mt-1"
+              onChange={handleFileChange}
+              disabled={saving}
+            />
+            {iconPreview && (
+              <img src={iconPreview} alt="プロフィール画像" className="mt-2 w-16 h-16 rounded-full object-cover" />
+            )}
+          </label>
           <label className="block mb-2 text-gray-300">
             ニックネーム
             <input
