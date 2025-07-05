@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <head>
-        <link rel="icon" href="/camel-logo.png" />
+        <link rel="icon" href="/camel-favicon.ico" />
       </head>
       <body className="bg-black text-white font-sans">
         <TopNav />
