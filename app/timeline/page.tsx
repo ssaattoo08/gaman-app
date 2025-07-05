@@ -206,7 +206,7 @@ export default function TimelinePage() {
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full p-4 pb-10 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
+              className="w-full p-4 pb-14 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
               placeholder={
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
@@ -216,8 +216,9 @@ export default function TimelinePage() {
               }
               style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
             />
+            {/* MyRuleチェックボックスをテキストエリア内左下に絶対配置 */}
             {selectedTab === 'gaman' && (
-              <label className="flex items-center text-gray-300 text-xs mt-1 mb-1" style={{userSelect:'none'}}>
+              <label className="absolute bottom-4 left-4 flex items-center text-gray-300 text-xs" style={{userSelect:'none'}}>
                 <input
                   type="checkbox"
                   checked={myRule}
