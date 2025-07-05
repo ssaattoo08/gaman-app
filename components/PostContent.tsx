@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Linkify from "linkify-react";
 
 // OGPカード用の型
@@ -34,24 +34,9 @@ function removeUrls(text: string) {
 }
 
 export default function PostContent({ content }: { content: string }) {
-  const [ogps, setOgps] = useState<OgpData[]>([]);
-
-  // OGPカード用に本文からURLを抽出
-  const urls = Array.from(content.matchAll(/https?:\/\/[^\s]+/g)).map(m => m[0]);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all(urls.map(url => fetchOgp(url))).then(results => {
-      if (!cancelled) {
-        setOgps(results.filter(Boolean) as OgpData[]);
-      }
-    });
-    return () => { cancelled = true; };
-  }, [urls]);
-
   return (
     <div>
-      {/* 本文のみ表示（OGPカード・画像リンクは非表示） */}
+      {/* 本文のみ表示 */}
       <div className="whitespace-pre-line break-words">
         {removeUrls(content)}
       </div>
