@@ -211,7 +211,7 @@ export default function TimelinePage() {
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
                   : myRule
-                    ? 'ガマン例：飲み会を断り生成AIの勉強をした'
+                    ? 'MyRule例：通勤電車で本を読む'
                     : 'ガマン例：飲み会を断り生成AIの勉強をした'
               }
               style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
