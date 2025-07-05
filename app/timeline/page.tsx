@@ -202,11 +202,11 @@ export default function TimelinePage() {
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
         <div className="mb-6 flex items-start w-full">
-          <div className="flex-1 flex flex-col w-full">
+          <div className="flex-1 flex flex-col w-full relative">
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
-              className="w-full p-4 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs"
+              className="w-full p-4 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
               placeholder={
                 selectedTab === 'cheatday'
                   ? '例：大好きなお酒を思う存分飲みまくった'
@@ -228,8 +228,16 @@ export default function TimelinePage() {
                 <span style={{lineHeight:'1.2'}}>MyRuleとして投稿</span>
               </label>
             )}
+            {/* Postボタンを右下に絶対配置 */}
+            <button
+              onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
+              disabled={posting || !content.trim()}
+              className={`absolute bottom-3 right-3 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+              style={{ fontSize: '11px', width: '36px', height: '36px', borderRadius: '50%' }}
+            >
+              Post
+            </button>
           </div>
-          {/* 投稿ボタンを一旦非表示に */}
         </div>
         {/* タブUI */}
         <div className="flex mb-4 gap-2">
