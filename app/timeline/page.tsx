@@ -202,8 +202,7 @@ export default function TimelinePage() {
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
         <div className="mb-6 flex items-start gap-3">
-          {/* プロフィール画像枠（ダミー） */}
-          <div style={{width:40,height:40,background:'#333',borderRadius:8,marginTop:2,flexShrink:0}}></div>
+          {/* プロフィール画像枠（ダミー）削除 */}
           <div className="flex-1 flex flex-col">
             <textarea
               value={content}
@@ -218,20 +217,12 @@ export default function TimelinePage() {
               }
               style={{minHeight:'40px',maxHeight:'80px'}}
             />
-            {/* アイコン群（ダミー） */}
-            <div className="flex items-center mt-1 mb-1 gap-3 text-blue-400 text-xl">
-              <span className="cursor-pointer">🖼️</span>
-              <span className="cursor-pointer">GIF</span>
-              <span className="cursor-pointer">🖊️</span>
-              <span className="cursor-pointer">😊</span>
-              <span className="cursor-pointer">📷</span>
-              <span className="cursor-pointer">📍</span>
-            </div>
+            {/* アイコン群（ダミー）削除 */}
           </div>
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`ml-2 px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-blue-400' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+            className={`ml-2 px-4 py-2 rounded-full font-bold transition-all duration-150 shadow text-base cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
             style={{ fontSize: '15px', minWidth: '80px', height: '38px', borderRadius: '9999px', alignSelf: 'flex-end' }}
           >
             {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
