@@ -45,7 +45,7 @@ function getDomain(url: string) {
   }
 }
 
-export default function PostContent({ content }: { content: string }) {
+export default function PostContent({ content, url_title }: { content: string, url_title?: string }) {
   const urls = extractUrls(content);
   return (
     <div>
@@ -63,12 +63,16 @@ export default function PostContent({ content }: { content: string }) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-300 font-semibold break-all text-base hover:underline"
+            className="block hover:underline"
           >
-            <span className="inline-block mr-2">🔗</span>
-            {getDomain(url)}
+            <div className="flex items-center mb-1">
+              <span className="inline-block mr-2">🔗</span>
+              <span className="text-blue-300 font-semibold text-base">
+                {url_title ? url_title : getDomain(url)}
+              </span>
+            </div>
+            <div className="text-xs text-gray-400 break-all mt-1">{url}</div>
           </a>
-          <div className="text-xs text-gray-400 break-all mt-1">{url}</div>
         </div>
       ))}
     </div>

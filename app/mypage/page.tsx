@@ -58,7 +58,7 @@ export default function MyPage() {
 
         const { data: userPosts } = await supabase
           .from("gaman_logs")
-          .select("id, content, created_at, user_id, cheat_day, myrule")
+          .select("id, content, created_at, user_id, cheat_day, myrule, url_title")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
 
@@ -382,7 +382,7 @@ export default function MyPage() {
                       <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ? post.profiles.nickname : ""}</span>
                       <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                     </div>
-                    <PostContent content={post.content} />
+                    <PostContent content={post.content} url_title={post.url_title} />
                   </div>
                 ))
               )}

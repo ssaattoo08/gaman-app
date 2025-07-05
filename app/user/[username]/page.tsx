@@ -302,7 +302,7 @@ export default function UserProfilePage() {
                     <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
                     <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                   </div>
-                  <PostContent content={post.content} />
+                  <PostContent content={post.content} url_title={post.url_title} />
                 </div>
               ))
           )}

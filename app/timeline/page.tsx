@@ -40,7 +40,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule")
+        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
 
       // リアクション・コメント機能を一時的にクローズ
@@ -308,7 +308,7 @@ export default function TimelinePage() {
                   </Link>
                   <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                 </div>
-                <PostContent content={post.content} />
+                <PostContent content={post.content} url_title={post.url_title} />
               </div>
             ))
           )}
