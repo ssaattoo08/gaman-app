@@ -53,17 +53,22 @@ export default function PostContent({ content }: { content: string }) {
       <div className="whitespace-pre-line break-words mb-2">
         {removeUrls(content)}
       </div>
-      {/* ドメイン＋アイコンリンク */}
+      {/* カード風リンク（X風） */}
       {urls.map(url => (
-        <div key={url} className="my-1">
+        <div
+          key={url}
+          className="my-2 p-3 rounded-lg bg-gray-800 border border-gray-600 max-w-xl"
+        >
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center text-blue-300 hover:underline font-semibold"
+            className="text-blue-300 font-semibold break-all text-base hover:underline"
           >
-            <span className="mr-1">🔗</span>{getDomain(url)}
+            <span className="inline-block mr-2">🔗</span>
+            {getDomain(url)}
           </a>
+          <div className="text-xs text-gray-400 break-all mt-1">{url}</div>
         </div>
       ))}
     </div>
