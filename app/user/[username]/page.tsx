@@ -195,7 +195,10 @@ export default function UserProfilePage() {
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* プロフィール欄＋カレンダーをまとめてカード化 */}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
-          <div className="text-lg font-bold text-white mb-1">{nickname}</div>
+          <div className="flex items-center mb-1">
+            <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+            <div className="text-lg font-bold text-white">{nickname}</div>
+          </div>
           {/* <div className="text-sm text-gray-400 mt-1">
             ガマン：{posts.filter(p => p.cheat_day === false || p.myrule === true).length}
             &nbsp;&nbsp;

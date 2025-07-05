@@ -276,7 +276,10 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション＋カレンダーをまとめてカード化 */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
-              <div className="text-lg font-bold text-white mb-1">{nickname ? nickname : ""}</div>
+              <div className="flex items-center mb-1">
+                <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+                <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
+              </div>
               {/* <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
                 &nbsp;&nbsp;
@@ -350,39 +353,4 @@ export default function MyPage() {
                 filteredPosts.map((post) => (
                   <div
                     key={post.id}
-                    className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
-                  >
-                    {post.myrule && (
-                      <span
-                        className="absolute top-2 right-4 text-xs font-bold"
-                        style={{
-                          color: '#bfa100',
-                          background: 'transparent',
-                          borderRadius: '8px',
-                          padding: '2px 8px',
-                          fontFamily: 'Meiryo UI, Meiryo, sans-serif',
-                          opacity: 0.85,
-                          fontWeight: 600,
-                          fontSize: '12px',
-                          letterSpacing: 1,
-                        }}
-                      >
-                        MyRule
-                      </span>
-                    )}
-                    <div className="flex items-center mb-2">
-                      <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ? post.profiles.nickname : ""}</span>
-                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{toJstYmd(post.created_at)}</span>
-                    </div>
-                    <PostContent content={post.content} url_title={post.url_title} />
-                  </div>
-                ))
-              )}
-            </div>
-          </>
-        )}
-      </main>
-      <BottomNav />
-    </>
-  )
-}
+                    className={`
