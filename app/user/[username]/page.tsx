@@ -299,8 +299,8 @@ export default function UserProfilePage() {
                     </span>
                   )}
                   <div className="flex items-center mb-2">
-                    <span className="text-sm text-gray-400">{post.profiles?.nickname ?? "名無し"}</span>
-                    <span className="text-xs text-gray-500 ml-3">{formatDate(post.created_at)}</span>
+                    <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
+                    <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                   </div>
                   <PostContent content={post.content} />
                 </div>
