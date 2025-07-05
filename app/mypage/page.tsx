@@ -353,4 +353,39 @@ export default function MyPage() {
                 filteredPosts.map((post) => (
                   <div
                     key={post.id}
-                    className={`
+                    className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
+                  >
+                    {post.myrule && (
+                      <span
+                        className="absolute top-2 right-4 text-xs font-bold"
+                        style={{
+                          color: '#bfa100',
+                          background: 'transparent',
+                          borderRadius: '8px',
+                          padding: '2px 8px',
+                          fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                          opacity: 0.85,
+                          fontWeight: 600,
+                          fontSize: '12px',
+                          letterSpacing: 1,
+                        }}
+                      >
+                        MyRule
+                      </span>
+                    )}
+                    <div className="flex items-center mb-2">
+                      <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ? post.profiles.nickname : ""}</span>
+                      <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{toJstYmd(post.created_at)}</span>
+                    </div>
+                    <PostContent content={post.content} url_title={post.url_title} />
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
+      </main>
+      <BottomNav />
+    </>
+  );
+}
