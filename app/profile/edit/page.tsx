@@ -1,15 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { Camera } from "lucide-react";
 
 export default function ProfileEditPage() {
-  const [nickname, setNickname] = useState("");
-  const [bio, setBio] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [iconPreview, setIconPreview] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -21,13 +21,11 @@ export default function ProfileEditPage() {
       }
       const { data, error } = await supabase
         .from("profiles")
-        .select("nickname, bio, icon_url")
+        .select("icon_url")
         .eq("id", user.id)
         .single();
-      if (!error && data) {
-        setNickname(data.nickname || "");
-        setBio(data.bio || "");
-        if (data.icon_url) setIconPreview(data.icon_url);
+      if (!error && data && data.icon_url) {
+        setIconPreview(data.icon_url);
       }
       setLoading(false);
     };
@@ -43,9 +41,11 @@ export default function ProfileEditPage() {
         setIconPreview(ev.target?.result as string);
       };
       reader.readAsDataURL(file);
-    } else {
-      setIconPreview("");
     }
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,73 +60,67 @@ export default function ProfileEditPage() {
     }
     let icon_url = iconPreview;
     if (iconFile) {
-      // 拡張子取得
       const ext = iconFile.name.split('.').pop();
       const filePath = `${user.id}.${ext}`;
-      // Storageにアップロード
       const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { upsert: true, contentType: iconFile.type });
       if (uploadError) {
         setMessage("画像アップロードに失敗しました");
         setSaving(false);
         return;
       }
-      // 公開URL取得
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
       icon_url = data.publicUrl;
     }
     const { error } = await supabase
       .from("profiles")
-      .update({ nickname, bio, icon_url })
+      .update({ icon_url })
       .eq("id", user.id);
     if (error) {
       setMessage("保存に失敗しました");
     } else {
-      setMessage("プロフィールを更新しました！");
+      setMessage("プロフィール画像を更新しました！");
     }
     setSaving(false);
   };
 
   return (
     <div className="max-w-md mx-auto mt-8 p-4 bg-gray-900 rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-white">プロフィール編集</h2>
+      <h2 className="text-xl font-bold mb-6 text-white text-center">プロフィール画像編集</h2>
       {loading ? (
-        <p className="text-gray-400">読み込み中...</p>
+        <p className="text-gray-400 text-center">読み込み中...</p>
       ) : (
-        <form onSubmit={handleSubmit}>
-          <label className="block mb-4 text-gray-300">
-            プロフィール画像
+        <form onSubmit={handleSubmit} className="flex flex-col items-center">
+          <div
+            className="relative mb-4 cursor-pointer group"
+            style={{ width: 96, height: 96 }}
+            onClick={handleImageClick}
+            tabIndex={0}
+            role="button"
+            aria-label="プロフィール画像を選択"
+          >
             <input
               type="file"
               accept="image/*"
-              className="block mt-1"
+              className="hidden"
+              ref={fileInputRef}
               onChange={handleFileChange}
               disabled={saving}
             />
-            {iconPreview && (
-              <img src={iconPreview} alt="プロフィール画像" className="mt-2 w-16 h-16 rounded-full object-cover" />
-            )}
-          </label>
-          <label className="block mb-2 text-gray-300">
-            ニックネーム
-            <input
-              type="text"
-              className="w-full p-2 rounded bg-gray-800 text-white mt-1"
-              value={nickname}
-              onChange={e => setNickname(e.target.value)}
-              disabled={saving}
-            />
-          </label>
-          <label className="block mb-4 text-gray-300">
-            自己紹介
-            <textarea
-              className="w-full p-2 rounded bg-gray-800 text-white mt-1"
-              rows={3}
-              value={bio}
-              onChange={e => setBio(e.target.value)}
-              disabled={saving}
-            />
-          </label>
-          <button type="submit" className="bg-yellow-600 text-white px-4 py-2 rounded font-bold w-full" disabled={saving}>
+            <div
+              className="rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-gray-500 group-hover:border-yellow-500"
+              style={{ width: 96, height: 96 }}
+            >
+              {iconPreview ? (
+                <img src={iconPreview} alt="プロフィール画像" className="object-cover w-full h-full" />
+              ) : (
+                <Camera size={40} color="#bbb" />
+              )}
+            </div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{whiteSpace:'nowrap'}}>
+              画像を選択
+            </div>
+          </div>
+          <button type="submit" className="bg-yellow-600 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={saving}>
             {saving ? "保存中..." : "保存"}
           </button>
           {message && <p className="mt-4 text-center text-green-400">{message}</p>}
