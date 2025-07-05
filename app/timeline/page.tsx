@@ -201,7 +201,8 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-6">
+        <div className="mb-6 flex items-end">
+          {/* プロフィール画像枠（ダミー）を左に追加したい場合はここに */}
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
@@ -228,7 +229,8 @@ export default function TimelinePage() {
           <button
             onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
             disabled={posting || !content.trim()}
-            className={`w-full py-2 rounded-xl bg-gray-500 text-white font-bold hover:bg-gray-600 disabled:opacity-50 text-base cursor-pointer`}
+            className={`ml-2 mb-4 px-5 py-2 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600 disabled:opacity-50 text-base cursor-pointer transition-all duration-150 shadow ${posting || !content.trim() ? 'opacity-60' : ''}`}
+            style={{ fontSize: '15px', minWidth: '90px', height: '38px', borderRadius: '9999px' }}
           >
             {posting ? '投稿中...' : selectedTab === 'cheatday' ? 'チートデイとして投稿' : '投稿する'}
           </button>
