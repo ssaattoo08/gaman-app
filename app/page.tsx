@@ -28,7 +28,7 @@ export default function Home() {
             alt="がまんロゴ"
             width={80}
             height={80}
-            className="rounded-full"
+            className="rounded-full bg-white"
           />
         </div>
 
