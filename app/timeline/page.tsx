@@ -289,7 +289,7 @@ export default function TimelinePage() {
             filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
+                className={`x-post${post.myrule ? ' myrule-x-post' : ''} border-b border-gray-500`}
               >
                 {post.myrule && (
                   <span
