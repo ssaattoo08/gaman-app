@@ -24,7 +24,7 @@ export default function ProfileEditPage() {
         .select("icon_url")
         .eq("id", user.id)
         .single();
-      if (!error && data && data.icon_url) {
+      if (!error && data?.icon_url) {
         setIconPreview(data.icon_url);
       }
       setLoading(false);
@@ -45,7 +45,7 @@ export default function ProfileEditPage() {
   };
 
   const handleImageClick = () => {
-    if (fileInputRef.current) fileInputRef.current.click();
+    fileInputRef.current?.click();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,8 +53,8 @@ export default function ProfileEditPage() {
     setSaving(true);
     setMessage("");
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
       setMessage("ログイン情報が取得できませんでした");
       setSaving(false);
       return;
@@ -66,14 +66,15 @@ export default function ProfileEditPage() {
       const ext = iconFile.name.split(".").pop();
       const filePath = `${user.id}_${Date.now()}.${ext}`;
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase
+        .storage
         .from("avatars")
         .upload(filePath, iconFile, {
           contentType: iconFile.type,
         });
 
       if (uploadError) {
-        console.error("Upload error:", uploadError.message);
+        console.error("アップロード失敗:", uploadError.message);
         setMessage("画像アップロードに失敗しました");
         setSaving(false);
         return;
@@ -130,7 +131,7 @@ export default function ProfileEditPage() {
                 <Camera size={40} color="#bbb" />
               )}
             </div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{ whiteSpace: 'nowrap' }}>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{ whiteSpace: "nowrap" }}>
               画像を選択
             </div>
           </div>
