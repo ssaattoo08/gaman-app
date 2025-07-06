@@ -52,34 +52,48 @@ export default function ProfileEditPage() {
     e.preventDefault();
     setSaving(true);
     setMessage("");
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       setMessage("ログイン情報が取得できませんでした");
       setSaving(false);
       return;
     }
+
     let icon_url = iconPreview;
+
     if (iconFile) {
-      const ext = iconFile.name.split('.').pop();
-      const filePath = `${user.id}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { upsert: true, contentType: iconFile.type });
+      const ext = iconFile.name.split(".").pop();
+      const filePath = `${user.id}_${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, iconFile, {
+          contentType: iconFile.type,
+        });
+
       if (uploadError) {
+        console.error("Upload error:", uploadError.message);
         setMessage("画像アップロードに失敗しました");
         setSaving(false);
         return;
       }
+
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
       icon_url = data.publicUrl;
     }
+
     const { error } = await supabase
       .from("profiles")
       .update({ icon_url })
       .eq("id", user.id);
+
     if (error) {
       setMessage("保存に失敗しました");
     } else {
       setMessage("プロフィール画像を更新しました！");
     }
+
     setSaving(false);
   };
 
@@ -116,7 +130,7 @@ export default function ProfileEditPage() {
                 <Camera size={40} color="#bbb" />
               )}
             </div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{whiteSpace:'nowrap'}}>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{ whiteSpace: 'nowrap' }}>
               画像を選択
             </div>
           </div>
@@ -128,4 +142,4 @@ export default function ProfileEditPage() {
       )}
     </div>
   );
-} 
+}
