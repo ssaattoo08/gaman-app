@@ -334,7 +334,7 @@ export default function MyPage() {
     if (iconFile) {
       const ext = iconFile.name.split('.').pop();
       const filePath = `${user.id}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { upsert: true, contentType: iconFile.type });
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { contentType: iconFile.type });
       if (uploadError) {
         setEditMessage("画像アップロードに失敗しました");
         setEditSaving(false);
