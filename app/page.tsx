@@ -34,13 +34,13 @@ export default function Home() {
 
         {/* キャッチコピー */}
         <p className="text-lg leading-relaxed text-gray-200">
-          日々のガマンを記録し<br />
+          ガマン、マイルールを記録し<br />
           見える化する習慣化サービス
         </p>
 
         {/* 説明文 */}
         <ul className="text-sm text-gray-400 space-y-1">
-          <li>✔︎ ガマンを投稿するだけ、振り返り機能も搭載してます</li>
+          <li>✔︎ 日々のガマン、マイルールを投稿するだけです</li>
           <li>✔︎ 完全匿名性・登録時に自動でニックネームがつきます</li>
         </ul>
 
