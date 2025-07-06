@@ -48,13 +48,9 @@ export default function TopNav() {
   //   }
   // }, [])
 
-  // ログイン・新規登録ページではロゴのみ表示
+  // ログイン・新規登録ページでは何も表示しない
   if (pathname === "/login" || pathname === "/register") {
-    return (
-      <nav className="flex justify-center items-center px-6 py-4 bg-black text-white">
-        <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block' }} />
-      </nav>
-    );
+    return null;
   }
 
   // トップページ（'/'）では何も表示しない
