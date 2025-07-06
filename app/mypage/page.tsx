@@ -26,6 +26,13 @@ export default function MyPage() {
   const [cheatDay, setCheatDay] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  // 画像編集用の状態
+  const [editLoading, setEditLoading] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editMessage, setEditMessage] = useState("");
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [iconPreview, setIconPreview] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     isMountedRef.current = true
@@ -270,6 +277,82 @@ export default function MyPage() {
       : post.cheat_day === true
   );
 
+  // プロフィール画像初期値取得
+  useEffect(() => {
+    if (!showEditModal) return;
+    const fetchProfile = async () => {
+      setEditLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setEditLoading(false);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("icon_url")
+        .eq("id", user.id)
+        .single();
+      if (!error && data && data.icon_url) {
+        setIconPreview(data.icon_url);
+      } else {
+        setIconPreview("");
+      }
+      setEditLoading(false);
+    };
+    fetchProfile();
+  }, [showEditModal]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setIconFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setIconPreview(ev.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditSaving(true);
+    setEditMessage("");
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setEditMessage("ログイン情報が取得できませんでした");
+      setEditSaving(false);
+      return;
+    }
+    let icon_url = iconPreview;
+    if (iconFile) {
+      const ext = iconFile.name.split('.').pop();
+      const filePath = `${user.id}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, iconFile, { upsert: true, contentType: iconFile.type });
+      if (uploadError) {
+        setEditMessage("画像アップロードに失敗しました");
+        setEditSaving(false);
+        return;
+      }
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+      icon_url = data.publicUrl;
+    }
+    const { error } = await supabase
+      .from("profiles")
+      .update({ icon_url })
+      .eq("id", user.id);
+    if (error) {
+      setEditMessage("保存に失敗しました");
+    } else {
+      setEditMessage("プロフィール画像を更新しました！");
+    }
+    setEditSaving(false);
+  };
+
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -282,12 +365,12 @@ export default function MyPage() {
               {/* 右上の三点リーダーアイコンとメニュー */}
               <div className="absolute top-3 right-3">
                 <button
-                  className="p-1 bg-[#444] rounded-full hover:bg-[#666] transition flex items-center justify-center"
-                  style={{ width: 24, height: 24 }}
+                  className="hover:bg-[#222] transition flex items-center justify-center"
+                  style={{ width: 20, height: 20, padding: 0, background: 'none', border: 'none' }}
                   onClick={() => setMenuOpen((v) => !v)}
                   aria-label="メニューを開く"
                 >
-                  <MoreVertical size={16} color="#ccc" />
+                  <MoreVertical size={14} color="#ccc" />
                 </button>
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-36 bg-gray-800 rounded shadow-lg z-20 border border-gray-700">
@@ -331,7 +414,7 @@ export default function MyPage() {
                 })()} />
               </div>
             </div>
-            {/* 画像編集モーダル（仮の土台） */}
+            {/* 画像編集モーダル（本物のUI） */}
             {showEditModal && (
               <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                 <div className="bg-gray-900 rounded-lg p-6 relative w-full max-w-md">
@@ -341,7 +424,47 @@ export default function MyPage() {
                   >
                     ×
                   </button>
-                  <div className="text-white text-center mb-4">画像編集UI（ここに後で本物を組み込み）</div>
+                  <h2 className="text-xl font-bold mb-6 text-white text-center">プロフィール画像編集</h2>
+                  {editLoading ? (
+                    <p className="text-gray-400 text-center">読み込み中...</p>
+                  ) : (
+                    <form onSubmit={handleEditSubmit} className="flex flex-col items-center">
+                      <div
+                        className="relative mb-4 cursor-pointer group"
+                        style={{ width: 96, height: 96 }}
+                        onClick={handleImageClick}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="プロフィール画像を選択"
+                      >
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          disabled={editSaving}
+                        />
+                        <div
+                          className="rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-gray-500 group-hover:border-yellow-500"
+                          style={{ width: 96, height: 96 }}
+                        >
+                          {iconPreview ? (
+                            <img src={iconPreview} alt="プロフィール画像" className="object-cover w-full h-full" />
+                          ) : (
+                            <span className="text-gray-400">画像</span>
+                          )}
+                        </div>
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{whiteSpace:'nowrap'}}>
+                          画像を選択
+                        </div>
+                      </div>
+                      <button type="submit" className="bg-yellow-600 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={editSaving}>
+                        {editSaving ? "保存中..." : "保存"}
+                      </button>
+                      {editMessage && <p className="mt-4 text-center text-green-400">{editMessage}</p>}
+                    </form>
+                  )}
                 </div>
               </div>
             )}
