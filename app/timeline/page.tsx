@@ -256,7 +256,7 @@ export default function TimelinePage() {
                   <div className="flex items-center">
                     <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
                     <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm hover:underline" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>
-                      {post.profiles?.nickname ? post.profiles.nickname : ""}
+                      {post.profiles?.nickname ? post.profiles.nickname : "名無し"}
                     </Link>
                     <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                   </div>
