@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import WeeklyGamanBarChart from "../../components/WeeklyGamanBarChart"
 import PostContent from "../../components/PostContent"
 import ThreeMonthCamelCalendar from "../../components/ThreeMonthCamelCalendar"
-import { Pencil } from "lucide-react"
+import { Pencil, MoreVertical } from "lucide-react"
 
 export default function MyPage() {
   const router = useRouter()
@@ -24,6 +24,8 @@ export default function MyPage() {
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [cheatDay, setCheatDay] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     isMountedRef.current = true
@@ -277,9 +279,30 @@ export default function MyPage() {
           <>
             {/* プロフィールセクション＋カレンダーをまとめてカード化 */}
             <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center w-full relative">
-              <a href="/profile/edit" className="absolute top-3 right-3 p-1 bg-[#444] rounded-full hover:bg-[#666] transition" style={{width:20,height:20,display:'flex',alignItems:'center',justifyContent:'center'}} title="プロフィール編集">
-                <Pencil size={12} color="#ccc" />
-              </a>
+              {/* 右上の三点リーダーアイコンとメニュー */}
+              <div className="absolute top-3 right-3">
+                <button
+                  className="p-1 bg-[#444] rounded-full hover:bg-[#666] transition flex items-center justify-center"
+                  style={{ width: 24, height: 24 }}
+                  onClick={() => setMenuOpen((v) => !v)}
+                  aria-label="メニューを開く"
+                >
+                  <MoreVertical size={16} color="#ccc" />
+                </button>
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2 w-36 bg-gray-800 rounded shadow-lg z-20 border border-gray-700">
+                    <button
+                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      onClick={() => {
+                        setShowEditModal(true);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      画像を編集する
+                    </button>
+                  </div>
+                )}
+              </div>
               <div className="flex items-center mb-1">
                 <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
@@ -308,6 +331,20 @@ export default function MyPage() {
                 })()} />
               </div>
             </div>
+            {/* 画像編集モーダル（仮の土台） */}
+            {showEditModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                <div className="bg-gray-900 rounded-lg p-6 relative w-full max-w-md">
+                  <button
+                    className="absolute top-2 right-2 text-gray-400 hover:text-white"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    ×
+                  </button>
+                  <div className="text-white text-center mb-4">画像編集UI（ここに後で本物を組み込み）</div>
+                </div>
+              </div>
+            )}
             {/* 投稿タブ */}
             {/* <div className="flex mb-4 gap-2"> ... </div> */}
             {/* 投稿一覧 */}
