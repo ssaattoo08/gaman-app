@@ -40,7 +40,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule, url_title")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
 
       // リアクション・コメント機能を一時的にクローズ
@@ -184,7 +184,7 @@ export default function TimelinePage() {
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username), cheat_day, myrule, url_title")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
@@ -254,7 +254,15 @@ export default function TimelinePage() {
               >
                 <div className="flex items-center mb-2 justify-between">
                   <div className="flex items-center">
-                    <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                    {post.profiles?.icon_url ? (
+                      <img
+                        src={post.profiles.icon_url}
+                        alt="プロフィール画像"
+                        style={{ width: 24, height: 24, borderRadius: 4, marginRight: 8, objectFit: 'cover', background: '#333' }}
+                      />
+                    ) : (
+                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                    )}
                     <Link href={`/user/${post.profiles?.username ?? ""}`} className="text-sm hover:underline" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>
                       {post.profiles?.nickname ? post.profiles.nickname : "名無し"}
                     </Link>

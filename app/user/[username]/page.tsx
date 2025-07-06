@@ -14,6 +14,7 @@ export default function UserProfilePage() {
   const username = params?.username ? String(params.username) : ""
   const [posts, setPosts] = useState<any[]>([])
   const [nickname, setNickname] = useState<string | null>(null)
+  const [iconUrl, setIconUrl] = useState<string>("")
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
@@ -30,7 +31,7 @@ export default function UserProfilePage() {
       // usernameからユーザー情報を取得
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, nickname")
+        .select("id, nickname, icon_url")
         .eq("username", username)
         .single()
       if (!profile) {
@@ -43,6 +44,7 @@ export default function UserProfilePage() {
       if (isMountedRef.current) {
         setNickname(profile.nickname || "名無し")
         setUserId(profile.id)
+        setIconUrl(profile.icon_url || "")
       }
       // 投稿一覧取得
       const { data: userPosts } = await supabase
@@ -196,7 +198,15 @@ export default function UserProfilePage() {
         {/* プロフィール欄＋カレンダーをまとめてカード化 */}
         <div className="bg-gray-900 rounded-2xl p-6 mb-6 flex flex-col items-center">
           <div className="flex items-center mb-1">
-            <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+            {iconUrl ? (
+              <img
+                src={iconUrl}
+                alt="プロフィール画像"
+                style={{ width: 32, height: 32, borderRadius: 6, marginRight: 12, objectFit: 'cover', background: '#333' }}
+              />
+            ) : (
+              <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+            )}
             <div className="text-lg font-bold text-white">{nickname}</div>
           </div>
           {/* <div className="text-sm text-gray-400 mt-1">

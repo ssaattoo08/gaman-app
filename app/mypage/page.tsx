@@ -14,6 +14,7 @@ export default function MyPage() {
   const [posts, setPosts] = useState<any[]>([])
   const [userId, setUserId] = useState<string | null>(null)
   const [nickname, setNickname] = useState<string | null>(null)
+  const [iconUrl, setIconUrl] = useState<string>("");
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
   const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
@@ -58,12 +59,13 @@ export default function MyPage() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("nickname")
+          .select("nickname, icon_url")
           .eq("id", user.id)
           .single()
 
         if (isMountedRef.current) {
         setNickname(profile?.nickname || "名無し")
+        setIconUrl(profile?.icon_url || "")
         }
 
         const { data: userPosts } = await supabase
@@ -387,7 +389,15 @@ export default function MyPage() {
                 )}
               </div>
               <div className="flex items-center mb-1">
-                <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+                {iconUrl ? (
+                  <img
+                    src={iconUrl}
+                    alt="プロフィール画像"
+                    style={{ width: 32, height: 32, borderRadius: 6, marginRight: 12, objectFit: 'cover', background: '#333' }}
+                  />
+                ) : (
+                  <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
+                )}
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
