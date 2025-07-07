@@ -64,9 +64,9 @@ export default function BottomNav() {
           <Home color={pathname === "/timeline" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/timeline" ? "text-white" : "text-gray-400"}`}>Timeline</span>
         </Link>
-        <div className="flex flex-col items-center justify-center w-full h-full pointer-events-none select-none">
-          <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block' }} />
-        </div>
+        <Link href="/cheatday" className="flex flex-col items-center justify-center w-full h-full">
+          <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block', cursor: 'pointer' }} />
+        </Link>
         <Link href="/mypage" className="flex flex-col items-center justify-center w-full h-full">
           <User color={pathname === "/mypage" ? "white" : "gray"} />
           <span className={`text-xs ${pathname === "/mypage" ? "text-white" : "text-gray-400"}`}>My Page</span>
