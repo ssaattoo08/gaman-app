@@ -8,6 +8,7 @@ import Link from "next/link"
 import WeeklyGamanBarChart from "@/components/WeeklyGamanBarChart"
 import PostContent from "../../../components/PostContent"
 import ThreeMonthCamelCalendar from "@/components/ThreeMonthCamelCalendar"
+import { useRouter } from "next/navigation"
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -22,6 +23,7 @@ export default function UserProfilePage() {
   const [reactions, setReactions] = useState<any[]>([])
   const [comments, setComments] = useState<any[]>([])
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
+  const router = useRouter()
 
   useEffect(() => {
     isMountedRef.current = true
@@ -255,7 +257,8 @@ export default function UserProfilePage() {
                       <img
                         src={iconUrl}
                         alt="プロフィール画像"
-                        style={{width:24,height:24,borderRadius:4,marginRight:8,objectFit:'cover',background:'#333'}}
+                        style={{width:24,height:24,borderRadius:4,marginRight:8,objectFit:'cover',background:'#333',cursor:'pointer'}}
+                        onClick={() => router.push('/cheatday')}
                       />
                     ) : (
                       <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
