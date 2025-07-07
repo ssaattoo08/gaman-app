@@ -8,6 +8,8 @@ import PostContent from "@/components/PostContent";
 export default function CheatdayPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState("");
+  const [posting, setPosting] = useState(false);
 
   useEffect(() => {
     const fetchCheatdayPosts = async () => {
@@ -38,9 +40,50 @@ export default function CheatdayPage() {
     });
   };
 
+  const handlePostSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPosting(true);
+    const { data, error } = await supabase
+      .from("gaman_logs")
+      .insert([
+        {
+          content,
+          cheat_day: true,
+          myrule: false,
+          url_title: "",
+        },
+      ])
+      .select();
+    if (!error && data) {
+      setPosts(data);
+      setContent("");
+    }
+    setPosting(false);
+  };
+
   return (
     <main className="px-4 py-6 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-6 text-center text-yellow-400">チートデイ投稿一覧</h1>
+      {/* 投稿フォーム */}
+      <div className="mb-6 flex items-start w-full">
+        <div className="flex-1 flex flex-col w-full relative">
+          <textarea
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            className="w-full p-4 pb-14 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
+            placeholder={"チートデイ例：大好きなお酒を思う存分飲みまくった"}
+            style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
+          />
+          <button
+            onClick={handlePostSubmit}
+            disabled={posting || !content.trim()}
+            className={`absolute bottom-4 right-4 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+            style={{ fontSize: '11px', width: '36px', height: '36px', borderRadius: '50%' }}
+          >
+            Post
+          </button>
+        </div>
+      </div>
+      {/* 投稿一覧 */}
       {loading ? (
         <p className="text-white text-center">読み込み中...</p>
       ) : posts.length === 0 ? (
