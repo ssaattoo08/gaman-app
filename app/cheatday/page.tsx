@@ -70,7 +70,7 @@ export default function CheatdayPage() {
             value={content}
             onChange={e => setContent(e.target.value)}
             className="w-full p-4 pb-14 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
-            placeholder={"チートデイ例：大好きなお酒を思う存分飲みまくった"}
+            placeholder={"たまにはいいよね！チートデイ！\n例：大好きなお酒を飲みまくった"}
             style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
           />
           <button
