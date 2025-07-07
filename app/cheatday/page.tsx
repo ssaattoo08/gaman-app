@@ -43,10 +43,17 @@ export default function CheatdayPage() {
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPosting(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("ログインが必要です");
+      setPosting(false);
+      return;
+    }
     const { data, error } = await supabase
       .from("gaman_logs")
       .insert([
         {
+          user_id: user.id,
           content,
           cheat_day: true,
           myrule: false,
