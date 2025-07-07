@@ -250,7 +250,16 @@ export default function UserProfilePage() {
               >
                 <div className="flex items-center mb-2 justify-between">
                   <div className="flex items-center">
-                    <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                    {/* 投稿欄にもプロフィール画像を表示 */}
+                    {iconUrl ? (
+                      <img
+                        src={iconUrl}
+                        alt="プロフィール画像"
+                        style={{width:24,height:24,borderRadius:4,marginRight:8,objectFit:'cover',background:'#333'}}
+                      />
+                    ) : (
+                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
+                    )}
                     <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
                     <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                   </div>
