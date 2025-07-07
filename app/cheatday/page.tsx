@@ -11,19 +11,21 @@ export default function CheatdayPage() {
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
 
+  // 投稿一覧取得関数をuseEffect外に
+  const fetchCheatdayPosts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("gaman_logs")
+      .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
+      .eq("cheat_day", true)
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      setPosts(data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchCheatdayPosts = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
-        .eq("cheat_day", true)
-        .order("created_at", { ascending: false });
-      if (!error && data) {
-        setPosts(data);
-      }
-      setLoading(false);
-    };
     fetchCheatdayPosts();
   }, []);
 
@@ -49,7 +51,7 @@ export default function CheatdayPage() {
       setPosting(false);
       return;
     }
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("gaman_logs")
       .insert([
         {
@@ -59,11 +61,10 @@ export default function CheatdayPage() {
           myrule: false,
           url_title: "",
         },
-      ])
-      .select();
-    if (!error && data) {
-      setPosts(data);
+      ]);
+    if (!error) {
       setContent("");
+      await fetchCheatdayPosts(); // 投稿後に再取得
     }
     setPosting(false);
   };
