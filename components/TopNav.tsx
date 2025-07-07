@@ -60,7 +60,9 @@ export default function TopNav() {
     <nav className="hidden md:flex justify-center items-center px-6 py-4 bg-black text-white">
       <div className="flex space-x-8 items-center">
         <Link href="/timeline" className={pathname === "/timeline" ? "font-bold underline" : ""}>Timeline</Link>
-        <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block' }} />
+        <Link href="/cheatday">
+          <img src="/camel-icon-transparent.png" alt="Camel Icon" style={{ height: 32, width: 32, borderRadius: '50%', background: '#fff', objectFit: 'cover', display: 'block', cursor: 'pointer' }} />
+        </Link>
         {/* <Link href="/post" className={pathname === "/post" ? "font-bold underline" : ""}>投稿</Link> */}
         <Link href="/mypage" className={pathname === "/mypage" ? "font-bold underline" : ""}>MyPage</Link>
       </div>

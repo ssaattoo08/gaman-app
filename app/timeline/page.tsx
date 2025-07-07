@@ -258,8 +258,7 @@ export default function TimelinePage() {
                       <img
                         src={post.profiles.icon_url}
                         alt="プロフィール画像"
-                        style={{ width: 24, height: 24, borderRadius: 4, marginRight: 8, objectFit: 'cover', background: '#333', cursor: 'pointer' }}
-                        onClick={() => router.push('/cheatday')}
+                        style={{ width: 24, height: 24, borderRadius: 4, marginRight: 8, objectFit: 'cover', background: '#333' }}
                       />
                     ) : (
                       <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
