@@ -27,6 +27,7 @@ function isHoliday(year: number, month: number, day: number) {
 
 // props: data = [{ date: 'YYYY-MM-DD', gaman: number, myrule: boolean }[] ]
 export default function ThreeMonthCamelCalendar({ data }: { data: { date: string, gaman: number, myrule: boolean }[] }) {
+  console.log('【カレンダーprops data】', data);
   // 今日を基準に直近2ヶ月分の年月を取得
   const today = new Date();
   const months = [];
