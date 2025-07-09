@@ -132,6 +132,20 @@ export default function MyPage() {
     return jstDate.toISOString().slice(0, 10); // 'YYYY-MM-DD'
   };
 
+  // 日付＋時刻（タイムラインと同じ形式）
+  const formatDate = (iso: string) => {
+    const date = new Date(iso);
+    const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    return jstDate.toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
   // 連続記録日数を計算
   const getStreak = () => {
     if (!posts || posts.length === 0) return 0;
@@ -505,7 +519,7 @@ export default function MyPage() {
                           <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
                         )}
                         <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{nickname}</span>
-                        <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{toJstYmd(post.created_at)}</span>
+                        <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
                       </div>
                       {post.myrule && (
                         <span
