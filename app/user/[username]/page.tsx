@@ -225,7 +225,10 @@ export default function UserProfilePage() {
               const dateMap: { [date: string]: { date: string, gaman: number, myrule: boolean } } = {};
               filtered.forEach(p => {
                 const d = new Date(new Date(p.created_at).getTime() + 9 * 60 * 60 * 1000);
-                const ymd = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const ymd = `${year}-${month}-${day}`;
                 if (!dateMap[ymd]) {
                   dateMap[ymd] = { date: ymd, gaman: 0, myrule: false };
                 }
