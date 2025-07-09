@@ -128,8 +128,12 @@ export default function MyPage() {
   // JST日付変換の共通関数
   const toJstYmd = (iso: string) => {
     const date = new Date(iso);
-    const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-    return jstDate.toISOString().slice(0, 10); // 'YYYY-MM-DD'
+    // JSTに変換
+    const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    const year = jst.getFullYear();
+    const month = String(jst.getMonth() + 1).padStart(2, '0');
+    const day = String(jst.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   // 日付＋時刻（タイムラインと同じ形式）
