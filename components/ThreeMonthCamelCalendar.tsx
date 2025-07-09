@@ -38,6 +38,7 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
 
   // 投稿がある日をSetで持つ
   const postSet = new Set(data.map(d => d.date));
+  console.log('【postSet】', Array.from(postSet));
 
   // カレンダー1ヶ月分を生成
   function renderMonth(year: number, month: number) {
@@ -55,6 +56,7 @@ export default function ThreeMonthCamelCalendar({ data }: { data: { date: string
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const hasPost = postSet.has(dateStr);
+      console.log('【dateStr】', dateStr, 'hasPost:', hasPost);
       // 曜日・祝日色分け
       const dow = new Date(year, month, day).getDay();
       let color = '#aaa';
