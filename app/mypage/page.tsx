@@ -127,19 +127,9 @@ export default function MyPage() {
 
   // JST日付変換の共通関数
   const toJstYmd = (iso: string) => {
-    // UTC文字列でもローカルタイムゾーンでも、必ずJSTでYYYY-MM-DDを返す
     const date = new Date(iso);
-    // getUTCFullYearなどでUTC値を取得し、JSTに補正
-    const jstYear = date.getUTCFullYear();
-    const jstMonth = date.getUTCMonth(); // 0-indexed
-    const jstDate = date.getUTCDate();
-    const jstHour = date.getUTCHours() + 9;
-    let d = new Date(Date.UTC(jstYear, jstMonth, jstDate, jstHour));
-    // JST補正後の年月日を取得
-    const year = d.getUTCFullYear();
-    const month = (d.getUTCMonth() + 1).toString().padStart(2, '0');
-    const day = d.getUTCDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    return jstDate.toISOString().slice(0, 10); // 'YYYY-MM-DD'
   };
 
   // 日付＋時刻（タイムラインと同じ形式）
