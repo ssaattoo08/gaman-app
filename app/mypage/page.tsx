@@ -535,7 +535,7 @@ export default function MyPage() {
                       </div>
                       {/* MyRule編集UI */}
                       <div className="w-full mb-4">
-                        <div className="text-base font-bold text-white mb-1">MyRule</div>
+                        <div className="text-base font-bold text-white mb-1" style={{fontSize:9}}>MyRule</div>
                         <ul className="list-disc pl-5 space-y-1 mb-2">
                           {editMyrules.map((rule, idx) => (
                             <li key={idx} className="flex items-center text-white text-sm">
@@ -555,7 +555,7 @@ export default function MyPage() {
                           />
                           <button
                             type="button"
-                            className="bg-yellow-600 text-white px-3 py-1 rounded font-bold"
+                            className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-3 py-1 rounded font-bold transition"
                             disabled={editSaving || !editMyruleInput.trim()}
                             onClick={() => {
                               if (editMyruleInput.trim()) {
@@ -566,7 +566,7 @@ export default function MyPage() {
                           >追加</button>
                         </div>
                       </div>
-                      <button type="submit" className="bg-yellow-600 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={editSaving}>
+                      <button type="submit" className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-6 py-2 rounded font-bold w-full mt-2 transition" disabled={editSaving}>
                         {editSaving ? "保存中..." : "保存"}
                       </button>
                       {editMessage && <p className="mt-4 text-center text-green-400">{editMessage}</p>}
