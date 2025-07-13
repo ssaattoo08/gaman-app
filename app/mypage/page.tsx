@@ -448,16 +448,18 @@ export default function MyPage() {
               </div>
               {/* MyRuleリスト表示 */}
               <div className="w-full flex flex-col items-center mt-4 mb-4">
-                <div className="text-lg font-bold text-white mb-3" style={{letterSpacing:1, fontSize:9}}>MyRule</div>
-                {myrules && myrules.length > 0 ? (
-                  <ul className="w-full max-w-xs flex flex-col items-start gap-2 px-3 py-3 bg-gray-800/60 rounded-lg" style={{lineHeight:1.8}}>
-                    {myrules.map((rule, idx) => (
-                      <li key={idx} className="text-white" style={{fontSize:9}}>{rule}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRuleが登録されていません</div>
-                )}
+                <div className="w-full max-w-xs px-3 py-3 bg-gray-800/60 rounded-lg flex flex-col items-start">
+                  <div className="text-lg font-bold text-white mb-2 pb-1 border-b border-gray-500" style={{letterSpacing:1, fontSize:9, width:'100%'}}>MyRule</div>
+                  {myrules && myrules.length > 0 ? (
+                    <ul className="w-full flex flex-col items-start gap-2" style={{lineHeight:1.8}}>
+                      {myrules.map((rule, idx) => (
+                        <li key={idx} className="text-white" style={{fontSize:9}}>{rule}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRuleが登録されていません</div>
+                  )}
+                </div>
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
