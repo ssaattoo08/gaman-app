@@ -452,8 +452,7 @@ export default function MyPage() {
                 {myrules && myrules.length > 0 ? (
                   <ul className="flex flex-col items-center gap-1">
                     {myrules.map((rule, idx) => (
-                      <li key={idx} className="text-white text-base flex items-center">
-                        <span className="mr-2">・</span>
+                      <li key={idx} className="text-white flex items-center" style={{fontSize:9}}>
                         <span>{rule}</span>
                       </li>
                     ))}
@@ -538,9 +537,25 @@ export default function MyPage() {
                         <div className="text-base font-bold text-white mb-1" style={{fontSize:9}}>MyRule</div>
                         <ul className="list-disc pl-5 space-y-1 mb-2">
                           {editMyrules.map((rule, idx) => (
-                            <li key={idx} className="flex items-center text-white text-sm">
+                            <li key={idx} className="flex items-center text-white" style={{fontSize:9}}>
                               <span className="flex-1">{rule}</span>
-                              <button type="button" className="ml-2 text-xs text-red-400 hover:text-red-600" onClick={() => setEditMyrules(editMyrules.filter((_, i) => i !== idx))}>削除</button>
+                              <div className="flex flex-col ml-2">
+                                <button type="button" className="text-xs text-gray-400 hover:text-white cursor-pointer" style={{lineHeight:1}} disabled={idx === 0} onClick={() => {
+                                  if(idx > 0) {
+                                    const newRules = [...editMyrules];
+                                    [newRules[idx-1], newRules[idx]] = [newRules[idx], newRules[idx-1]];
+                                    setEditMyrules(newRules);
+                                  }
+                                }}>▲</button>
+                                <button type="button" className="text-xs text-gray-400 hover:text-white cursor-pointer" style={{lineHeight:1}} disabled={idx === editMyrules.length-1} onClick={() => {
+                                  if(idx < editMyrules.length-1) {
+                                    const newRules = [...editMyrules];
+                                    [newRules[idx+1], newRules[idx]] = [newRules[idx], newRules[idx+1]];
+                                    setEditMyrules(newRules);
+                                  }
+                                }}>▼</button>
+                              </div>
+                              <button type="button" className="ml-2 text-xs text-red-400 hover:text-red-600 cursor-pointer" onClick={() => setEditMyrules(editMyrules.filter((_, i) => i !== idx))}>削除</button>
                             </li>
                           ))}
                         </ul>
