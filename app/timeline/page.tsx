@@ -288,7 +288,7 @@ export default function TimelinePage() {
                 </div>
                 <PostContent content={post.content} url_title={post.url_title} />
                 {/* リアクションボタン */}
-                <div className="flex items-center mt-3 pt-3 border-t border-gray-700">
+                <div className="flex items-center mt-3">
                   <button
                     onClick={() => handleReaction(post.id, REACTION_TYPE(post))}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
@@ -297,9 +297,9 @@ export default function TimelinePage() {
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                     }`}
                   >
-                    <span className="text-sm">
+                    {/* <span className="text-sm">
                       {REACTION_TYPE(post) === 'sugoi' ? '✨' : '😊'}
-                    </span>
+                    </span> */}
                     <span>{REACTION_LABEL(post)}</span>
                     <span className="ml-1 text-xs opacity-80">
                       {getReactionCount(post.id, REACTION_TYPE(post))}
