@@ -1,19 +1,22 @@
+import 'dotenv/config';
+import axios from 'axios';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 async function fetchTitle(url: string): Promise<string | null> {
   try {
-    const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
-    const json = await res.json();
+    const res = await axios.get(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+    const json = res.data;
     if (json.status === 'success' && json.data.title) {
       return json.data.title;
     }
     return null;
-  } catch {
+  } catch (e) {
+    console.error('axios error for url:', url, e);
     return null;
   }
 }
@@ -24,6 +27,7 @@ function extractFirstUrl(text: string): string | null {
 }
 
 export async function batchAssignTitles() {
+  console.log('posts取得開始');
   // url_titleがNULLの投稿を全件取得
   const { data: posts, error } = await supabase
     .from('gaman_logs')
@@ -56,6 +60,4 @@ export async function batchAssignTitles() {
 }
 
 // 実行用
-if (require.main === module) {
-  batchAssignTitles().then(() => process.exit());
-} 
+batchAssignTitles().then(() => process.exit()); 
