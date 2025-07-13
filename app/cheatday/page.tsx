@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import PostContent from "@/components/PostContent";
@@ -10,6 +10,11 @@ export default function CheatdayPage() {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
+  const [reactions, setReactions] = useState<any[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
+  const isMountedRef = useRef(true);
 
   // 投稿一覧取得関数をuseEffect外に
   const fetchCheatdayPosts = async () => {
@@ -25,8 +30,26 @@ export default function CheatdayPage() {
     setLoading(false);
   };
 
+  // リアクション一覧取得
+  const fetchReactions = async () => {
+    const { data, error } = await supabase
+      .from("reactions")
+      .select("id, post_id, user_id, type, profiles(nickname)");
+    if (!error && data) {
+      setReactions(data);
+    }
+  };
+
   useEffect(() => {
+    isMountedRef.current = true;
     fetchCheatdayPosts();
+    fetchReactions();
+    // ユーザーID取得
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (isMountedRef.current) setUserId(user?.id ?? null);
+    })();
+    return () => { isMountedRef.current = false; };
   }, []);
 
   const formatDate = (iso: string) => {
@@ -67,6 +90,64 @@ export default function CheatdayPage() {
       await fetchCheatdayPosts(); // 投稿後に再取得
     }
     setPosting(false);
+  };
+
+  // --- リアクション関連 ---
+  const REACTION_TYPE = "ii";
+  const REACTION_LABEL = "たまにはいいよね";
+
+  const getReactionCount = (postId: string) =>
+    reactions.filter(r => r.post_id === postId && r.type === REACTION_TYPE).length;
+
+  const hasReacted = (postId: string) =>
+    reactions.some(r => r.post_id === postId && r.type === REACTION_TYPE && r.user_id === userId);
+
+  const handleReaction = async (postId: string) => {
+    if (!userId) {
+      alert("ログインしてください");
+      return;
+    }
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try {
+      if (hasReacted(postId)) {
+        // 削除
+        const { error } = await supabase
+          .from("reactions")
+          .delete()
+          .match({ post_id: postId, user_id: userId, type: REACTION_TYPE });
+        if (error) {
+          alert("リアクション削除に失敗しました: " + error.message);
+          return;
+        }
+        setReactions(prev => prev.filter(
+          r => !(r.post_id === postId && r.user_id === userId && r.type === REACTION_TYPE)
+        ));
+        await fetchReactions();
+      } else {
+        // 追加
+        const { error } = await supabase.from("reactions").insert({
+          post_id: postId,
+          user_id: userId,
+          type: REACTION_TYPE,
+        });
+        if (error) {
+          alert("リアクション追加に失敗しました: " + error.message);
+          return;
+        }
+        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type: REACTION_TYPE }]);
+        await fetchReactions();
+      }
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // リアクションした人のニックネーム取得
+  const getReactionUserNicknames = (postId: string) => {
+    return reactions
+      .filter(r => r.post_id === postId && r.type === REACTION_TYPE)
+      .map(r => r.profiles?.nickname || "名無し");
   };
 
   return (
@@ -123,8 +204,46 @@ export default function CheatdayPage() {
                 )}
               </div>
               <PostContent content={post.content} url_title={post.url_title} />
+              {/* リアクションボタン */}
+              <div className="flex items-center mt-3">
+                <button
+                  onClick={() => handleReaction(post.id)}
+                  disabled={isProcessing}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                    hasReacted(post.id)
+                      ? 'bg-yellow-500 text-gray-900 shadow-md'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                  } ${isProcessing ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                  <span>{REACTION_LABEL}</span>
+                  <span
+                    className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
+                    onClick={e => { e.stopPropagation(); setShowReactionModal({ open: true, postId: post.id, type: REACTION_TYPE }); }}
+                  >
+                    {getReactionCount(post.id)}
+                  </span>
+                </button>
+              </div>
             </div>
           ))}
+        </div>
+      )}
+      {/* リアクションした人のニックネーム表示モーダル */}
+      {showReactionModal.open && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-lg p-6 min-w-[220px] max-w-xs relative">
+            <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setShowReactionModal({ open: false, postId: null, type: null })}>×</button>
+            <h2 className="text-lg font-bold mb-4 text-white text-center">リアクションした人</h2>
+            <ul className="space-y-2">
+              {showReactionModal.postId && getReactionUserNicknames(showReactionModal.postId).length > 0 ? (
+                getReactionUserNicknames(showReactionModal.postId).map((nickname, idx) => (
+                  <li key={idx} className="text-center text-white bg-gray-800 rounded px-2 py-1">{nickname}</li>
+                ))
+              ) : (
+                <li className="text-center text-gray-400">まだ誰もリアクションしていません</li>
+              )}
+            </ul>
+          </div>
         </div>
       )}
     </main>
