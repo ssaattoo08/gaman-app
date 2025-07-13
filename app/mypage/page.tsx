@@ -448,7 +448,7 @@ export default function MyPage() {
               </div>
               {/* MyRuleリスト表示 */}
               <div className="w-full flex flex-col items-center mt-4 mb-4">
-                <div className="text-lg font-bold text-white mb-2" style={{letterSpacing:1}}>MyRule</div>
+                <div className="text-lg font-bold text-white mb-2" style={{letterSpacing:1, fontSize:9}}>MyRule</div>
                 {myrules && myrules.length > 0 ? (
                   <ul className="flex flex-col items-center gap-1">
                     {myrules.map((rule, idx) => (
@@ -459,7 +459,7 @@ export default function MyPage() {
                     ))}
                   </ul>
                 ) : (
-                  <div className="text-gray-400 text-base">まだMyRuleが登録されていません</div>
+                  <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRuleが登録されていません</div>
                 )}
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
