@@ -447,7 +447,7 @@ export default function MyPage() {
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
               </div>
               {/* MyRuleリスト表示 */}
-              <div className="w-full flex flex-col items-center mt-4 mb-4">
+              <div className="w-full flex flex-col items-center mt-6 mb-2">
                 <div className="w-full max-w-xs px-3 py-3 bg-gray-800/60 rounded-lg flex flex-col items-start">
                   <span className="font-bold text-white mb-2 pb-1 border-b border-gray-500 inline-block" style={{letterSpacing:1, fontSize:10, borderBottomWidth:2, width:'fit-content'}}>MyRule</span>
                   {myrules && myrules.length > 0 ? (
