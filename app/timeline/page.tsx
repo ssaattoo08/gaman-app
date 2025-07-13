@@ -76,6 +76,12 @@ export default function TimelinePage() {
     }
   }, [])
 
+  useEffect(() => {
+    if (userId === null && !loading) {
+      router.replace('/');
+    }
+  }, [userId, loading, router]);
+
   const formatDate = (iso: string) => {
     const date = new Date(iso);
     const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
@@ -246,45 +252,47 @@ export default function TimelinePage() {
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
         {/* 投稿フォーム */}
-        <div className="mb-6 flex items-start w-full">
-          <div className="flex-1 flex flex-col w-full relative">
-            <textarea
-              value={content}
-              onChange={e => setContent(e.target.value)}
-              className="w-full p-4 pb-14 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
-              placeholder={
-                selectedTab === 'cheatday'
-                  ? '例：大好きなお酒を思う存分飲みまくった'
-                  : myRule
-                    ? 'MyRule例：通勤電車で本を読む'
-                    : 'ガマン例：飲み会を断り生成AIの勉強をした'
-              }
-              style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
-            />
-            {/* MyRuleチェックボックスをテキストエリア内左下に絶対配置 */}
-            {selectedTab === 'gaman' && (
-              <label className="absolute bottom-4 left-4 flex items-center text-gray-300 text-xs" style={{userSelect:'none'}}>
-                <input
-                  type="checkbox"
-                  checked={myRule}
-                  onChange={e => setMyRule(e.target.checked)}
-                  className="mr-1 accent-blue-500 w-4 h-4"
-                  style={{verticalAlign:'middle'}}
-                />
-                <span style={{lineHeight:'1.2'}}>MyRuleとして投稿</span>
-              </label>
-            )}
-            {/* Postボタンをテキストエリア内右下にしっかり収める */}
-            <button
-              onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
-              disabled={posting || !content.trim()}
-              className={`absolute bottom-4 right-4 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
-              style={{ fontSize: '11px', width: '36px', height: '36px', borderRadius: '50%' }}
-            >
-              Post
-            </button>
+        {userId && (
+          <div className="mb-6 flex items-start w-full">
+            <div className="flex-1 flex flex-col w-full relative">
+              <textarea
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                className="w-full p-4 pb-14 rounded-xl bg-gray-800 text-white resize-none mb-2 placeholder:text-xs text-xs"
+                placeholder={
+                  selectedTab === 'cheatday'
+                    ? '例：大好きなお酒を思う存分飲みまくった'
+                    : myRule
+                      ? 'MyRule例：通勤電車で本を読む'
+                      : 'ガマン例：飲み会を断り生成AIの勉強をした'
+                }
+                style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px', width:'100%'}}
+              />
+              {/* MyRuleチェックボックスをテキストエリア内左下に絶対配置 */}
+              {selectedTab === 'gaman' && (
+                <label className="absolute bottom-4 left-4 flex items-center text-gray-300 text-xs" style={{userSelect:'none'}}>
+                  <input
+                    type="checkbox"
+                    checked={myRule}
+                    onChange={e => setMyRule(e.target.checked)}
+                    className="mr-1 accent-blue-500 w-4 h-4"
+                    style={{verticalAlign:'middle'}}
+                  />
+                  <span style={{lineHeight:'1.2'}}>MyRuleとして投稿</span>
+                </label>
+              )}
+              {/* Postボタンをテキストエリア内右下にしっかり収める */}
+              <button
+                onClick={() => handlePostSubmit(selectedTab === 'cheatday')}
+                disabled={posting || !content.trim()}
+                className={`absolute bottom-4 right-4 flex items-center justify-center rounded-full font-bold transition-all duration-150 shadow text-xs cursor-pointer ${posting || !content.trim() ? 'opacity-60 bg-gray-500' : 'bg-gray-500 hover:bg-gray-600 text-white'}`}
+                style={{ fontSize: '11px', width: '36px', height: '36px', borderRadius: '50%' }}
+              >
+                Post
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         {/* タブUI */}
         {/* <div className="flex mb-4 gap-2"> ... </div> */}
         {/* 投稿一覧 */}
