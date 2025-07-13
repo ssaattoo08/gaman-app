@@ -30,12 +30,7 @@ export default function UserProfilePage() {
   const getReactionUserNicknames = (postId: string, type: string) => {
     return reactions
       .filter(r => r.post_id === postId && r.type === type)
-      .map(r => {
-        // 投稿のuser_idと一致する場合はプロフィールのnicknameを使う
-        const post = posts.find(p => p.id === postId);
-        if (r.user_id === post?.user_id && post?.profiles?.nickname) return post.profiles.nickname;
-        return "名無し";
-      });
+      .map(r => r.profiles?.nickname || "名無し");
   };
 
   useEffect(() => {
@@ -58,7 +53,6 @@ export default function UserProfilePage() {
       }
       if (isMountedRef.current) {
         setNickname(profile.nickname || "名無し")
-        setUserId(profile.id)
         setIconUrl(profile.icon_url || "")
       }
       // 投稿一覧取得
@@ -70,15 +64,18 @@ export default function UserProfilePage() {
       // リアクション・コメントも取得
       const { data: reactionsData } = await supabase
         .from("reactions")
-        .select("id, post_id, user_id, type")
+        .select("id, post_id, user_id, type, profiles(nickname)")
       const { data: commentsData } = await supabase
         .from("comments")
         .select("id, post_id, user_id, content, created_at, profiles(nickname)")
         .order("created_at", { ascending: true })
+      // 現在ログイン中のユーザーidを取得
+      const { data: { user } } = await supabase.auth.getUser();
       if (isMountedRef.current) {
         setPosts(userPosts || [])
         setReactions(reactionsData || [])
         setComments(commentsData || [])
+        setUserId(user?.id ?? null)
         setLoading(false)
       }
     }
