@@ -413,7 +413,7 @@ export default function MyPage() {
               {/* 右上の三点リーダーアイコンとメニュー */}
               <div className="absolute top-3 right-3">
                 <button
-                  className="hover:bg-[#222] transition flex items-center justify-center"
+                  className="hover:bg-[#222] transition flex items-center justify-center cursor-pointer"
                   style={{ width: 20, height: 20, padding: 0, background: 'none', border: 'none' }}
                   onClick={() => setMenuOpen((v) => !v)}
                   aria-label="メニューを開く"
@@ -423,7 +423,7 @@ export default function MyPage() {
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-36 bg-gray-800 rounded shadow-lg z-20 border border-gray-700">
                     <button
-                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 cursor-pointer"
                       onClick={() => {
                         setShowEditModal(true);
                         setMenuOpen(false);
@@ -626,7 +626,7 @@ export default function MyPage() {
                     <div className="flex items-center mt-3">
                       <button
                         onClick={() => handleReaction(post.id, REACTION_TYPE(post))}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
                           hasReacted(post.id, REACTION_TYPE(post))
                             ? 'bg-yellow-500 text-gray-900 shadow-md'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
