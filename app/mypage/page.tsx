@@ -448,13 +448,11 @@ export default function MyPage() {
               </div>
               {/* MyRuleリスト表示 */}
               <div className="w-full flex flex-col items-center mt-4 mb-4">
-                <div className="text-lg font-bold text-white mb-2" style={{letterSpacing:1, fontSize:9}}>MyRule</div>
+                <div className="text-lg font-bold text-white mb-3" style={{letterSpacing:1, fontSize:9}}>MyRule</div>
                 {myrules && myrules.length > 0 ? (
-                  <ul className="flex flex-col items-center gap-1">
+                  <ul className="w-full max-w-xs flex flex-col items-start gap-2 px-3 py-3 bg-gray-800/60 rounded-lg" style={{lineHeight:1.8}}>
                     {myrules.map((rule, idx) => (
-                      <li key={idx} className="text-white flex items-center" style={{fontSize:9}}>
-                        <span>{rule}</span>
-                      </li>
+                      <li key={idx} className="text-white" style={{fontSize:9}}>{rule}</li>
                     ))}
                   </ul>
                 ) : (
