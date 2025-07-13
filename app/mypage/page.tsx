@@ -429,7 +429,7 @@ export default function MyPage() {
                         setMenuOpen(false);
                       }}
                     >
-                      画像を編集する
+                      プロフィールを編集する
                     </button>
                   </div>
                 )}
@@ -447,16 +447,19 @@ export default function MyPage() {
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
               </div>
               {/* MyRuleリスト表示 */}
-              <div className="w-full mt-2 mb-2">
-                <div className="text-base font-bold text-white mb-1">MyRule</div>
+              <div className="w-full flex flex-col items-center mt-4 mb-4">
+                <div className="text-lg font-bold text-white mb-2" style={{letterSpacing:1}}>MyRule</div>
                 {myrules && myrules.length > 0 ? (
-                  <ul className="list-disc pl-5 space-y-1">
+                  <ul className="flex flex-col items-center gap-1">
                     {myrules.map((rule, idx) => (
-                      <li key={idx} className="text-white text-sm">{rule}</li>
+                      <li key={idx} className="text-white text-base flex items-center">
+                        <span className="mr-2">・</span>
+                        <span>{rule}</span>
+                      </li>
                     ))}
                   </ul>
                 ) : (
-                  <div className="text-gray-400 text-sm">まだMyRuleが登録されていません</div>
+                  <div className="text-gray-400 text-base">まだMyRuleが登録されていません</div>
                 )}
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
@@ -495,7 +498,7 @@ export default function MyPage() {
                   >
                     ×
                   </button>
-                  <h2 className="text-xl font-bold mb-6 text-white text-center">プロフィール画像編集</h2>
+                  <h2 className="text-xl font-bold mb-6 text-white text-center">プロフィール編集</h2>
                   {editLoading ? (
                     <p className="text-gray-400 text-center">読み込み中...</p>
                   ) : (
