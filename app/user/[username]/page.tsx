@@ -26,6 +26,7 @@ export default function UserProfilePage() {
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const router = useRouter()
   const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // 指定投稿・リアクションタイプのユーザー名リスト取得
   const getReactionUserNicknames = (postId: string, type: string) => {
@@ -133,58 +134,56 @@ export default function UserProfilePage() {
 
   const handleReaction = async (postId: string, type: string) => {
     if (!userId) return;
-    if (hasReacted(postId, type)) {
-      // 削除処理
-      console.log("リアクション削除開始:", { postId, userId, type })
-      const { error, data } = await supabase
-        .from("reactions")
-        .delete()
-        .match({ post_id: postId, user_id: userId, type })
-      
-      console.log("削除結果:", { error, data })
-      
-      if (error) {
-        console.error("リアクション削除エラー:", error)
-        alert(`リアクション削除に失敗しました: ${error.message}`)
-        return
-      }
-      
-      // 削除成功時はローカル状態を更新
-      setReactions(prev => prev.filter(
-        r => !(r.post_id === postId && r.user_id === userId && r.type === type)
-      ))
-      
-      // 削除後にリアクションデータを再取得してDB状態を確認
-      const { data: reactionsData, error: fetchError } = await supabase
-        .from("reactions")
-        .select("id, post_id, user_id, type")
-      
-      if (fetchError) {
-        console.error("リアクション再取得エラー:", fetchError)
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try {
+      if (hasReacted(postId, type)) {
+        // 削除処理
+        console.log("リアクション削除開始:", { postId, userId, type })
+        const { error, data } = await supabase
+          .from("reactions")
+          .delete()
+          .match({ post_id: postId, user_id: userId, type })
+        
+        console.log("削除結果:", { error, data })
+        
+        if (error) {
+          console.error("リアクション削除エラー:", error)
+          alert(`リアクション削除に失敗しました: ${error.message}`)
+          return
+        }
+        setReactions(prev => prev.filter(
+          r => !(r.post_id === postId && r.user_id === userId && r.type === type)
+        ))
+        const { data: reactionsData, error: fetchError } = await supabase
+          .from("reactions")
+          .select("id, post_id, user_id, type")
+        if (fetchError) {
+          console.error("リアクション再取得エラー:", fetchError)
+        } else {
+          console.log("削除後のリアクションデータ:", reactionsData)
+          setReactions(reactionsData || [])
+        }
       } else {
-        console.log("削除後のリアクションデータ:", reactionsData)
-        setReactions(reactionsData || [])
+        // 追加処理
+        console.log("リアクション追加開始:", { postId, userId, type })
+        const { error, data } = await supabase.from("reactions").insert({
+          post_id: postId,
+          user_id: userId,
+          type,
+        })
+        console.log("追加結果:", { error, data })
+        if (error) {
+          console.error("リアクション追加エラー:", error)
+          alert(`リアクション追加に失敗しました: ${error.message}`)
+          return
+        }
+        if (!error) {
+          setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+        }
       }
-    } else {
-      // 追加処理
-      console.log("リアクション追加開始:", { postId, userId, type })
-      const { error, data } = await supabase.from("reactions").insert({
-        post_id: postId,
-        user_id: userId,
-        type,
-      })
-      
-      console.log("追加結果:", { error, data })
-      
-      if (error) {
-        console.error("リアクション追加エラー:", error)
-        alert(`リアクション追加に失敗しました: ${error.message}`)
-        return
-      }
-      
-      if (!error) {
-        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
-      }
+    } finally {
+      setIsProcessing(false);
     }
   }
 
@@ -342,11 +341,12 @@ export default function UserProfilePage() {
                 <div className="flex items-center mt-3">
                   <button
                     onClick={() => handleReaction(post.id, post.cheat_day ? 'ii' : 'sugoi')}
+                    disabled={isProcessing}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                       hasReacted(post.id, post.cheat_day ? 'ii' : 'sugoi')
                         ? 'bg-yellow-500 text-gray-900 shadow-md'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                    }`}
+                    } ${isProcessing ? 'opacity-60 cursor-not-allowed' : ''}`}
                   >
                     <span>{post.cheat_day ? 'たまにはいいよね' : 'すごい'}</span>
                     <span
