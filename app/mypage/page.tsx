@@ -555,7 +555,7 @@ export default function MyPage() {
                           />
                           <button
                             type="button"
-                            className="bg-yellow-600 text-white px-3 py-1 rounded font-bold"
+                            className="bg-gray-500 text-white px-3 py-1 rounded font-bold"
                             disabled={editSaving || !editMyruleInput.trim()}
                             onClick={() => {
                               if (editMyruleInput.trim()) {
@@ -566,7 +566,7 @@ export default function MyPage() {
                           >追加</button>
                         </div>
                       </div>
-                      <button type="submit" className="bg-yellow-600 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={editSaving}>
+                      <button type="submit" className="bg-gray-500 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={editSaving}>
                         {editSaving ? "保存中..." : "保存"}
                       </button>
                       {editMessage && <p className="mt-4 text-center text-green-400">{editMessage}</p>}
