@@ -33,8 +33,11 @@ export default function MyPage() {
   const [editMessage, setEditMessage] = useState("");
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [iconPreview, setIconPreview] = useState<string>("");
+  const [editMyrules, setEditMyrules] = useState<string[]>([]);
+  const [editMyruleInput, setEditMyruleInput] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
+  const [myrules, setMyrules] = useState<string[]>([]);
 
   // 指定投稿・リアクションタイプのユーザー名リスト取得
   const getReactionUserNicknames = (postId: string, type: string) => {
@@ -70,13 +73,14 @@ export default function MyPage() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("nickname, icon_url")
+          .select("nickname, icon_url, myrules")
           .eq("id", user.id)
           .single()
 
         if (isMountedRef.current) {
         setNickname(profile?.nickname || "名無し")
         setIconUrl(profile?.icon_url || "")
+        setMyrules(profile?.myrules || [])
         }
 
         const { data: userPosts } = await supabase
@@ -332,6 +336,13 @@ export default function MyPage() {
       } else {
         setIconPreview("");
       }
+      // MyRuleも初期値セット
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("myrules")
+        .eq("id", user.id)
+        .single();
+      setEditMyrules(profile?.myrules || []);
       setEditLoading(false);
     };
     fetchProfile();
@@ -378,12 +389,12 @@ export default function MyPage() {
     }
     const { error } = await supabase
       .from("profiles")
-      .update({ icon_url })
+      .update({ icon_url, myrules: editMyrules })
       .eq("id", user.id);
     if (error) {
       setEditMessage("保存に失敗しました");
     } else {
-      setEditMessage("プロフィール画像を更新しました！");
+      setEditMessage("プロフィール画像/MyRuleを更新しました！");
       // 保存成功時はマイページに遷移
       router.push("/mypage");
     }
@@ -434,6 +445,19 @@ export default function MyPage() {
                   <div style={{width:32,height:32,background:'#333',borderRadius:6,marginRight:12}}></div>
                 )}
                 <div className="text-lg font-bold text-white">{nickname ? nickname : ""}</div>
+              </div>
+              {/* MyRuleリスト表示 */}
+              <div className="w-full mt-2 mb-2">
+                <div className="text-base font-bold text-white mb-1">MyRule</div>
+                {myrules && myrules.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1">
+                    {myrules.map((rule, idx) => (
+                      <li key={idx} className="text-white text-sm">{rule}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-gray-400 text-sm">まだMyRuleが登録されていません</div>
+                )}
               </div>
               {/* <div className="text-sm text-gray-400 mt-1">
                 ガマン：{posts.filter(p => p.cheat_day === false || p.cheat_day === null || p.cheat_day === undefined).length}
@@ -504,6 +528,39 @@ export default function MyPage() {
                         </div>
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-xs text-white px-2 py-1 rounded mt-2 pointer-events-none" style={{whiteSpace:'nowrap'}}>
                           画像を選択
+                        </div>
+                      </div>
+                      {/* MyRule編集UI */}
+                      <div className="w-full mb-4">
+                        <div className="text-base font-bold text-white mb-1">MyRule</div>
+                        <ul className="list-disc pl-5 space-y-1 mb-2">
+                          {editMyrules.map((rule, idx) => (
+                            <li key={idx} className="flex items-center text-white text-sm">
+                              <span className="flex-1">{rule}</span>
+                              <button type="button" className="ml-2 text-xs text-red-400 hover:text-red-600" onClick={() => setEditMyrules(editMyrules.filter((_, i) => i !== idx))}>削除</button>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={editMyruleInput}
+                            onChange={e => setEditMyruleInput(e.target.value)}
+                            className="flex-1 px-2 py-1 rounded bg-gray-800 text-white border border-gray-600"
+                            placeholder="MyRuleを追加"
+                            disabled={editSaving}
+                          />
+                          <button
+                            type="button"
+                            className="bg-yellow-600 text-white px-3 py-1 rounded font-bold"
+                            disabled={editSaving || !editMyruleInput.trim()}
+                            onClick={() => {
+                              if (editMyruleInput.trim()) {
+                                setEditMyrules([...editMyrules, editMyruleInput.trim()]);
+                                setEditMyruleInput("");
+                              }
+                            }}
+                          >追加</button>
                         </div>
                       </div>
                       <button type="submit" className="bg-yellow-600 text-white px-6 py-2 rounded font-bold w-full mt-2" disabled={editSaving}>
