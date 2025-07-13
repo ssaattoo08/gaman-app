@@ -34,6 +34,17 @@ export default function MyPage() {
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [iconPreview, setIconPreview] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
+
+  // 指定投稿・リアクションタイプのユーザー名リスト取得
+  const getReactionUserNicknames = (postId: string, type: string) => {
+    return reactions
+      .filter(r => r.post_id === postId && r.type === type)
+      .map(r => {
+        // マイページは自分の投稿のみなのでnicknameでOK
+        return nickname || "名無し";
+      });
+  };
 
   useEffect(() => {
     isMountedRef.current = true
@@ -562,7 +573,10 @@ export default function MyPage() {
                         }`}
                       >
                         <span>{REACTION_LABEL(post)}</span>
-                        <span className="ml-1 text-xs opacity-80">
+                        <span
+                          className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
+                          onClick={e => { e.stopPropagation(); setShowReactionModal({ open: true, postId: post.id, type: REACTION_TYPE(post) }); }}
+                        >
                           {getReactionCount(post.id, REACTION_TYPE(post))}
                         </span>
                       </button>
@@ -571,6 +585,24 @@ export default function MyPage() {
                 ))
               )}
             </div>
+            {/* リアクションした人のニックネーム表示モーダル */}
+            {showReactionModal.open && (
+              <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-gray-900 rounded-lg p-6 min-w-[220px] max-w-xs relative">
+                  <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setShowReactionModal({ open: false, postId: null, type: null })}>×</button>
+                  <h2 className="text-lg font-bold mb-4 text-white text-center">リアクションした人</h2>
+                  <ul className="space-y-2">
+                    {showReactionModal.postId && showReactionModal.type && getReactionUserNicknames(showReactionModal.postId, showReactionModal.type).length > 0 ? (
+                      getReactionUserNicknames(showReactionModal.postId, showReactionModal.type).map((nickname, idx) => (
+                        <li key={idx} className="text-center text-white bg-gray-800 rounded px-2 py-1">{nickname}</li>
+                      ))
+                    ) : (
+                      <li className="text-center text-gray-400">まだ誰もリアクションしていません</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            )}
           </>
         )}
       </main>

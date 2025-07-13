@@ -316,7 +316,7 @@ export default function TimelinePage() {
                     </span> */}
                     <span>{REACTION_LABEL(post)}</span>
                     <span className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
-                      onClick={() => setShowReactionModal({ open: true, postId: post.id, type: REACTION_TYPE(post) })}
+                      onClick={e => { e.stopPropagation(); setShowReactionModal({ open: true, postId: post.id, type: REACTION_TYPE(post) }); }}
                     >
                       {getReactionCount(post.id, REACTION_TYPE(post))}
                     </span>
