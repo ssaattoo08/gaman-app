@@ -556,7 +556,7 @@ export default function MyPage() {
                           <button
                             type="button"
                             className="bg-yellow-500 hover:bg-yellow-400 text-black px-3 py-1 rounded font-bold transition"
-                            style={{color:'black'}}
+                            style={{color:'black', fontWeight:'bold', fontSize:18, letterSpacing:2, WebkitTextStroke:'0.2px black', textShadow:'0 0 0 #000'}}
                             disabled={editSaving || !editMyruleInput.trim()}
                             onClick={() => {
                               if (editMyruleInput.trim()) {
@@ -567,7 +567,7 @@ export default function MyPage() {
                           >追加</button>
                         </div>
                       </div>
-                      <button type="submit" className="bg-yellow-500 hover:bg-yellow-400 text-black px-6 py-2 rounded font-bold w-full mt-2 transition" style={{color:'black'}} disabled={editSaving}>
+                      <button type="submit" className="bg-yellow-500 hover:bg-yellow-400 text-black px-6 py-2 rounded font-bold w-full mt-2 transition" style={{color:'black', fontWeight:'bold', fontSize:18, letterSpacing:2, WebkitTextStroke:'0.2px black', textShadow:'0 0 0 #000'}} disabled={editSaving}>
                         {editSaving ? "保存中..." : "保存"}
                       </button>
                       {editMessage && <p className="mt-4 text-center text-green-400">{editMessage}</p>}
