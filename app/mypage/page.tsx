@@ -18,7 +18,7 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
   const [selectedTab, setSelectedTab] = useState<'gaman' | 'cheatday'>('gaman')
-  // const [reactions, setReactions] = useState<any[]>([])
+  const [reactions, setReactions] = useState<any[]>([])
   // const [comments, setComments] = useState<any[]>([])
   // const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   // 投稿フォーム用の状態
@@ -81,18 +81,19 @@ export default function MyPage() {
         }
 
         // リアクション・コメント機能を一時的にクローズ
-        // const { data: reactionsData } = await supabase
-        //   .from("reactions")
-        //   .select("id, post_id, user_id, type")
+        const { data: reactionsData } = await supabase
+          .from("reactions")
+          .select("id, post_id, user_id, type")
         // const { data: commentsData } = await supabase
         //   .from("comments")
         //   .select("id, post_id, user_id, content, created_at, profiles(nickname)")
         //   .order("created_at", { ascending: true })
 
-        // if (isMountedRef.current) {
-        //   setReactions(reactionsData || [])
-        //   setComments(commentsData || [])
-        // }
+        if (isMountedRef.current) {
+        setPosts(userPosts || [])
+        setReactions(reactionsData || [])
+        // setComments(commentsData || [])
+        }
       } catch (e) {
         console.error("データ取得時にエラー", e)
       } finally {
@@ -190,38 +191,41 @@ export default function MyPage() {
   // ]
   // const REACTION_TYPES = selectedTab === 'gaman' ? GAMAN_REACTIONS : CHEATDAY_REACTIONS;
 
-  // const getReactionCount = (postId: string, type: string) =>
-  //   reactions.filter(r => r.post_id === postId && r.type === type).length
+  const REACTION_TYPE = (post: any) => post.cheat_day ? 'ii' : 'sugoi';
+  const REACTION_LABEL = (post: any) => post.cheat_day ? 'たまにはいいよね' : 'すごい';
 
-  // const hasReacted = (postId: string, type: string) =>
-  //   reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
+  const getReactionCount = (postId: string, type: string) =>
+    reactions.filter(r => r.post_id === postId && r.type === type).length
 
-  // const handleReaction = async (postId: string, type: string) => {
-  //   if (!userId) {
-  //     alert("ログインしてください")
-  //     return
-  //   }
-  //   if (hasReacted(postId, type)) {
-  //     const { error } = await supabase
-  //       .from("reactions")
-  //       .delete()
-  //       .match({ post_id: postId, user_id: userId, type })
-  //     if (!error) {
-  //       setReactions(prev => prev.filter(
-  //         r => !(r.post_id === postId && r.user_id === userId && r.type === type)
-  //       ))
-  //     }
-  //   } else {
-  //     const { error } = await supabase.from("reactions").insert({
-  //       post_id: postId,
-  //       user_id: userId,
-  //       type,
-  //     })
-  //     if (!error) {
-  //       setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
-  //     }
-  //   }
-  // }
+  const hasReacted = (postId: string, type: string) =>
+    reactions.some(r => r.post_id === postId && r.type === type && r.user_id === userId)
+
+  const handleReaction = async (postId: string, type: string) => {
+    if (!userId) {
+      alert("ログインしてください")
+      return
+    }
+    if (hasReacted(postId, type)) {
+      const { error } = await supabase
+        .from("reactions")
+        .delete()
+        .match({ post_id: postId, user_id: userId, type })
+      if (!error) {
+        setReactions(prev => prev.filter(
+          r => !(r.post_id === postId && r.user_id === userId && r.type === type)
+        ))
+      }
+    } else {
+      const { error } = await supabase.from("reactions").insert({
+        post_id: postId,
+        user_id: userId,
+        type,
+      })
+      if (!error) {
+        setReactions(prev => [...prev, { post_id: postId, user_id: userId, type }])
+      }
+    }
+  }
 
   // const handleCommentInput = (postId: string, value: string) => {
   //   setCommentInputs((prev) => ({ ...prev, [postId]: value }))
@@ -547,6 +551,25 @@ export default function MyPage() {
                       )}
                     </div>
                     <PostContent content={post.content} url_title={post.url_title} />
+                    {/* リアクションボタン */}
+                    <div className="flex items-center mt-3 pt-3 border-t border-gray-700">
+                      <button
+                        onClick={() => handleReaction(post.id, REACTION_TYPE(post))}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                          hasReacted(post.id, REACTION_TYPE(post))
+                            ? 'bg-yellow-500 text-gray-900 shadow-md'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                        }`}
+                      >
+                        <span className="text-sm">
+                          {REACTION_TYPE(post) === 'sugoi' ? '✨' : '😊'}
+                        </span>
+                        <span>{REACTION_LABEL(post)}</span>
+                        <span className="ml-1 text-xs opacity-80">
+                          {getReactionCount(post.id, REACTION_TYPE(post))}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
