@@ -17,6 +17,7 @@ export default function UserProfilePage() {
   const [nickname, setNickname] = useState<string | null>(null)
   const [iconUrl, setIconUrl] = useState<string>("")
   const [userId, setUserId] = useState<string | null>(null)
+  const [myrules, setMyrules] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const isMountedRef = useRef(true)
   const [selectedTab, setSelectedTab] = useState<'gaman' | 'myrule' | 'cheatday'>('gaman')
@@ -41,7 +42,7 @@ export default function UserProfilePage() {
       // usernameからユーザー情報を取得
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, nickname, icon_url")
+        .select("id, nickname, icon_url, myrules")
         .eq("username", username)
         .single()
       if (!profile) {
@@ -54,6 +55,7 @@ export default function UserProfilePage() {
       if (isMountedRef.current) {
         setNickname(profile.nickname || "名無し")
         setIconUrl(profile.icon_url || "")
+        setMyrules(profile.myrules || [])
       }
       // 投稿一覧取得
       const { data: userPosts } = await supabase
@@ -217,12 +219,21 @@ export default function UserProfilePage() {
             )}
             <div className="text-lg font-bold text-white">{nickname}</div>
           </div>
-          {/* <div className="text-sm text-gray-400 mt-1">
-            ガマン：{posts.filter(p => p.cheat_day === false || p.myrule === true).length}
-            &nbsp;&nbsp;
-            チートデイ：{posts.filter(p => p.cheat_day === true).length}
-            <div className="mt-1 text-center">連続記録：{getStreak()}日</div>
-          </div> */}
+          {/* MyRulesカード */}
+          <div className="w-full flex flex-col items-center mt-6 mb-2">
+            <div className="w-full max-w-xs px-3 py-3 bg-gray-800/60 rounded-lg flex flex-col items-start">
+              <span className="font-bold text-white mb-2 pb-1 border-b border-gray-500 inline-block" style={{letterSpacing:1, fontSize:10, borderBottomWidth:2, width:'fit-content'}}>MyRules</span>
+              {myrules && myrules.length > 0 ? (
+                <ul className="w-full flex flex-col items-start gap-1" style={{lineHeight:1.4}}>
+                  {myrules.map((rule, idx) => (
+                    <li key={idx} className="text-white" style={{fontSize:10}}>{rule}</li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRulesが登録されていません</div>
+              )}
+            </div>
+          </div>
           {/* カレンダーをカード内に追加 */}
           <div className="w-full mt-4 flex justify-center">
             <ThreeMonthCamelCalendar data={(() => {
