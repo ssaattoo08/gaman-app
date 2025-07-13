@@ -394,7 +394,7 @@ export default function MyPage() {
     if (error) {
       setEditMessage("保存に失敗しました");
     } else {
-      setEditMessage("プロフィール画像/MyRuleを更新しました！");
+      setEditMessage("プロフィール画像/MyRulesを更新しました！");
       // 保存成功時はマイページに遷移
       router.push("/mypage");
     }
@@ -449,7 +449,7 @@ export default function MyPage() {
               {/* MyRuleリスト表示 */}
               <div className="w-full flex flex-col items-center mt-6 mb-2">
                 <div className="w-full max-w-xs px-3 py-3 bg-gray-800/60 rounded-lg flex flex-col items-start">
-                  <span className="font-bold text-white mb-2 pb-1 border-b border-gray-500 inline-block" style={{letterSpacing:1, fontSize:10, borderBottomWidth:2, width:'fit-content'}}>MyRule</span>
+                  <span className="font-bold text-white mb-2 pb-1 border-b border-gray-500 inline-block" style={{letterSpacing:1, fontSize:10, borderBottomWidth:2, width:'fit-content'}}>MyRules</span>
                   {myrules && myrules.length > 0 ? (
                     <ul className="w-full flex flex-col items-start gap-1" style={{lineHeight:1.4}}>
                       {myrules.map((rule, idx) => (
@@ -457,7 +457,7 @@ export default function MyPage() {
                       ))}
                     </ul>
                   ) : (
-                    <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRuleが登録されていません</div>
+                    <div className="text-gray-400 text-base" style={{fontSize:9}}>まだMyRulesが登録されていません</div>
                   )}
                 </div>
               </div>
@@ -534,7 +534,7 @@ export default function MyPage() {
                       </div>
                       {/* MyRule編集UI */}
                       <div className="w-full mb-4">
-                        <div className="text-base font-bold text-white mb-1" style={{fontSize:9}}>MyRule</div>
+                        <div className="text-base font-bold text-white mb-1" style={{fontSize:9}}>MyRules</div>
                         <ul className="list-disc pl-5 space-y-1 mb-2">
                           {editMyrules.map((rule, idx) => (
                             <li key={idx} className="flex items-center text-white" style={{fontSize:9}}>
@@ -565,7 +565,7 @@ export default function MyPage() {
                             value={editMyruleInput}
                             onChange={e => setEditMyruleInput(e.target.value)}
                             className="flex-1 px-2 py-1 rounded bg-gray-800 text-white border border-gray-600"
-                            placeholder="MyRuleを追加"
+                            placeholder="MyRulesを追加"
                             disabled={editSaving}
                           />
                           <button
