@@ -36,6 +36,9 @@ export default function TimelinePage() {
   const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
   const [isProcessing, setIsProcessing] = useState(false);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [editModal, setEditModal] = useState<{ open: boolean, post: any | null }>({ open: false, post: null });
+  const [editContent, setEditContent] = useState("");
+  const [editScope, setEditScope] = useState<'public' | 'private'>('public');
 
   useEffect(() => {
     isMountedRef.current = true
@@ -331,16 +334,12 @@ export default function TimelinePage() {
                         setMenuOpenId(post.id === menuOpenId ? null : post.id);
                       }}
                     >
-                      <span style={{fontSize:'22px',lineHeight:1}}>︙</span>
+                      <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
                     </button>
                     {menuOpenId === post.id && (
-                      <div className="absolute right-0 mt-2 w-40 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-white" onClick={() => { /* 編集処理 */ setMenuOpenId(null); }}>編集</button>
+                      <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-700 font-bold" onClick={() => { setEditModal({ open: true, post }); setEditContent(post.content); setEditScope(post.is_private ? 'private' : 'public'); setMenuOpenId(null); }}>編集</button>
                         <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { /* 削除処理 */ setMenuOpenId(null); }}>削除</button>
-                        <div className="px-4 py-2 text-xs text-gray-400">投稿種別</div>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-white" onClick={() => { /* ガマン切替 */ setMenuOpenId(null); }}>ガマン</button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-300" onClick={() => { /* MyRule切替 */ setMenuOpenId(null); }}>MyRule</button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-pink-300" onClick={() => { /* チートデイ切替 */ setMenuOpenId(null); }}>チートデイ</button>
                       </div>
                     )}
                   </div>
@@ -408,6 +407,43 @@ export default function TimelinePage() {
                 <li className="text-center text-gray-400">まだ誰もリアクションしていません</li>
               )}
             </ul>
+          </div>
+        </div>
+      )}
+      {/* 編集モーダル */}
+      {editModal.open && editModal.post && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-lg p-6 min-w-[320px] max-w-lg w-full relative border border-gray-700">
+            <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setEditModal({ open: false, post: null })}>×</button>
+            <div className="mb-2 text-xs text-gray-300">{formatDate(editModal.post.created_at)}</div>
+            <textarea
+              className="w-full p-3 rounded-lg bg-gray-800 text-white resize-none mb-3 placeholder:text-xs text-xs border border-gray-700"
+              style={{minHeight:'60px',height:'80px',maxHeight:'120px', fontSize:'13px'}}
+              value={editContent}
+              onChange={e => setEditContent(e.target.value)}
+            />
+            <div className="flex items-center mb-4 gap-4">
+              <label className="flex items-center text-sm text-blue-300">
+                <input
+                  type="radio"
+                  className="mr-1 accent-blue-500"
+                  checked={editScope === 'public'}
+                  onChange={() => setEditScope('public')}
+                />全員に公開
+              </label>
+              <label className="flex items-center text-sm text-gray-300">
+                <input
+                  type="radio"
+                  className="mr-1 accent-gray-400"
+                  checked={editScope === 'private'}
+                  onChange={() => setEditScope('private')}
+                />自分だけ
+              </label>
+            </div>
+            <div className="flex gap-2 justify-start">
+              <button className="px-4 py-2 rounded bg-yellow-700 text-white font-bold text-sm hover:bg-yellow-800" onClick={() => {/* 保存処理 */}}>保存</button>
+              <button className="px-4 py-2 rounded bg-gray-300 text-gray-800 font-bold text-sm hover:bg-gray-400" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
+            </div>
           </div>
         </div>
       )}
