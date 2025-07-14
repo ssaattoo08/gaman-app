@@ -281,6 +281,29 @@ export default function TimelinePage() {
     setEditModal({ open: false, post: null });
   };
 
+  // 投稿削除処理
+  const handleDelete = async (postId: string) => {
+    if (!window.confirm('本当にこの投稿を削除しますか？')) return;
+    const { error } = await supabase
+      .from('gaman_logs')
+      .delete()
+      .eq('id', postId);
+    if (error) {
+      alert('削除に失敗しました: ' + error.message);
+      return;
+    }
+    // 投稿一覧を再取得
+    setLoading(true);
+    const { data: postsData, error: postsError } = await supabase
+      .from('gaman_logs')
+      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private')
+      .order('created_at', { ascending: false });
+    if (!postsError) {
+      setPosts(postsData);
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <main className="px-4 py-6 max-w-xl mx-auto">
@@ -368,7 +391,7 @@ export default function TimelinePage() {
                     {menuOpenId === post.id && (
                       <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
                         <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-700 font-bold" onClick={() => { setEditModal({ open: true, post }); setEditContent(post.content); setEditScope(post.is_private ? 'private' : 'public'); setMenuOpenId(null); }}>編集</button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { /* 削除処理 */ setMenuOpenId(null); }}>削除</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
                       </div>
                     )}
                   </div>
