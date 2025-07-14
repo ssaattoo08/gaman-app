@@ -395,8 +395,8 @@ export default function TimelinePage() {
                       <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
                     </button>
                     {menuOpenId === post.id && (
-                      <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#181e26'}}>
-                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-yellow-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
+                      <div className="absolute right-0 mt-2 w-32 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#23272e'}}>
+                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
                           setEditModal({ open: true, post });
                           setEditContent(post.content);
                           if (post.cheat_day) setEditType('cheatday');
@@ -404,7 +404,7 @@ export default function TimelinePage() {
                           else setEditType('gaman');
                           setMenuOpenId(null);
                         }}>編集</button>
-                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-pink-300 cursor-pointer" style={{letterSpacing:1}} onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-400 cursor-pointer" style={{letterSpacing:1}} onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
                       </div>
                     )}
                   </div>
