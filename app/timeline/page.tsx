@@ -189,12 +189,12 @@ export default function TimelinePage() {
   // 投稿の絞り込み
   const filteredPosts = posts.filter(post =>
     selectedTab === 'gaman'
-      ? post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined
-      : post.cheat_day === true
+      ? (post.cheat_day === false || post.cheat_day === null || post.cheat_day === undefined)
+      : (post.cheat_day === true)
   );
 
-  const REACTION_TYPE = (post: any) => post.cheat_day ? 'ii' : 'sugoi';
-  const REACTION_LABEL = (post: any) => post.cheat_day ? 'たまにはいいよね' : 'すごい';
+  const REACTION_TYPE = (post: any) => (post && !!post.cheat_day) ? 'ii' : 'sugoi';
+  const REACTION_LABEL = (post: any) => (post && !!post.cheat_day) ? 'たまにはいいよね' : 'すごい';
 
   // 指定投稿・リアクションタイプのユーザー名リスト取得
   const getReactionUserNicknames = (postId: string, type: string) => {
