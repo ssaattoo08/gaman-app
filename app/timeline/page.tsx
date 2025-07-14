@@ -35,6 +35,7 @@ export default function TimelinePage() {
   const router = useRouter()
   const [showReactionModal, setShowReactionModal] = useState<{ open: boolean, postId: string | null, type: string | null }>({ open: false, postId: null, type: null });
   const [isProcessing, setIsProcessing] = useState(false);
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
 
   useEffect(() => {
     isMountedRef.current = true
@@ -320,6 +321,28 @@ export default function TimelinePage() {
                       {post.profiles?.nickname ? post.profiles.nickname : "名無し"}
                     </Link>
                     <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
+                  </div>
+                  {/* 三点リーダーメニュー */}
+                  <div className="relative group">
+                    <button
+                      className="p-1 rounded-full hover:bg-gray-700 focus:outline-none"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setMenuOpenId(post.id === menuOpenId ? null : post.id);
+                      }}
+                    >
+                      <span style={{fontSize:'22px',lineHeight:1}}>︙</span>
+                    </button>
+                    {menuOpenId === post.id && (
+                      <div className="absolute right-0 mt-2 w-40 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-white" onClick={() => { /* 編集処理 */ setMenuOpenId(null); }}>編集</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { /* 削除処理 */ setMenuOpenId(null); }}>削除</button>
+                        <div className="px-4 py-2 text-xs text-gray-400">投稿種別</div>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-white" onClick={() => { /* ガマン切替 */ setMenuOpenId(null); }}>ガマン</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-300" onClick={() => { /* MyRule切替 */ setMenuOpenId(null); }}>MyRule</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-pink-300" onClick={() => { /* チートデイ切替 */ setMenuOpenId(null); }}>チートデイ</button>
+                      </div>
+                    )}
                   </div>
                   {post.myrule && (
                     <span
