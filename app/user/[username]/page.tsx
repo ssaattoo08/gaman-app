@@ -9,6 +9,7 @@ import WeeklyGamanBarChart from "@/components/WeeklyGamanBarChart"
 import PostContent from "../../../components/PostContent"
 import ThreeMonthCamelCalendar from "@/components/ThreeMonthCamelCalendar"
 import { useRouter } from "next/navigation"
+import PostCardWithMenu from "../../../components/PostCardWithMenu";
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -298,66 +299,64 @@ export default function UserProfilePage() {
             <p className="text-white text-center">読み込み中...</p>
           ) : (
             posts.filter(post => post.cheat_day !== true).map((post) => (
-              <div
+              <PostCardWithMenu
                 key={post.id}
-                className={`x-post${post.myrule ? ' myrule-x-post' : ''}`}
-              >
-                <div className="flex items-center mb-2 justify-between">
-                  <div className="flex items-center">
-                    {/* 投稿欄にもプロフィール画像を表示 */}
-                    {iconUrl ? (
-                      <img
-                        src={iconUrl}
-                        alt="プロフィール画像"
-                        style={{width:24,height:24,borderRadius:4,marginRight:8,objectFit:'cover',background:'#333'}}
-                      />
-                    ) : (
-                      <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div>
-                    )}
-                    <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{post.profiles?.nickname ?? "名無し"}</span>
-                    <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
-                  </div>
-                  {post.myrule && (
-                    <span
-                      className="text-xs font-bold"
-                      style={{
-                        color: '#bfa100',
-                        background: 'transparent',
-                        borderRadius: '8px',
-                        padding: '2px 8px',
-                        fontFamily: 'Meiryo UI, Meiryo, sans-serif',
-                        opacity: 0.85,
-                        fontWeight: 600,
-                        fontSize: '12px',
-                        letterSpacing: 1,
-                      }}
-                    >
-                      MyRule
-                    </span>
-                  )}
-                </div>
-                <PostContent content={post.content} url_title={post.url_title} />
-                {/* リアクションボタン */}
-                <div className="flex items-center mt-3">
-                  <button
-                    onClick={() => handleReaction(post.id, post.cheat_day ? 'ii' : 'sugoi')}
-                    disabled={isProcessing}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                      hasReacted(post.id, post.cheat_day ? 'ii' : 'sugoi')
-                        ? 'bg-yellow-500 text-gray-900 shadow-md'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                    } ${isProcessing ? 'opacity-60 cursor-not-allowed' : ''}`}
-                  >
-                    <span>{post.cheat_day ? 'たまにはいいよね' : 'すごい'}</span>
-                    <span
-                      className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
-                      onClick={e => { e.stopPropagation(); setShowReactionModal({ open: true, postId: post.id, type: post.cheat_day ? 'ii' : 'sugoi' }); }}
-                    >
-                      {getReactionCount(post.id, post.cheat_day ? 'ii' : 'sugoi')}
-                    </span>
-                  </button>
-                </div>
-              </div>
+                post={post}
+                userId={userId}
+                iconUrl={iconUrl}
+                nickname={post.profiles?.nickname ?? nickname}
+                formatDate={formatDate}
+                handleReaction={handleReaction}
+                hasReacted={hasReacted}
+                getReactionCount={getReactionCount}
+                REACTION_TYPE={(p: any) => p.cheat_day ? 'ii' : 'sugoi'}
+                REACTION_LABEL={(p: any) => p.cheat_day ? 'たまにはいいよね' : 'すごい'}
+                isProcessing={isProcessing}
+                onEdit={async (editData: any) => {
+                  // 投稿編集処理
+                  const { id, content, cheat_day, myrule } = editData;
+                  const { error } = await supabase
+                    .from('gaman_logs')
+                    .update({ content, cheat_day, myrule })
+                    .eq('id', id);
+                  if (error) {
+                    alert('編集に失敗しました: ' + error.message);
+                    return;
+                  }
+                  // 投稿一覧を再取得
+                  setLoading(true);
+                  const { data: userPosts, error: postsError } = await supabase
+                    .from("gaman_logs")
+                    .select("id, content, created_at, user_id, cheat_day, myrule, url_title, profiles(nickname)")
+                    .eq("user_id", post.user_id)
+                    .order("created_at", { ascending: false });
+                  if (!postsError) {
+                    setPosts(userPosts || []);
+                  }
+                  setLoading(false);
+                }}
+                onDelete={async (postId: string) => {
+                  if (!window.confirm('本当にこの投稿を削除しますか？')) return;
+                  const { error } = await supabase
+                    .from('gaman_logs')
+                    .delete()
+                    .eq('id', postId);
+                  if (error) {
+                    alert('削除に失敗しました: ' + error.message);
+                    return;
+                  }
+                  setLoading(true);
+                  const { data: userPosts, error: postsError } = await supabase
+                    .from("gaman_logs")
+                    .select("id, content, created_at, user_id, cheat_day, myrule, url_title, profiles(nickname)")
+                    .eq("user_id", post.user_id)
+                    .order("created_at", { ascending: false });
+                  if (!postsError) {
+                    setPosts(userPosts || []);
+                  }
+                  setLoading(false);
+                }}
+              />
             ))
           )}
         </div>
