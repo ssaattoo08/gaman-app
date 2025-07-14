@@ -386,7 +386,7 @@ export default function TimelinePage() {
                   {/* 三点リーダーメニュー */}
                   <div className="relative group">
                     <button
-                      className="p-1 rounded-full hover:bg-gray-700 focus:outline-none"
+                      className="p-1 rounded-full hover:bg-gray-700 focus:outline-none cursor-pointer"
                       onClick={e => {
                         e.stopPropagation();
                         setMenuOpenId(post.id === menuOpenId ? null : post.id);
@@ -395,8 +395,8 @@ export default function TimelinePage() {
                       <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
                     </button>
                     {menuOpenId === post.id && (
-                      <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-700 font-bold" onClick={() => {
+                      <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#181e26'}}>
+                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-yellow-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
                           setEditModal({ open: true, post });
                           setEditContent(post.content);
                           if (post.cheat_day) setEditType('cheatday');
@@ -404,7 +404,7 @@ export default function TimelinePage() {
                           else setEditType('gaman');
                           setMenuOpenId(null);
                         }}>編集</button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-pink-300 cursor-pointer" style={{letterSpacing:1}} onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
                       </div>
                     )}
                   </div>
@@ -514,8 +514,8 @@ export default function TimelinePage() {
               </label>
             </div>
             <div className="flex gap-2 justify-start">
-              <button className="px-4 py-2 rounded bg-gray-700 text-gray-100 font-bold text-sm hover:bg-gray-600 border border-gray-600 transition" onClick={handleEditSave}>保存</button>
-              <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-400 border border-gray-400 transition" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
+              <button className="px-4 py-2 rounded bg-gray-700 text-gray-100 font-bold text-sm hover:bg-gray-600 border border-gray-600 transition cursor-pointer" onClick={handleEditSave}>保存</button>
+              <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-400 border border-gray-400 transition cursor-pointer" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
             </div>
           </div>
         </div>
