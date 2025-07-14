@@ -39,6 +39,7 @@ export default function TimelinePage() {
   const [editModal, setEditModal] = useState<{ open: boolean, post: any | null }>({ open: false, post: null });
   const [editContent, setEditContent] = useState("");
   const [editScope, setEditScope] = useState<'public' | 'private'>('public');
+  const [editType, setEditType] = useState<'gaman' | 'myrule' | 'cheatday'>('gaman');
 
   useEffect(() => {
     isMountedRef.current = true
@@ -256,9 +257,14 @@ export default function TimelinePage() {
   const handleEditSave = async () => {
     if (!editModal.post) return;
     const postId = editModal.post.id;
+    let cheat_day = false, myrule = false;
+    if (editType === 'cheatday') cheat_day = true;
+    else if (editType === 'myrule') myrule = true;
+    // ガマンは両方false
     const updates: any = {
       content: editContent,
-      is_private: editScope === 'private',
+      cheat_day,
+      myrule,
     };
     const { error } = await supabase
       .from('gaman_logs')
@@ -390,7 +396,14 @@ export default function TimelinePage() {
                     </button>
                     {menuOpenId === post.id && (
                       <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-700 font-bold" onClick={() => { setEditModal({ open: true, post }); setEditContent(post.content); setEditScope(post.is_private ? 'private' : 'public'); setMenuOpenId(null); }}>編集</button>
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-yellow-700 font-bold" onClick={() => {
+                          setEditModal({ open: true, post });
+                          setEditContent(post.content);
+                          if (post.cheat_day) setEditType('cheatday');
+                          else if (post.myrule) setEditType('myrule');
+                          else setEditType('gaman');
+                          setMenuOpenId(null);
+                        }}>編集</button>
                         <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 text-red-400" onClick={() => { handleDelete(post.id); setMenuOpenId(null); }}>削除</button>
                       </div>
                     )}
@@ -479,17 +492,25 @@ export default function TimelinePage() {
                 <input
                   type="radio"
                   className="mr-1 accent-blue-500"
-                  checked={editScope === 'public'}
-                  onChange={() => setEditScope('public')}
-                />全員に公開
+                  checked={editType === 'gaman'}
+                  onChange={() => setEditType('gaman')}
+                />ガマン
               </label>
-              <label className="flex items-center text-sm text-gray-300">
+              <label className="flex items-center text-sm text-yellow-300">
                 <input
                   type="radio"
-                  className="mr-1 accent-gray-400"
-                  checked={editScope === 'private'}
-                  onChange={() => setEditScope('private')}
-                />自分だけ
+                  className="mr-1 accent-yellow-500"
+                  checked={editType === 'myrule'}
+                  onChange={() => setEditType('myrule')}
+                />MyRule
+              </label>
+              <label className="flex items-center text-sm text-pink-300">
+                <input
+                  type="radio"
+                  className="mr-1 accent-pink-500"
+                  checked={editType === 'cheatday'}
+                  onChange={() => setEditType('cheatday')}
+                />チートデイ
               </label>
             </div>
             <div className="flex gap-2 justify-start">
