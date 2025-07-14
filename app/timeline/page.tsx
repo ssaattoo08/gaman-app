@@ -46,7 +46,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private")
         .order("created_at", { ascending: false })
 
       const { data: reactionsData, error: reactionsError } = await supabase
@@ -239,7 +239,7 @@ export default function TimelinePage() {
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
@@ -251,6 +251,35 @@ export default function TimelinePage() {
     }
     setPosting(false)
   }
+
+  // 編集保存処理
+  const handleEditSave = async () => {
+    if (!editModal.post) return;
+    const postId = editModal.post.id;
+    const updates: any = {
+      content: editContent,
+      is_private: editScope === 'private',
+    };
+    const { error } = await supabase
+      .from('gaman_logs')
+      .update(updates)
+      .eq('id', postId);
+    if (error) {
+      alert('編集に失敗しました: ' + error.message);
+      return;
+    }
+    // 投稿一覧を再取得
+    setLoading(true);
+    const { data: postsData, error: postsError } = await supabase
+      .from('gaman_logs')
+      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private')
+      .order('created_at', { ascending: false });
+    if (!postsError) {
+      setPosts(postsData);
+    }
+    setLoading(false);
+    setEditModal({ open: false, post: null });
+  };
 
   return (
     <>
@@ -441,7 +470,7 @@ export default function TimelinePage() {
               </label>
             </div>
             <div className="flex gap-2 justify-start">
-              <button className="px-4 py-2 rounded bg-yellow-700 text-white font-bold text-sm hover:bg-yellow-800" onClick={() => {/* 保存処理 */}}>保存</button>
+              <button className="px-4 py-2 rounded bg-yellow-700 text-white font-bold text-sm hover:bg-yellow-800" onClick={handleEditSave}>保存</button>
               <button className="px-4 py-2 rounded bg-gray-300 text-gray-800 font-bold text-sm hover:bg-gray-400" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
             </div>
           </div>
