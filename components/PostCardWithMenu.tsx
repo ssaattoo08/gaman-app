@@ -58,49 +58,76 @@ export default function PostCardWithMenu({
             <span className="text-sm" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{nickname || "名無し"}</span>
           )}
           <span className="text-xs ml-3" style={post.myrule ? { color: '#bfa100', fontWeight: 600 } : {}}>{formatDate(post.created_at)}</span>
-        </div>
-        {/* 三点リーダーメニュー */}
-        <div className="relative group">
-          <button
-            className="p-1 rounded-full hover:bg-gray-700 focus:outline-none cursor-pointer"
-            onClick={e => {
-              e.stopPropagation();
-              setMenuOpenId(post.id === menuOpenId ? null : post.id);
-            }}
-          >
-            <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
-          </button>
-          {menuOpenId === post.id && (
-            <div className="absolute right-0 mt-2 w-32 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#23272e'}}>
-              <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
-                setEditModal({ open: true, post });
-                setEditContent(post.content);
-                if (post.cheat_day) setEditType('cheatday');
-                else if (post.myrule) setEditType('myrule');
-                else setEditType('gaman');
-                setMenuOpenId(null);
-              }}>編集</button>
-              <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-400 cursor-pointer" style={{letterSpacing:1}} onClick={() => { onDelete(post.id); setMenuOpenId(null); }}>削除</button>
-            </div>
+          {post.myrule && (
+            <span
+              className="text-xs font-bold ml-2 flex items-center"
+              style={{
+                color: '#bfa100',
+                background: 'transparent',
+                borderRadius: '8px',
+                padding: '2px 8px',
+                fontFamily: 'Meiryo UI, Meiryo, sans-serif',
+                opacity: 0.85,
+                fontWeight: 600,
+                fontSize: '12px',
+                letterSpacing: 1,
+              }}
+            >
+              MyRule
+              {/* MyRuleラベルの右に三点リーダー */}
+              <div className="relative group ml-2">
+                <button
+                  className="p-1 rounded-full hover:bg-gray-700 focus:outline-none cursor-pointer"
+                  onClick={e => {
+                    e.stopPropagation();
+                    setMenuOpenId(post.id === menuOpenId ? null : post.id);
+                  }}
+                >
+                  <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
+                </button>
+                {menuOpenId === post.id && (
+                  <div className="absolute right-0 mt-2 w-32 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#23272e'}}>
+                    <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
+                      setEditModal({ open: true, post });
+                      setEditContent(post.content);
+                      if (post.cheat_day) setEditType('cheatday');
+                      else if (post.myrule) setEditType('myrule');
+                      else setEditType('gaman');
+                      setMenuOpenId(null);
+                    }}>編集</button>
+                    <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-400 cursor-pointer" style={{letterSpacing:1}} onClick={() => { onDelete(post.id); setMenuOpenId(null); }}>削除</button>
+                  </div>
+                )}
+              </div>
+            </span>
           )}
         </div>
-        {post.myrule && (
-          <span
-            className="text-xs font-bold"
-            style={{
-              color: '#bfa100',
-              background: 'transparent',
-              borderRadius: '8px',
-              padding: '2px 8px',
-              fontFamily: 'Meiryo UI, Meiryo, sans-serif',
-              opacity: 0.85,
-              fontWeight: 600,
-              fontSize: '12px',
-              letterSpacing: 1,
-            }}
-          >
-            MyRule
-          </span>
+        {/* 通常投稿は右上に三点リーダー */}
+        {!post.myrule && (
+          <div className="relative group">
+            <button
+              className="p-1 rounded-full hover:bg-gray-700 focus:outline-none cursor-pointer"
+              onClick={e => {
+                e.stopPropagation();
+                setMenuOpenId(post.id === menuOpenId ? null : post.id);
+              }}
+            >
+              <span style={{fontSize:'16px',lineHeight:1}}>︙</span>
+            </button>
+            {menuOpenId === post.id && (
+              <div className="absolute right-0 mt-2 w-32 border border-gray-700 rounded-lg shadow-lg z-50" style={{boxShadow:'0 2px 8px rgba(0,0,0,0.18)', background:'#23272e'}}>
+                <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-200 cursor-pointer" style={{letterSpacing:1}} onClick={() => {
+                  setEditModal({ open: true, post });
+                  setEditContent(post.content);
+                  if (post.cheat_day) setEditType('cheatday');
+                  else if (post.myrule) setEditType('myrule');
+                  else setEditType('gaman');
+                  setMenuOpenId(null);
+                }}>編集</button>
+                <button className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-800 text-gray-400 cursor-pointer" style={{letterSpacing:1}} onClick={() => { onDelete(post.id); setMenuOpenId(null); }}>削除</button>
+              </div>
+            )}
+          </div>
         )}
       </div>
       <PostContent content={post.content} url_title={post.url_title} />
