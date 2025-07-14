@@ -488,34 +488,34 @@ export default function TimelinePage() {
               onChange={e => setEditContent(e.target.value)}
             />
             <div className="flex items-center mb-4 gap-4">
-              <label className="flex items-center text-sm text-blue-300">
+              <label className={`flex items-center text-sm ${editType === 'gaman' ? 'text-gray-100 font-bold' : 'text-gray-400'}`} style={{letterSpacing:1}}>
                 <input
                   type="radio"
-                  className="mr-1 accent-blue-500"
+                  className="mr-1 accent-gray-500"
                   checked={editType === 'gaman'}
                   onChange={() => setEditType('gaman')}
                 />ガマン
               </label>
-              <label className="flex items-center text-sm text-yellow-300">
+              <label className={`flex items-center text-sm ${editType === 'myrule' ? 'text-yellow-200 font-bold' : 'text-gray-400'}`} style={{letterSpacing:1}}>
                 <input
                   type="radio"
-                  className="mr-1 accent-yellow-500"
+                  className="mr-1 accent-yellow-200"
                   checked={editType === 'myrule'}
                   onChange={() => setEditType('myrule')}
                 />MyRule
               </label>
-              <label className="flex items-center text-sm text-pink-300">
+              <label className={`flex items-center text-sm ${editType === 'cheatday' ? 'text-pink-200 font-bold' : 'text-gray-400'}`} style={{letterSpacing:1}}>
                 <input
                   type="radio"
-                  className="mr-1 accent-pink-500"
+                  className="mr-1 accent-pink-200"
                   checked={editType === 'cheatday'}
                   onChange={() => setEditType('cheatday')}
                 />チートデイ
               </label>
             </div>
             <div className="flex gap-2 justify-start">
-              <button className="px-4 py-2 rounded bg-yellow-700 text-white font-bold text-sm hover:bg-yellow-800" onClick={handleEditSave}>保存</button>
-              <button className="px-4 py-2 rounded bg-gray-300 text-gray-800 font-bold text-sm hover:bg-gray-400" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
+              <button className="px-4 py-2 rounded bg-gray-700 text-gray-100 font-bold text-sm hover:bg-gray-600 border border-gray-600 transition" onClick={handleEditSave}>保存</button>
+              <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-400 border border-gray-400 transition" onClick={() => setEditModal({ open: false, post: null })}>キャンセル</button>
             </div>
           </div>
         </div>
