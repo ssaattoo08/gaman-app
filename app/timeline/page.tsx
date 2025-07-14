@@ -47,7 +47,7 @@ export default function TimelinePage() {
     const fetchData = async () => {
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
 
       const { data: reactionsData, error: reactionsError } = await supabase
@@ -240,7 +240,7 @@ export default function TimelinePage() {
       setLoading(true)
       const { data: postsData, error: postsError } = await supabase
         .from("gaman_logs")
-        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private")
+        .select("id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title")
         .order("created_at", { ascending: false })
       if (!postsError) {
         setPosts(postsData)
@@ -278,7 +278,7 @@ export default function TimelinePage() {
     setLoading(true);
     const { data: postsData, error: postsError } = await supabase
       .from('gaman_logs')
-      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private')
+      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title')
       .order('created_at', { ascending: false });
     if (!postsError) {
       setPosts(postsData);
@@ -302,7 +302,7 @@ export default function TimelinePage() {
     setLoading(true);
     const { data: postsData, error: postsError } = await supabase
       .from('gaman_logs')
-      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title, is_private')
+      .select('id, content, created_at, user_id, profiles(nickname, username, icon_url), cheat_day, myrule, url_title')
       .order('created_at', { ascending: false });
     if (!postsError) {
       setPosts(postsData);
