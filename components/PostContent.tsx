@@ -57,18 +57,19 @@ export default function PostContent({ content, url_title }: { content: string, u
       {urls.map(url => (
         <div
           key={url}
-          className="my-2 p-3 rounded-lg bg-gray-800 border border-gray-600 max-w-xl"
+          className="my-2 p-3 rounded-lg bg-gray-800 border border-gray-600 max-w-xl overflow-x-auto"
+          style={{wordBreak: 'break-all'}}
         >
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:underline"
+            style={{overflowWrap: 'anywhere'}}
           >
-            <div className="flex items-center mb-1">
-              {/* <div style={{width:24,height:24,background:'#333',borderRadius:4,marginRight:8}}></div> */}
+            <div className="flex items-center mb-1 min-w-0">
               <span className="inline-block mr-2">🔗</span>
-              <span className="text-blue-300 font-semibold text-base">
+              <span className="text-blue-300 font-semibold text-base truncate block min-w-0" style={{maxWidth: '100%'}}>
                 {url_title ? url_title : getDomain(url)}
               </span>
             </div>
