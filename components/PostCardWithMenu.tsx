@@ -16,6 +16,7 @@ export default function PostCardWithMenu({
   REACTION_TYPE,
   REACTION_LABEL,
   isProcessing,
+  reactionsArray, // 追加
 }: any) {
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<{ open: boolean, post: any | null }>({ open: false, post: null });
@@ -133,24 +134,27 @@ export default function PostCardWithMenu({
       </div>
       <PostContent content={post.content} url_title={post.url_title} />
       {/* リアクションボタン */}
-      <div className="flex items-center mt-3">
-        <button
-          onClick={() => handleReaction(post.id, REACTION_TYPE(post))}
-          disabled={isProcessing}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
-            hasReacted(post.id, REACTION_TYPE(post))
-              ? 'bg-yellow-500 text-gray-900 shadow-md'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-          } ${isProcessing ? 'opacity-60 cursor-not-allowed' : ''}`}
-        >
-          <span>{REACTION_LABEL(post)}</span>
-          <span
-            className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
-            onClick={e => { e.stopPropagation(); /* モーダル表示は親で */ }}
+      <div className="flex items-center mt-3 gap-2">
+        {reactionsArray && reactionsArray.map((reaction: any) => (
+          <button
+            key={reaction.type}
+            onClick={() => handleReaction(post.id, reaction.type)}
+            disabled={isProcessing}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
+              hasReacted(post.id, reaction.type)
+                ? 'bg-yellow-500 text-gray-900 shadow-md'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+            } ${isProcessing ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
-            {getReactionCount(post.id, REACTION_TYPE(post))}
-          </span>
-        </button>
+            <span>{reaction.label}</span>
+            <span
+              className="ml-1 text-xs opacity-80 cursor-pointer underline hover:text-yellow-400"
+              onClick={e => { e.stopPropagation(); /* モーダル表示は親で */ }}
+            >
+              {getReactionCount(post.id, reaction.type)}
+            </span>
+          </button>
+        ))}
       </div>
       {/* 編集モーダル */}
       {editModal.open && editModal.post && (

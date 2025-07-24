@@ -13,6 +13,7 @@ const GAMAN_REACTIONS = [
   { type: "erai", label: "えらい" },
   { type: "sugoi", label: "すごい" },
   { type: "shinpai", label: "心配" },
+  { type: "waratta", label: "笑った" }, // 追加
 ]
 const CHEATDAY_REACTIONS = [
   { type: "ii", label: "たまにはいいよね" },
@@ -377,6 +378,8 @@ export default function TimelinePage() {
                 REACTION_TYPE={REACTION_TYPE}
                 REACTION_LABEL={REACTION_LABEL}
                 isProcessing={isProcessing}
+                // ↓追加
+                reactionsArray={post.cheat_day ? CHEATDAY_REACTIONS : GAMAN_REACTIONS}
                 onEdit={async (editData: any) => {
                   // 投稿編集処理
                   const { id, content, cheat_day, myrule } = editData;
